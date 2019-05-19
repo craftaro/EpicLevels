@@ -4,7 +4,7 @@ stages:
 variables:
   name: "EpicLevels"
   path: "/builds/$CI_PROJECT_PATH"
-  version: "1-Beta-2"
+  version: "1-Beta-3"
 
 build:
   stage: build
