@@ -64,7 +64,7 @@ public class DeathListeners implements Listener {
             eKilled.addDeath();
             eKilled.resetKillstreak();
 
-            long killedExpBefore = ePlayer.getExperience();
+            long killedExpBefore = eKilled.getExperience();
             long killedExpAfter = eKilled.addExperience(0L - SettingsManager.Setting.EXP_DEATH.getLong());
 
             if (SettingsManager.Setting.SEND_DEATH_MESSAGE.getBoolean())
