@@ -1,0 +1,12 @@
+name: EpicLevels
+description: EpicLevels
+version: maven-version-number
+main: com.songoda.epiclevels.EpicLevels
+author: songoda
+api-version: 1.13
+commands:
+  EpicLevels:
+    description: View information on this plugin.
+    default: true
+    aliases: [el, levels]
+    usage: /levels
