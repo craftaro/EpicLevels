@@ -30,17 +30,17 @@ public class ModifierTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        double heartsPerLevel = SettingsManager.Setting.EXTRA_HEALTH_PER_LEVEL.getDouble();
+        double healthPerLevel = SettingsManager.Setting.EXTRA_HEALTH_PER_LEVEL.getDouble();
         double damagePerLevel = SettingsManager.Setting.EXTRA_DAMAGE_PER_LEVEL.getDouble();
         Bukkit.getOnlinePlayers().forEach(player -> {
-            updateHealthModifier(player, plugin.getPlayerManager().getPlayer(player).getLevel() * heartsPerLevel);
+            updateHealthModifier(player, plugin.getPlayerManager().getPlayer(player).getLevel() * healthPerLevel);
             updateDamageModifier(player, plugin.getPlayerManager().getPlayer(player).getLevel() * damagePerLevel);
         });
     }
 
     private void updateHealthModifier(Player player, double health) {
-        int maxHearts = SettingsManager.Setting.MAX_EXTRA_HEALTH.getInt();
-        if (health > maxHearts) health = maxHearts;
+        int maxHealth = SettingsManager.Setting.MAX_EXTRA_HEALTH.getInt();
+        if (health > maxHealth) health = maxHealth;
         AttributeInstance healthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         for (AttributeModifier modifier : healthAttribute.getModifiers()) {
             if (!modifier.getName().equals("EpicLevels"))
@@ -53,8 +53,8 @@ public class ModifierTask extends BukkitRunnable {
     }
 
     private void updateDamageModifier(Player player, double damage) {
-        int maxHearts = SettingsManager.Setting.MAX_EXTRA_DAMAGE.getInt();
-        if (damage > maxHearts) damage = maxHearts;
+        double maxDamage = SettingsManager.Setting.MAX_EXTRA_DAMAGE.getDouble();
+        if (damage > maxDamage) damage = maxDamage;
         AttributeInstance damageAttribute = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
         for (AttributeModifier modifier : damageAttribute.getModifiers()) {
             if (!modifier.getName().equals("EpicLevels"))
