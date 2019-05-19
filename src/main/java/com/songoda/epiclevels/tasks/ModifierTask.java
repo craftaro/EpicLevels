@@ -30,7 +30,7 @@ public class ModifierTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        double heartsPerLevel = SettingsManager.Setting.EXTRA_HEARTS_PER_LEVEL.getDouble();
+        double heartsPerLevel = SettingsManager.Setting.EXTRA_HEALTH_PER_LEVEL.getDouble();
         double damagePerLevel = SettingsManager.Setting.EXTRA_DAMAGE_PER_LEVEL.getDouble();
         Bukkit.getOnlinePlayers().forEach(player -> {
             updateHealthModifier(player, plugin.getPlayerManager().getPlayer(player).getLevel() * heartsPerLevel);
@@ -39,7 +39,7 @@ public class ModifierTask extends BukkitRunnable {
     }
 
     private void updateHealthModifier(Player player, double health) {
-        int maxHearts = SettingsManager.Setting.MAX_EXTRA_HEARTS.getInt();
+        int maxHearts = SettingsManager.Setting.MAX_EXTRA_HEALTH.getInt();
         if (health > maxHearts) health = maxHearts;
         AttributeInstance healthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         for (AttributeModifier modifier : healthAttribute.getModifiers()) {

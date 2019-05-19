@@ -191,8 +191,8 @@ public class SettingsManager implements Listener {
 
         BLACKLISTED_WORLDS("Main.Blacklisted Worlds", Arrays.asList("World1", "World2", "World3")),
 
-        MAX_EXTRA_HEARTS("Main.Max Extra Hearts", 10),
-        EXTRA_HEARTS_PER_LEVEL("Main.Extra Hearts Per Level", 0.2),
+        MAX_EXTRA_HEALTH("Main.Max Extra Health", 10),
+        EXTRA_HEALTH_PER_LEVEL("Main.Extra Health Per Level", 0.2),
         MAX_EXTRA_DAMAGE("Main.Max Extra Damage", 2.0),
         EXTRA_DAMAGE_PER_LEVEL("Main.Extra Damage Per Level", 0.05),
 
