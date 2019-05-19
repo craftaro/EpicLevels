@@ -6,8 +6,6 @@ import com.songoda.epiclevels.levels.Level;
 import com.songoda.epiclevels.utils.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
@@ -73,6 +71,10 @@ public class EPlayer {
         double boostMultiplier = boost == null ? 1 : boost.getMultiplier();
 
         this.experience += ((this.experience + experience < 0 ? 0 : experience) * multiplier()) * boostMultiplier;
+
+        double bonus = SettingsManager.Setting.KILLSTREAK_BONUS_EXP.getDouble();
+        this.experience += bonus * killstreak;
+
         Player player = getPlayer().getPlayer();
         if (currentLevel != getLevel() && player != null) {
             for (int i = currentLevel; i != getLevel(); i++) {

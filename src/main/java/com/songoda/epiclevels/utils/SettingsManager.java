@@ -196,6 +196,9 @@ public class SettingsManager implements Listener {
         MAX_EXTRA_DAMAGE("Main.Max Extra Damage", 2.0),
         EXTRA_DAMAGE_PER_LEVEL("Main.Extra Damage Per Level", 0.05),
 
+        ANNOUNCE_KILLSTREAK_EVERY("Main.Announce Killstreaks Every", 3),
+        KILLSTREAK_BONUS_EXP("Main.Killstreak Bonus Experience", 0.2),
+
         BOOST_ITEMS("Boost.Items Enabled", true),
         BOOST_EXP("Boost.Experience Enabled", true),
 

@@ -61,7 +61,6 @@ public class DeathListeners implements Listener {
             Player killed = (Player) event.getEntity();
             EPlayer eKilled = plugin.getPlayerManager().getPlayer(killed);
 
-            ePlayer.increaseKillstreak();
             eKilled.addDeath();
             eKilled.resetKillstreak();
             eKilled.addExperience(0L - SettingsManager.Setting.EXP_DEATH.getLong());
@@ -79,7 +78,13 @@ public class DeathListeners implements Listener {
                 return;
             }
 
+            ePlayer.increaseKillstreak();
             ePlayer.addPlayerKill(killed.getUniqueId());
+
+            int every = SettingsManager.Setting.ANNOUNCE_KILLSTREAK_EVERY.getInt();
+            if (every != 0 && ePlayer.getKillstreak() % every == 0) {
+                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.announce", player.getName(), ePlayer.getKillstreak()));
+            }
 
             long playerExpBefore = ePlayer.getExperience();
             long playerExpAfter = ePlayer.addExperience(expPlayer);
