@@ -62,8 +62,14 @@ public class EPlayer {
 
     public long addExperience(long experience) {
         EpicLevels plugin = EpicLevels.getInstance();
-        if (this.experience + experience < 0L && !SettingsManager.Setting.ALLOW_NEGATIVE.getBoolean())
-            return experience;
+        if (experience < 0L) {
+            if (this.experience + experience < 0L && !SettingsManager.Setting.ALLOW_NEGATIVE.getBoolean())
+                this.experience = 0L;
+            else
+                this.experience = this.experience + experience;
+
+            return this.experience;
+        }
         int currentLevel = getLevel();
 
         Boost boost = plugin.getBoostManager().getBoost(uuid);
