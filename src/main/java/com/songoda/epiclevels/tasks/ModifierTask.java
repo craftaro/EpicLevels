@@ -45,11 +45,11 @@ public class ModifierTask extends BukkitRunnable {
         for (AttributeModifier modifier : healthAttribute.getModifiers()) {
             if (!modifier.getName().equals("EpicLevels"))
                 continue;
-            if (modifier.getAmount() == health)
+            if (modifier.getAmount() == (int)health)
                 return;
             healthAttribute.removeModifier(modifier);
         }
-        healthAttribute.addModifier(new AttributeModifier("EpicLevels", health, AttributeModifier.Operation.ADD_NUMBER));
+        healthAttribute.addModifier(new AttributeModifier("EpicLevels", (int)health, AttributeModifier.Operation.ADD_NUMBER));
     }
 
     private void updateDamageModifier(Player player, double damage) {
