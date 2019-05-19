@@ -3,6 +3,7 @@ package com.songoda.epiclevels.command.commands;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.command.AbstractCommand;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -18,11 +19,13 @@ public class CommandTakeExp extends AbstractCommand {
         if (args.length != 3) return ReturnType.SYNTAX_ERROR;
 
         String playerStr = args[1].toLowerCase();
+        OfflinePlayer player = Bukkit.getOfflinePlayer(playerStr);
+
         long amount = Long.parseLong(args[2]);
 
-        instance.getPlayerManager().getPlayer(Bukkit.getOfflinePlayer(playerStr)).addExperience(0L - amount);
+        instance.getPlayerManager().getPlayer(player).addExperience(0L - amount);
 
-        sender.sendMessage("ALL GOOD HOMMIE");
+        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.removeexp.success", player.getName(), amount));
 
         return ReturnType.SUCCESS;
     }

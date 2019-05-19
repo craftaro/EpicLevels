@@ -24,8 +24,6 @@ public class CommandRemoveBoost extends AbstractCommand {
 
         instance.getBoostManager().removeBoost(player.getUniqueId());
 
-        sender.sendMessage("ALL GOOD HOMMIE");
-
         return ReturnType.SUCCESS;
     }
 

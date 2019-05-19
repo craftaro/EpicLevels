@@ -7,8 +7,10 @@ import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandBoost extends AbstractCommand {
 
@@ -32,7 +34,11 @@ public class CommandBoost extends AbstractCommand {
 
         instance.getBoostManager().addBoost(player.getUniqueId(), new Boost(duration + System.currentTimeMillis(), multiplier));
 
-        sender.sendMessage("ALL GOOD HOMMIE " + duration);
+        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.success", player.getName(), multiplier, Methods.makeReadable(duration)));
+
+        if (player.isOnline())
+            player.getPlayer().sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.announce", sender.getName(), multiplier, Methods.makeReadable(duration)));
+
 
         return ReturnType.SUCCESS;
     }

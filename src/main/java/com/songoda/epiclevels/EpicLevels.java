@@ -12,6 +12,7 @@ import com.songoda.epiclevels.players.PlayerManager;
 import com.songoda.epiclevels.storage.Storage;
 import com.songoda.epiclevels.storage.StorageRow;
 import com.songoda.epiclevels.storage.types.StorageYaml;
+import com.songoda.epiclevels.tasks.BoostTask;
 import com.songoda.epiclevels.tasks.ModifierTask;
 import com.songoda.epiclevels.utils.Methods;
 import com.songoda.epiclevels.utils.ServerVersion;
@@ -87,6 +88,7 @@ public class EpicLevels extends JavaPlugin {
 
         // Start Tasks
         ModifierTask.startTask(this);
+        BoostTask.startTask(this);
 
         int timeout = SettingsManager.Setting.AUTOSAVE.getInt() * 60 * 20;
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveToFile, timeout, timeout);

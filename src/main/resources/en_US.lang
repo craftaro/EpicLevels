@@ -16,5 +16,12 @@ event.levelup.announcement = "&6%player% &7leveled up to level &6%level&7."
 
 event.antigrinder.trigger = "&7You have killed &6%killed% &7too many times recently and therefore have not gained experience. Please wait before killing this person again."
 
-event.boost.announce = "&6%player% &7activated a global boost (&6%multiplier%x&7) for &6%duration%&7."
-event.boost.success = "&7You created a global boost with the multiplier of &6%multiplier% &7and the duration &6%duration%&7."
+command.removeexp.success = "&7Removed &6%amount% &7experience to &6%player% &7successfully."
+command.addexp.success = "&7Added &6%amount% &7experience to &6%player% &7successfully."
+
+event.boost.globalannounce = "&6%player% &7activated a global boost (&6%multiplier%x&7) for everyone lasting &6%duration%&7."
+event.boost.globalsuccess = "&7You created a global boost with the multiplier of &6%multiplier% &7and the duration &6%duration%&7."
+event.boost.globalexpire = "&7The global boost has expired."
+event.boost.announce = "&6%player% &7activated a boost (&6%multiplier%x&7) for you lasting &6%duration%&7."
+event.boost.success = "&7You created a boost for &6%player% &7with the multiplier of &6%multiplier% &7and the duration &6%duration%&7."
+event.boost.expire = "&7your boost has expired."
