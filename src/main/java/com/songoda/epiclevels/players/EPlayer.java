@@ -62,8 +62,7 @@ public class EPlayer {
 
     public long addExperience(long experience) {
         EpicLevels plugin = EpicLevels.getInstance();
-        if (this.experience + experience > SettingsManager.Setting.MAX_EXP.getLong()
-                || this.experience + experience < 0L && !SettingsManager.Setting.ALLOW_NEGATIVE.getBoolean())
+        if (this.experience + experience < 0L && !SettingsManager.Setting.ALLOW_NEGATIVE.getBoolean())
             return experience;
         int currentLevel = getLevel();
 
@@ -90,6 +89,8 @@ public class EPlayer {
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).collect(Collectors.toList()))
                     pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.levelup.announcement", player.getName(), getLevel()));
         }
+        if (this.experience > SettingsManager.Setting.MAX_EXP.getLong())
+            this.experience = SettingsManager.Setting.MAX_EXP.getLong();
         return this.experience;
     }
 
