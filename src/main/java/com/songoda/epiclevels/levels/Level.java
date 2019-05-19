@@ -31,7 +31,7 @@ public class Level {
         }
     }
 
-    public void run(Player player, int level) {
+    public void run(Player player, int level, boolean last) {
         if (level == -1 && EpicLevels.getInstance().getLevelManager().getLevel(level).rewards.stream()
                 .anyMatch(line -> line.contains("OVERRIDE")))
             return;
@@ -40,8 +40,9 @@ public class Level {
                 String line = replace(player, level, s.trim());
                 switch (s.split(" ")[0]) {
                     case "MSG":
-                        player.sendMessage(EpicLevels.getInstance().getReferences().getPrefix() +
-                                Methods.formatText(line.trim()));
+                        if (last)
+                            player.sendMessage(EpicLevels.getInstance().getReferences().getPrefix() +
+                                    Methods.formatText(line.trim()));
                         break;
                     case "CMD":
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line.replace("/", "").trim());
@@ -59,10 +60,12 @@ public class Level {
                         player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
                         break;
                     case "FIREWORK":
-                        launchRandomFirework(player.getLocation().clone().add(0, 2, 0));
+                        if (last)
+                            launchRandomFirework(player.getLocation().clone().add(0, 2, 0));
                         break;
                     case "SOUND":
-                        player.playSound(player.getLocation(), Sound.valueOf(line), 1L, 1L);
+                        if (last)
+                            player.playSound(player.getLocation(), Sound.valueOf(line), 1L, 1L);
                         break;
                 }
             } catch (Exception e) {

@@ -76,13 +76,13 @@ public class EPlayer {
         this.experience += bonus * killstreak;
 
         Player player = getPlayer().getPlayer();
-        if (currentLevel != getLevel() && player != null) {
-            for (int i = currentLevel; i != getLevel(); i++) {
+        if ((currentLevel != getLevel() || currentLevel > getLevel()) && player != null) {
+            for (int i = currentLevel; i <= getLevel() ; i++) {
                 Level def = plugin.getLevelManager().getLevel(-1);
                 if (def != null)
-                    def.run(player, i);
+                    def.run(player, i, i == getLevel());
                 if (plugin.getLevelManager().getLevel(i) == null) continue;
-                plugin.getLevelManager().getLevel(i).run(player, i);
+                plugin.getLevelManager().getLevel(i).run(player, i, i == getLevel());
             }
 
             if (SettingsManager.Setting.SEND_BROADCAST_LEVELUP_MESSAGE.getBoolean()
