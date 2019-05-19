@@ -9,8 +9,8 @@ event.player.death = "&7You were killed by &6%name% &7and lost &6%exp% Experienc
 
 event.player.death.broadcast = "&6%killed% &7was killed by &6%killer%&7."
 
-event.pvp.deny = &cYou can not attack this player because you are below the minimum PVP level."
-event.pvp.denythem = &cYou can not attack this player because they are below the minimum PVP level."
+event.pvp.deny = "&cYou can not attack this player because you are below the minimum PVP level."
+event.pvp.denythem = "&cYou can not attack this player because they are below the minimum PVP level."
 
 event.levelup.announcement = "&6%player% &7leveled up to level &6%level&7."
 
