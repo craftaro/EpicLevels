@@ -124,7 +124,7 @@ public class GUILevels extends AbstractGUI {
             int slot = 37 + i;
 
             if (current == position) {
-                createButton(slot + 9, Material.ARROW, "&l");
+                createButton(slot + 9, Material.ARROW, "&6Selected");
                 //slot++;
             }
 
@@ -139,7 +139,7 @@ public class GUILevels extends AbstractGUI {
                         "&7Player Kills: &6" + selected.getPlayerKills(),
                         "&7Mob Kills: &6" + selected.getMobKills(),
                         "&7Deaths: &6" + selected.getDeaths(),
-                        "&7KDR: &6" + (selected.getDeaths() == 0 ? selected.getPlayerKills() : selected.getPlayerKills() / selected.getDeaths()),
+                        "&7KDR: &6" + (selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double)selected.getPlayerKills()) / selected.getDeaths()),
                         "&7Current Killstreak: &6" + selected.getKillstreak(),
                         "&7Best Killstreak: &6" + selected.getBestKillstreak());
 
