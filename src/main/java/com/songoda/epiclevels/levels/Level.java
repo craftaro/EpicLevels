@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -51,7 +52,9 @@ public class Level {
                         String[] args = line.split(" ");
                         int amount = Integer.parseInt(engine.eval(line.replace(args[0], "").trim()).toString());
                         ItemStack item = new ItemStack(Material.valueOf(args[0].toUpperCase()), amount);
-                        player.getInventory().addItem(item);
+                        Collection<ItemStack> items = player.getInventory().addItem(item).values();
+                        items.forEach(itemStack ->
+                                player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
                         break;
                     case "ECONOMY":
                         EpicLevels.getInstance().getEconomy().AddToBalance(player, Double.parseDouble(line.replace("$", "")));

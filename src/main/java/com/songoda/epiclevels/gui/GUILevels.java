@@ -123,10 +123,8 @@ public class GUILevels extends AbstractGUI {
 
             int slot = 37 + i;
 
-            if (current == position) {
+            if (current == position)
                 createButton(slot + 9, Material.ARROW, "&6Selected");
-                //slot++;
-            }
 
             createButton(slot, head, (current + 1) + " &6&l" + targetPlayer.getName(),
                     "&7Level " + (selected.getLevel()),
