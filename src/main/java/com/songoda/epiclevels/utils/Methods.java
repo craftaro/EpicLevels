@@ -6,6 +6,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.concurrent.TimeUnit;
+
 public class Methods {
 
     public static ItemStack getGlass() {
@@ -61,6 +63,15 @@ public class Methods {
         }
         text = formatText(text);
         return text;
+    }
+
+    public static String makeReadable(Long time) {
+        if (time == null)
+            return "";
+        return String.format("%dd %dh %dm",
+                TimeUnit.MILLISECONDS.toDays(time),
+                TimeUnit.MILLISECONDS.toHours(time) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(time)),
+                TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)));
     }
 
     public static long parseTime(String input) {

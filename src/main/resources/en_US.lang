@@ -17,3 +17,4 @@ event.levelup.announcement = "&6%player% &7leveled up to level &6%level&7."
 event.antigrinder.trigger = "&7You have killed &6%killed% &7too many times recently and therefore have not gained experience. Please wait before killing this person again."
 
 event.boost.announce = "&6%player% &7activated a global boost (&6%multiplier%x&7) for &6%duration%&7."
+event.boost.success = "&7You created a global boost with the multiplier of &6%multiplier% &7and the duration &6%duration%&7."

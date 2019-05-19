@@ -1,5 +1,6 @@
 package com.songoda.epiclevels;
 
+import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.boost.BoostManager;
 import com.songoda.epiclevels.command.CommandManager;
 import com.songoda.epiclevels.economy.Economy;
@@ -73,17 +74,6 @@ public class EpicLevels extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("Vault") != null)
             this.economy = new VaultEconomy(this);
 
-        playerManager.addPlayer(new EPlayer(UUID.fromString("be8c08d2-9c2e-4ed1-a1c1-e24ad05b6e7f"), 1173L, 35, 6, 2, 1, 74));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("c28b7d05-e20e-3fdd-9ba3-3c9599dc2bed"), 1123L, 3, 6, 62, 0, 0));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("38edcc03-328d-4a6c-a783-b0e579bc98fe"), 1347L, 3, 64, 2, 0, 0));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("845b66e1-45b8-4bc4-b0bd-d1ccdf0fc7a4"), 1342L, 3, 6, 22, 0, 0));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("9db1c64c-5459-43bc-802c-c475e227a271"), 1345L, 31, 61, 2, 32, 32));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("792cc008-277a-48aa-a444-977e91985ce6"), 1657L, 3, 6, 2, 0, 0));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("2f50536e-fc88-3dc6-a726-230a6cff6580"), 1765L, 3, 16, 22, 45, 45));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("8035aba9-973f-485d-a19f-ec1397137dd9"), 1876L, 13, 6, 2, 1, 1));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("79d19a5a-28df-319a-9aff-459c81cc9efc"), 1245L, 3, 6, 2, 4, 4));
-        playerManager.addPlayer(new EPlayer(UUID.fromString("97fb7165-9e8d-3f22-aad2-7b617785eca0"), 1569L, 3, 6, 23, 1, 1));
-
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         // Listener Registration
@@ -133,7 +123,6 @@ public class EpicLevels extends JavaPlugin {
     }
 
     private void loadData() {
-        // Adding in favorites.
         if (storage.containsGroup("players")) {
             for (StorageRow row : storage.getRowsByGroup("players")) {
                 if (row.get("uuid").asObject() == null)
@@ -149,6 +138,17 @@ public class EpicLevels extends JavaPlugin {
                         row.get("bestKillstreak").asInt());
 
                 this.playerManager.addPlayer(player);
+            }
+        }
+        if (storage.containsGroup("boosts")) {
+            for (StorageRow row : storage.getRowsByGroup("boosts")) {
+
+                Boost boost = new Boost(row.get("expiration").asLong(), row.get("multiplier").asDouble());
+
+                if (row.get("global") != null)
+                    boostManager.setGlobalBoost(boost);
+                else
+                    boostManager.addBoost(UUID.fromString(row.get("uuid").asString()), boost);
             }
         }
 

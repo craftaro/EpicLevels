@@ -40,6 +40,10 @@ public class BoostManager {
         return registeredBoosts.remove(uuid);
     }
 
+    public Boost getGlobalBoost() {
+        return globalBoost;
+    }
+
     public Boost setGlobalBoost(Boost boost) {
         this.globalBoost = boost;
         return boost;

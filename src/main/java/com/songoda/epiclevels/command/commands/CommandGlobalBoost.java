@@ -33,10 +33,10 @@ public class CommandGlobalBoost extends AbstractCommand {
 
         instance.getBoostManager().setGlobalBoost(new Boost(duration + System.currentTimeMillis(), multiplier));
 
-        sender.sendMessage("ALL GOOD HOMMIE");
+        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.success", multiplier, Methods.makeReadable(duration)));
 
         for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != sender).collect(Collectors.toList()))
-            pl.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.announce", sender.getName(), multiplier, duration));
+            pl.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.announce", sender.getName(), multiplier, Methods.makeReadable(duration)));
 
         return ReturnType.SUCCESS;
     }
