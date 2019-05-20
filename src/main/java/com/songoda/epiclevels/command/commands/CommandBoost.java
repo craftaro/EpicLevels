@@ -22,7 +22,17 @@ public class CommandBoost extends AbstractCommand {
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
         if (args.length < 4) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[1].toLowerCase());
+        Player player = Bukkit.getPlayer(args[1].toLowerCase());
+
+        if (player == null) {
+            sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notonline", args[1]));
+            return ReturnType.FAILURE;
+        }
+
+        if (!Methods.isInt(args[2])) {
+            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint")));
+            return ReturnType.SYNTAX_ERROR;
+        }
         int multiplier = Integer.parseInt(args[2]);
 
         long duration = 0;

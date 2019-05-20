@@ -22,6 +22,10 @@ public class CommandGlobalBoost extends AbstractCommand {
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
         if (args.length < 3) return ReturnType.SYNTAX_ERROR;
 
+        if (!Methods.isInt(args[1])) {
+            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint")));
+            return ReturnType.SYNTAX_ERROR;
+        }
         int multiplier = Integer.parseInt(args[1]);
 
         long duration = 0;

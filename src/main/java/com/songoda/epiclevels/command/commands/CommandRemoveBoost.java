@@ -1,9 +1,7 @@
 package com.songoda.epiclevels.command.commands;
 
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.command.AbstractCommand;
-import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -20,7 +18,12 @@ public class CommandRemoveBoost extends AbstractCommand {
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
         if (args.length != 2) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[1].toLowerCase());
+        OfflinePlayer player = Bukkit.getPlayer(args[1].toLowerCase());
+
+        if (player == null) {
+            sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notonline", args[1]));
+            return ReturnType.FAILURE;
+        }
 
         instance.getBoostManager().removeBoost(player.getUniqueId());
 

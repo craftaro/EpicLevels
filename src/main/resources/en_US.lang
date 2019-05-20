@@ -19,6 +19,8 @@ event.antigrinder.trigger = "&7You have killed &6%killed% &7too many times recen
 command.removeexp.success = "&7Removed &6%amount% &7experience to &6%player% &7successfully."
 command.addexp.success = "&7Added &6%amount% &7experience to &6%player% &7successfully."
 
+command.general.notonline = "&cThe player &4%name% &ccould not be found."
+command.general.notint = "&6%number%&7 is not a number."
 event.killstreak.announce = "&6%player% &7just reached a killstreak of &6%killstreak% &7kills!"
 
 event.boost.globalannounce = "&6%player% &7activated a global boost (&6%multiplier%x&7) for everyone lasting &6%duration%&7."
