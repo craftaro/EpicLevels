@@ -133,7 +133,6 @@ public class GUILevels extends AbstractGUI {
                     plugin.getLocale().getMessage("gui.levels.exp", selected.getExperience(), EPlayer.experience(selected.getLevel() + 1)),
                     prog.toString());
 
-            System.out.println(plugin.getLocale().getMessage("gui.levels.mobkills", selected.getMobKills()));
             if (current == position)
                 createButton(slot - 9, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.stats"),
                         plugin.getLocale().getMessage("gui.levels.totalkills", selected.getKills()),
