@@ -87,7 +87,7 @@ public class EpicLevels extends JavaPlugin {
         loadData();
 
         // Start Tasks
-        ModifierTask.startTask(this);
+        if (isServerVersionAtLeast(ServerVersion.V1_9)) ModifierTask.startTask(this);
         BoostTask.startTask(this);
 
         int timeout = SettingsManager.Setting.AUTOSAVE.getInt() * 60 * 20;

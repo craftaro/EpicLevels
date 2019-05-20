@@ -2,6 +2,7 @@ package com.songoda.epiclevels.levels;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.utils.Methods;
+import com.songoda.epiclevels.utils.ServerVersion;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Firework;
@@ -60,7 +61,10 @@ public class Level {
                         EpicLevels.getInstance().getEconomy().AddToBalance(player, Double.parseDouble(line.replace("$", "")));
                         break;
                     case "HEAL":
-                        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                        if (EpicLevels.getInstance().isServerVersionAtLeast(ServerVersion.V1_9))
+                            player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                        else
+                            player.setHealth(20);
                         break;
                     case "FIREWORK":
                         if (last)

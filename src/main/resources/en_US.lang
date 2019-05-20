@@ -12,7 +12,7 @@ event.player.death.broadcast = "&6%killed% &7was killed by &6%killer%&7."
 event.pvp.deny = "&cYou can not attack this player because you are below the minimum PVP level."
 event.pvp.denythem = "&cYou can not attack this player because they are below the minimum PVP level."
 
-event.levelup.announcement = "&6%player% &7leveled up to level &6%level&7."
+event.levelup.announcement = "&6%player% &7leveled up to level &6%level%&7."
 
 event.antigrinder.trigger = "&7You have killed &6%killed% &7too many times recently and therefore have not gained experience. Please wait before killing this person again."
 

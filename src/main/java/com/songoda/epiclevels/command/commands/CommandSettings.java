@@ -32,7 +32,7 @@ public class CommandSettings extends AbstractCommand {
 
     @Override
     public String getSyntax() {
-        return "/levels settings";
+        return "/levels Settings";
     }
 
     @Override

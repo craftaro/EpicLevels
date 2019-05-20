@@ -29,6 +29,7 @@ public class CommandTakeExp extends AbstractCommand {
 
         if (!Methods.isInt(args[2])) {
             sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint")));
+            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint", args[2])));
             return ReturnType.SYNTAX_ERROR;
         }
 

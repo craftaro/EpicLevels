@@ -86,9 +86,9 @@ public class GUILevels extends AbstractGUI {
         inventory.setItem(53, Methods.getBackgroundGlass(true));
 
 
-        createButton(2, Material.EXPERIENCE_BOTTLE, plugin.getLocale().getMessage("gui.levels.toplevels"));
-        createButton(3, Material.SKELETON_SKULL, plugin.getLocale().getMessage("gui.levels.topmobs"));
-        createButton(5, Material.PLAYER_HEAD, plugin.getLocale().getMessage("gui.levels.topmobs"));
+        createButton(2, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.EXPERIENCE_BOTTLE : Material.valueOf("EXP_BOTTLE"), plugin.getLocale().getMessage("gui.levels.toplevels"));
+        createButton(3, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.SKELETON_SKULL : new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (byte) 0), plugin.getLocale().getMessage("gui.levels.topmobs"));
+        createButton(5, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.PLAYER_HEAD : new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (byte) 3), plugin.getLocale().getMessage("gui.levels.topplayers"));
         createButton(6, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.topkillstreaks"));
         createButton(16, Material.COMPASS, plugin.getLocale().getMessage("gui.levels.search"));
 
@@ -169,7 +169,7 @@ public class GUILevels extends AbstractGUI {
                     .sorted(Comparator.comparingInt(EPlayer::getMobKills)).collect(Collectors.toList());
             Collections.reverse(players);
             sort();
-            sortingBy = Sorting.MOB_KILLS;
+            sortingBy = Sorting.MOBKILLS;
             updateTitle();
         }));
 
@@ -178,7 +178,7 @@ public class GUILevels extends AbstractGUI {
                     .sorted(Comparator.comparingInt(EPlayer::getPlayerKills)).collect(Collectors.toList());
             Collections.reverse(players);
             sort();
-            sortingBy = Sorting.PLAYER_KILLS;
+            sortingBy = Sorting.PLAYERKILLS;
             updateTitle();
         }));
 
@@ -187,7 +187,7 @@ public class GUILevels extends AbstractGUI {
                     .sorted(Comparator.comparingInt(EPlayer::getKillstreak)).collect(Collectors.toList());
             Collections.reverse(players);
             sort();
-            sortingBy = Sorting.KILL_STREAKS;
+            sortingBy = Sorting.KILLSTREAKS;
             updateTitle();
         }));
 
@@ -223,9 +223,9 @@ public class GUILevels extends AbstractGUI {
     public enum Sorting {
 
         LEVELS,
-        MOB_KILLS,
-        PLAYER_KILLS,
-        KILL_STREAKS;
+        MOBKILLS,
+        PLAYERKILLS,
+        KILLSTREAKS;
 
         public String getName() {
             return EpicLevels.getInstance().getLocale().getMessage("gui.levels." + name().toLowerCase() + "type");

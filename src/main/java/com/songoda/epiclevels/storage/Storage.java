@@ -41,7 +41,7 @@ public abstract class Storage {
 
         for (UUID uuid : instance.getBoostManager().getBoosts().keySet()) {
             Boost boost = instance.getBoostManager().getBoost(uuid);
-            prepareSaveItem("boosts", new StorageItem("uuid", uuid),
+            prepareSaveItem("boosts", new StorageItem("uuid", uuid.toString()),
                     new StorageItem("expiration", boost.getExpiration()),
                     new StorageItem("multiplier", boost.getMultiplier()));
         }
