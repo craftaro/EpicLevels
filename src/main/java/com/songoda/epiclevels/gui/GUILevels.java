@@ -228,7 +228,7 @@ public class GUILevels extends AbstractGUI {
         KILL_STREAKS;
 
         public String getName() {
-            return EpicLevels.getInstance().getLocale().getMessage("gui.levels." + name().toLowerCase());
+            return EpicLevels.getInstance().getLocale().getMessage("gui.levels." + name().toLowerCase() + "type");
         }
     }
 
