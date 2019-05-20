@@ -41,7 +41,7 @@ public class GUILevels extends AbstractGUI {
     }
 
     private void updateTitle() {
-        init("Showing Top " + sortingBy.getName(), 54);
+        init(plugin.getLocale().getMessage("gui.levels.title", sortingBy.getName()), 54);
         constructGUI();
     }
 
@@ -86,19 +86,21 @@ public class GUILevels extends AbstractGUI {
         inventory.setItem(53, Methods.getBackgroundGlass(true));
 
 
-        createButton(2, Material.EXPERIENCE_BOTTLE, "&e&lTop Levels");
-        createButton(3, Material.SKELETON_SKULL, "&a&lTop Mob Killers");
-        createButton(5, Material.PLAYER_HEAD, "&c&lTop Player Killers");
-        createButton(6, Material.DIAMOND_SWORD, "&b&lTop Killstreaks");
-        createButton(16, Material.COMPASS, "&6&lSearch");
+        createButton(2, Material.EXPERIENCE_BOTTLE, plugin.getLocale().getMessage("gui.levels.toplevels"));
+        createButton(3, Material.SKELETON_SKULL, plugin.getLocale().getMessage("gui.levels.topmobs"));
+        createButton(5, Material.PLAYER_HEAD, plugin.getLocale().getMessage("gui.levels.topmobs"));
+        createButton(6, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.topkillstreaks"));
+        createButton(16, Material.COMPASS, plugin.getLocale().getMessage("gui.levels.search"));
 
-        createButton(13, Material.REDSTONE, "&7Sorting by: &6" + sortingBy.getName() + "&7.",
-                "&8Click to go to you.");
+        createButton(13, Material.REDSTONE, plugin.getLocale().getMessage("gui.levels.sortingby", sortingBy.getName()),
+                plugin.getLocale().getMessage("gui.levels.you"));
 
         for (int i = 0; i < 7; i++) {
             int current = i + (position - 3 < 0 ? 0 : (position + 3 > (players.size() - 1) ? (players.size() - 7) : position - 3));
             if (current > (players.size() - 1)) break;
             EPlayer selected = players.get(current);
+            if (selected.getPlayer() == null || selected.getPlayer().getName() == null)
+                continue;
 
             OfflinePlayer targetPlayer = selected.getPlayer();
 
@@ -124,22 +126,23 @@ public class GUILevels extends AbstractGUI {
             int slot = 37 + i;
 
             if (current == position)
-                createButton(slot + 9, Material.ARROW, "&6Selected");
+                createButton(slot + 9, Material.ARROW, plugin.getLocale().getMessage("gui.levels.selected"));
 
-            createButton(slot, head, (current + 1) + " &6&l" + targetPlayer.getName(),
-                    "&7Level " + (selected.getLevel()),
-                    "&7EXP: &6" + selected.getExperience() + "&7/&6" + EPlayer.experience(selected.getLevel() + 1),
+            createButton(slot, head, plugin.getLocale().getMessage("gui.levels.name", current + 1, targetPlayer.getName()),
+                    plugin.getLocale().getMessage("gui.levels.level", selected.getLevel()),
+                    plugin.getLocale().getMessage("gui.levels.exp", selected.getExperience(), EPlayer.experience(selected.getLevel() + 1)),
                     prog.toString());
 
+            System.out.println(plugin.getLocale().getMessage("gui.levels.mobkills", selected.getMobKills()));
             if (current == position)
-                createButton(slot - 9, Material.DIAMOND_SWORD, "&6&lStats",
-                        "&7Total Kills: &6" + selected.getKills(),
-                        "&7Player Kills: &6" + selected.getPlayerKills(),
-                        "&7Mob Kills: &6" + selected.getMobKills(),
-                        "&7Deaths: &6" + selected.getDeaths(),
-                        "&7KDR: &6" + (selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double)selected.getPlayerKills()) / selected.getDeaths()),
-                        "&7Current Killstreak: &6" + selected.getKillstreak(),
-                        "&7Best Killstreak: &6" + selected.getBestKillstreak());
+                createButton(slot - 9, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.stats"),
+                        plugin.getLocale().getMessage("gui.levels.totalkills", selected.getKills()),
+                        plugin.getLocale().getMessage("gui.levels.playerkills", selected.getPlayerKills()),
+                        plugin.getLocale().getMessage("gui.levels.mobkills", selected.getMobKills()),
+                        plugin.getLocale().getMessage("gui.levels.deaths", selected.getDeaths()),
+                        plugin.getLocale().getMessage("gui.levels.kdr", selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double) selected.getPlayerKills()) / selected.getDeaths()),
+                        plugin.getLocale().getMessage("gui.levels.killstreak", selected.getKillstreak()),
+                        plugin.getLocale().getMessage("gui.levels.bestkillstreak", selected.getBestKillstreak()));
 
             registerClickable(slot, ((player1, inventory1, cursor, slot1, type) -> {
                 position = current;
@@ -194,7 +197,7 @@ public class GUILevels extends AbstractGUI {
         }));
 
         registerClickable(16, ((player1, inventory1, cursor, slot, type) -> {
-            player.sendMessage("Enter name to search...");
+            player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("gui.levels.nametosearch"));
             AbstractChatConfirm abstractChatConfirm = new AbstractChatConfirm(player, event -> {
                 Optional<EPlayer> targetOptional = players.stream()
                         .filter(ePlayer -> ePlayer.getPlayer().getName() != null
@@ -202,7 +205,7 @@ public class GUILevels extends AbstractGUI {
                         .limit(1).findAny();
 
                 if (!targetOptional.isPresent()) {
-                    player.sendMessage("No results found...");
+                    player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("gui.levels.noresults"));
                     return;
                 }
                 target = targetOptional.get();
@@ -210,7 +213,6 @@ public class GUILevels extends AbstractGUI {
             });
             abstractChatConfirm.setOnClose(this::updateTitle);
         }));
-
     }
 
     @Override
@@ -220,19 +222,13 @@ public class GUILevels extends AbstractGUI {
 
     public enum Sorting {
 
-        LEVELS("Levels"),
-        MOB_KILLS("Mob Kills"),
-        PLAYER_KILLS("Player Kills"),
-        KILL_STREAKS("Killstreaks");
-
-        private final String name;
-
-        Sorting(String name) {
-            this.name = name;
-        }
+        LEVELS,
+        MOB_KILLS,
+        PLAYER_KILLS,
+        KILL_STREAKS;
 
         public String getName() {
-            return name;
+            return EpicLevels.getInstance().getLocale().getMessage("gui.levels." + name().toLowerCase());
         }
     }
 
