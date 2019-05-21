@@ -5,6 +5,8 @@
 # HEAL - This will heal the player.
 # FIREWORK - This will launch a firework.
 # SOUND - This will play a sound on level up.
+# TITLE - This will show a title
+# SUBTITLE - This will show a subtitle (Title must be present)
 # OVERRIDE - Will cause the default options to not run.
 
 # Rewards in -1 will happen with every level up.
@@ -12,7 +14,8 @@
 # You can add levels to this file infinitely.
 
 -1:
-  - "MSG &7You have leveled up to &6level &6%level%&7!"
+  - "TITLE &6&lLEVEL UP!"
+  - "SUBTITLE &7You have leveled up to &6level &6%level%&7!"
   - "ITEM DIAMOND (3 * %level%)"
   - "HEAL"
   - "FIREWORK"

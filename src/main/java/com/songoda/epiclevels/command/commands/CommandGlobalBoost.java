@@ -22,6 +22,10 @@ public class CommandGlobalBoost extends AbstractCommand {
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
         if (args.length < 3) return ReturnType.SYNTAX_ERROR;
 
+        if (!Methods.isInt(args[1])) {
+            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint")));
+            return ReturnType.SYNTAX_ERROR;
+        }
         int multiplier = Integer.parseInt(args[1]);
 
         long duration = 0;
@@ -33,10 +37,10 @@ public class CommandGlobalBoost extends AbstractCommand {
 
         instance.getBoostManager().setGlobalBoost(new Boost(duration + System.currentTimeMillis(), multiplier));
 
-        sender.sendMessage("ALL GOOD HOMMIE");
+        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.globalsuccess", multiplier, Methods.makeReadable(duration)));
 
         for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != sender).collect(Collectors.toList()))
-            pl.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.announce", sender.getName(), multiplier, duration));
+            pl.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.globalannounce", sender.getName(), multiplier, Methods.makeReadable(duration)));
 
         return ReturnType.SUCCESS;
     }

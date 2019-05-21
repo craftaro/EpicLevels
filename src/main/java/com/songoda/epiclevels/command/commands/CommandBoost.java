@@ -7,8 +7,10 @@ import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandBoost extends AbstractCommand {
 
@@ -20,7 +22,17 @@ public class CommandBoost extends AbstractCommand {
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
         if (args.length < 4) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[1].toLowerCase());
+        Player player = Bukkit.getPlayer(args[1].toLowerCase());
+
+        if (player == null) {
+            sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notonline", args[1]));
+            return ReturnType.FAILURE;
+        }
+
+        if (!Methods.isInt(args[2])) {
+            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint", args[2])));
+            return ReturnType.SYNTAX_ERROR;
+        }
         int multiplier = Integer.parseInt(args[2]);
 
         long duration = 0;
@@ -32,7 +44,11 @@ public class CommandBoost extends AbstractCommand {
 
         instance.getBoostManager().addBoost(player.getUniqueId(), new Boost(duration + System.currentTimeMillis(), multiplier));
 
-        sender.sendMessage("ALL GOOD HOMMIE " + duration);
+        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.success", player.getName(), multiplier, Methods.makeReadable(duration)));
+
+        if (player.isOnline())
+            player.getPlayer().sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.announce", sender.getName(), multiplier, Methods.makeReadable(duration)));
+
 
         return ReturnType.SUCCESS;
     }

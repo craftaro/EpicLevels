@@ -1,5 +1,8 @@
 package com.songoda.epiclevels.boost;
 
+import com.songoda.epiclevels.EpicLevels;
+import org.bukkit.Bukkit;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,18 +19,24 @@ public class BoostManager {
     }
 
     public Boost getBoost(UUID uuid) {
+        EpicLevels epicLevels = EpicLevels.getInstance();
         if (globalBoost != null) {
             if (globalBoost.getExpiration() > System.currentTimeMillis())
                 return globalBoost;
-            else
+            else {
                 globalBoost = null;
+                Bukkit.getOnlinePlayers().forEach(player ->
+                        player.sendMessage(epicLevels.getReferences().getPrefix() + epicLevels.getLocale().getMessage("event.boost.globalexpire")));
+            }
         }
         Boost boost = registeredBoosts.get(uuid);
         if (boost == null) return null;
         if (boost.getExpiration() > System.currentTimeMillis())
             return boost;
-        else
-            removeBoost(uuid);
+        else {
+            registeredBoosts.remove(uuid);
+            Bukkit.getPlayer(uuid).sendMessage(epicLevels.getReferences().getPrefix() + epicLevels.getLocale().getMessage("event.boost.expire"));
+        }
         return null;
     }
 
@@ -37,7 +46,15 @@ public class BoostManager {
     }
 
     public Boost removeBoost(UUID uuid) {
-        return registeredBoosts.remove(uuid);
+        if (registeredBoosts.get(uuid) == null) return null;
+
+        Boost boost = registeredBoosts.get(uuid);
+        boost.expire();
+        return boost;
+    }
+
+    public Boost getGlobalBoost() {
+        return globalBoost;
     }
 
     public Boost setGlobalBoost(Boost boost) {
@@ -46,6 +63,7 @@ public class BoostManager {
     }
 
     public void clearGlobalBoost() {
-        this.globalBoost = null;
+        if (globalBoost == null) return;
+        globalBoost.expire();
     }
 }

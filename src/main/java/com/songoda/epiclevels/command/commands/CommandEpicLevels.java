@@ -27,7 +27,7 @@ public class CommandEpicLevels extends AbstractCommand {
 
     @Override
     public String getPermissionNode() {
-        return null;
+        return "epiclevels.menu";
     }
 
     @Override

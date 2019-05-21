@@ -17,6 +17,7 @@ public class CommandShow extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
+        if (args.length != 2) return ReturnType.SYNTAX_ERROR;
 
         new GUILevels(instance, (Player)sender, instance.getPlayerManager().getPlayer(Bukkit.getOfflinePlayer(args[1])));
 

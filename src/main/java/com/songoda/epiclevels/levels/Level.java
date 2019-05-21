@@ -2,6 +2,8 @@ package com.songoda.epiclevels.levels;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.utils.Methods;
+import com.songoda.epiclevels.utils.ServerVersion;
+import com.songoda.epiclevels.utils.Title;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Firework;
@@ -11,6 +13,7 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -31,7 +34,7 @@ public class Level {
         }
     }
 
-    public void run(Player player, int level) {
+    public void run(Player player, int level, boolean last) {
         if (level == -1 && EpicLevels.getInstance().getLevelManager().getLevel(level).rewards.stream()
                 .anyMatch(line -> line.contains("OVERRIDE")))
             return;
@@ -40,8 +43,9 @@ public class Level {
                 String line = replace(player, level, s.trim());
                 switch (s.split(" ")[0]) {
                     case "MSG":
-                        player.sendMessage(EpicLevels.getInstance().getReferences().getPrefix() +
-                                Methods.formatText(line.trim()));
+                        if (last)
+                            player.sendMessage(EpicLevels.getInstance().getReferences().getPrefix() +
+                                    Methods.formatText(line.trim()));
                         break;
                     case "CMD":
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line.replace("/", "").trim());
@@ -50,19 +54,32 @@ public class Level {
                         String[] args = line.split(" ");
                         int amount = Integer.parseInt(engine.eval(line.replace(args[0], "").trim()).toString());
                         ItemStack item = new ItemStack(Material.valueOf(args[0].toUpperCase()), amount);
-                        player.getInventory().addItem(item);
+                        Collection<ItemStack> items = player.getInventory().addItem(item).values();
+                        items.forEach(itemStack ->
+                                player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
                         break;
                     case "ECONOMY":
                         EpicLevels.getInstance().getEconomy().AddToBalance(player, Double.parseDouble(line.replace("$", "")));
                         break;
                     case "HEAL":
-                        player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                        if (EpicLevels.getInstance().isServerVersionAtLeast(ServerVersion.V1_9))
+                            player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                        else
+                            player.setHealth(20);
                         break;
                     case "FIREWORK":
-                        launchRandomFirework(player.getLocation().clone().add(0, 2, 0));
+                        if (last)
+                            launchRandomFirework(player.getLocation().clone().add(0, 2, 0));
                         break;
                     case "SOUND":
-                        player.playSound(player.getLocation(), Sound.valueOf(line), 1L, 1L);
+                        if (last)
+                            player.playSound(player.getLocation(), Sound.valueOf(line), 1L, 1L);
+                        break;
+                    case "TITLE":
+                        Title.sendTitle(player, Methods.formatText(line.trim()), null, 20, 100, 20);
+                        break;
+                    case "SUBTITLE":
+                        Title.sendTitle(player, null, Methods.formatTitle(line.trim()), 20, 100, 20);
                         break;
                 }
             } catch (Exception e) {
@@ -77,6 +94,8 @@ public class Level {
 
     private String replace(Player player, int level, String line) {
         line = line.replace("MSG", "")
+                .replace("SUBTITLE", "")
+                .replace("TITLE", "")
                 .replace("CMD", "")
                 .replace("ITEM", "")
                 .replace("ECONOMY", "")

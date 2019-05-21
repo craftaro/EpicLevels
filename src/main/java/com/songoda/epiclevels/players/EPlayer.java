@@ -6,8 +6,6 @@ import com.songoda.epiclevels.levels.Level;
 import com.songoda.epiclevels.utils.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
@@ -64,23 +62,32 @@ public class EPlayer {
 
     public long addExperience(long experience) {
         EpicLevels plugin = EpicLevels.getInstance();
-        if (this.experience + experience > SettingsManager.Setting.MAX_EXP.getLong()
-                || this.experience + experience < 0L && !SettingsManager.Setting.ALLOW_NEGATIVE.getBoolean())
-            return experience;
+        if (experience < 0L) {
+            if (this.experience + experience < 0L && !SettingsManager.Setting.ALLOW_NEGATIVE.getBoolean())
+                this.experience = 0L;
+            else
+                this.experience = this.experience + experience;
+
+            return this.experience;
+        }
         int currentLevel = getLevel();
 
         Boost boost = plugin.getBoostManager().getBoost(uuid);
         double boostMultiplier = boost == null ? 1 : boost.getMultiplier();
 
         this.experience += ((this.experience + experience < 0 ? 0 : experience) * multiplier()) * boostMultiplier;
+
+        double bonus = SettingsManager.Setting.KILLSTREAK_BONUS_EXP.getDouble();
+        this.experience += bonus * killstreak;
+
         Player player = getPlayer().getPlayer();
-        if (currentLevel != getLevel() && player != null) {
-            for (int i = currentLevel; i != getLevel(); i++) {
+        if ((currentLevel != getLevel() || currentLevel > getLevel()) && player != null) {
+            for (int i = currentLevel; i <= getLevel() ; i++) {
                 Level def = plugin.getLevelManager().getLevel(-1);
                 if (def != null)
-                    def.run(player, i);
+                    def.run(player, i, i == getLevel());
                 if (plugin.getLevelManager().getLevel(i) == null) continue;
-                plugin.getLevelManager().getLevel(i).run(player, i);
+                plugin.getLevelManager().getLevel(i).run(player, i, i == getLevel());
             }
 
             if (SettingsManager.Setting.SEND_BROADCAST_LEVELUP_MESSAGE.getBoolean()
@@ -88,6 +95,8 @@ public class EPlayer {
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).collect(Collectors.toList()))
                     pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.levelup.announcement", player.getName(), getLevel()));
         }
+        if (this.experience > SettingsManager.Setting.MAX_EXP.getLong())
+            this.experience = SettingsManager.Setting.MAX_EXP.getLong();
         return this.experience;
     }
 

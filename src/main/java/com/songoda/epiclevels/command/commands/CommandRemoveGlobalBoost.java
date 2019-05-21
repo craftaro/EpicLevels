@@ -11,14 +11,12 @@ import java.util.List;
 public class CommandRemoveGlobalBoost extends AbstractCommand {
 
     public CommandRemoveGlobalBoost(AbstractCommand parent) {
-        super(parent, false, "GlobalBoost");
+        super(parent, false, "RemoveGlobalBoost");
     }
 
     @Override
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
         instance.getBoostManager().clearGlobalBoost();
-
-        sender.sendMessage("ALL GOOD HOMMIE");
 
         return ReturnType.SUCCESS;
     }

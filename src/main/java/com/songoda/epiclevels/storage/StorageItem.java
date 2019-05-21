@@ -54,6 +54,11 @@ public class StorageItem {
         return (int) object;
     }
 
+    public double asDouble() {
+        if (object == null) return 0;
+        return (double) object;
+    }
+
     public Object asObject() {
         return object;
     }

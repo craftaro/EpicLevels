@@ -61,16 +61,17 @@ public class DeathListeners implements Listener {
             Player killed = (Player) event.getEntity();
             EPlayer eKilled = plugin.getPlayerManager().getPlayer(killed);
 
-            ePlayer.increaseKillstreak();
             eKilled.addDeath();
             eKilled.resetKillstreak();
-            eKilled.addExperience(0L - SettingsManager.Setting.EXP_DEATH.getLong());
+
+            long killedExpBefore = eKilled.getExperience();
+            long killedExpAfter = eKilled.addExperience(0L - SettingsManager.Setting.EXP_DEATH.getLong());
 
             if (SettingsManager.Setting.SEND_DEATH_MESSAGE.getBoolean())
-                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getDisplayName()), SettingsManager.Setting.EXP_DEATH.getLong()));
+                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getDisplayName()), -(killedExpAfter - killedExpBefore)));
 
             if (SettingsManager.Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
-                for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).collect(Collectors.toList()))
+                for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
                     pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death.broadcast", killed.getName(), player.getName()));
 
             if (!ePlayer.canGainExperience(killed.getUniqueId()) && SettingsManager.Setting.ANTI_GRINDER.getBoolean()) {
@@ -79,7 +80,13 @@ public class DeathListeners implements Listener {
                 return;
             }
 
+            ePlayer.increaseKillstreak();
             ePlayer.addPlayerKill(killed.getUniqueId());
+
+            int every = SettingsManager.Setting.ANNOUNCE_KILLSTREAK_EVERY.getInt();
+            if (every != 0 && ePlayer.getKillstreak() % every == 0) {
+                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.announce", player.getName(), ePlayer.getKillstreak()));
+            }
 
             long playerExpBefore = ePlayer.getExperience();
             long playerExpAfter = ePlayer.addExperience(expPlayer);
