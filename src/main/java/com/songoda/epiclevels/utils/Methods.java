@@ -112,4 +112,15 @@ public class Methods {
         }
         return 0;
     }
+
+    public static String generateProgressBar(double exp, double nextLevel, boolean placeholder) {
+        double length = placeholder ? SettingsManager.Setting.PROGRESS_BAR_LENGTH_PLACEHOLDER.getInt()
+                : SettingsManager.Setting.PROGRESS_BAR_LENGTH.getInt();
+        double progress = (exp / nextLevel) * length;
+
+        StringBuilder prog = new StringBuilder();
+        for (int j = 0; j < length; j++)
+            prog.append("&").append(j > progress ? "c" : "a").append("|");
+        return prog.toString();
+    }
 }

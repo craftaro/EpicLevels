@@ -9,5 +9,5 @@ commands:
   EpicLevels:
     description: View information on this plugin.
     default: true
-    aliases: [el, levels]
+    aliases: [el, levels, level]
     usage: /levels

@@ -2,6 +2,7 @@ package com.songoda.epiclevels.placeholder;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.players.EPlayer;
+import com.songoda.epiclevels.utils.Methods;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 
@@ -35,7 +36,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "bestkillstreak":
                 return decimalFormat.format(ePlayer.getBestKillstreak());
             case "kdr":
-                return decimalFormat.format(ePlayer.getKills() / ePlayer.getDeaths());
+                return decimalFormat.format(ePlayer.getDeaths() == 0 ? 0 : ePlayer.getKills() / ePlayer.getDeaths());
             case "nextlevel":
                 return decimalFormat.format(ePlayer.getLevel() + 1);
             case "neededfornextlevel":
@@ -54,6 +55,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "globalbooster":
                 if (plugin.getBoostManager().getGlobalBoost() == null) return "1";
                 return decimalFormat.format(plugin.getBoostManager().getGlobalBoost().getMultiplier());
+            case "progressbar":
+                long exp = ePlayer.getExperience() - EPlayer.experience(ePlayer.getLevel());
+                double nextLevel = EPlayer.experience(ePlayer.getLevel() + 1) - EPlayer.experience(ePlayer.getLevel());
+                return Methods.generateProgressBar(exp, nextLevel, true);
             default:
                 return null;
         }

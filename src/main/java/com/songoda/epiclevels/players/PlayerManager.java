@@ -28,4 +28,8 @@ public class PlayerManager {
         return players;
     }
 
+    public void resetPlayer(UUID uuid) {
+        registeredPlayers.remove(uuid);
+    }
+
 }

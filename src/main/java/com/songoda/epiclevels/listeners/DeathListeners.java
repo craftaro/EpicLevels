@@ -71,7 +71,7 @@ public class DeathListeners implements Listener {
             long killedExpAfter = eKilled.addExperience(0L - SettingsManager.Setting.EXP_DEATH.getLong());
 
             if (SettingsManager.Setting.SEND_DEATH_MESSAGE.getBoolean())
-                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getDisplayName()), -(killedExpAfter - killedExpBefore)));
+                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getName()), -(killedExpAfter - killedExpBefore)));
 
             if (SettingsManager.Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
