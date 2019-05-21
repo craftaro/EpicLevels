@@ -20,9 +20,9 @@ public class CommandTakeExp extends AbstractCommand {
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
         if (args.length != 3) return ReturnType.SYNTAX_ERROR;
 
-        Player player = Bukkit.getPlayer(args[1].toLowerCase());
+        OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
 
-        if (player == null) {
+        if (!player.hasPlayedBefore()) {
             sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notonline", args[1]));
             return ReturnType.FAILURE;
         }
