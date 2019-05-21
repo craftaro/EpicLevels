@@ -105,7 +105,7 @@ public class EpicLevels extends JavaPlugin {
 
         // Register Placeholders
         if (pluginManager.isPluginEnabled("PlaceholderAPI"))
-            new PlaceholderManager().register();
+            new PlaceholderManager(this).register();
 
         // Start Metrics
         new Metrics(this);

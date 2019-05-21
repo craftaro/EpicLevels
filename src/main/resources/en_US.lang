@@ -1,6 +1,8 @@
 #General Messages
 
 general.nametag.prefix = "&7[&6EpicLevels&7]"
+general.word.enabled = "Enabled"
+general.word.disabled = "Disabled"
 
 event.mob.killed = "&7You killed a &6%type% &7and gained &6%exp% Experience&7."
 

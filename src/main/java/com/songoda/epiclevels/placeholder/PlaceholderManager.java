@@ -5,31 +5,55 @@ import com.songoda.epiclevels.players.EPlayer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 
+import java.text.DecimalFormat;
+
 public class PlaceholderManager extends PlaceholderExpansion {
+
+    private final EpicLevels plugin;
+
+    private DecimalFormat decimalFormat = new DecimalFormat("###,###.###");
+
+    public PlaceholderManager(EpicLevels plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public String onRequest(OfflinePlayer player, String identifier) {
-        EPlayer ePlayer = EpicLevels.getInstance().getPlayerManager().getPlayer(player);
-
+        EPlayer ePlayer = plugin.getPlayerManager().getPlayer(player);
+        
         switch (identifier) {
             case "level":
-                return String.valueOf(ePlayer.getLevel());
+                return decimalFormat.format(ePlayer.getLevel());
             case "experience":
-                return String.valueOf(ePlayer.getExperience());
+                return decimalFormat.format(ePlayer.getExperience());
             case "kills":
-                return String.valueOf(ePlayer.getKills());
+                return decimalFormat.format(ePlayer.getKills());
             case "deaths":
-                return String.valueOf(ePlayer.getDeaths());
+                return decimalFormat.format(ePlayer.getDeaths());
             case "killstreak":
-                return String.valueOf(ePlayer.getKillstreak());
+                return decimalFormat.format(ePlayer.getKillstreak());
             case "bestkillstreak":
-                return String.valueOf(ePlayer.getBestKillstreak());
+                return decimalFormat.format(ePlayer.getBestKillstreak());
             case "kdr":
-                return String.valueOf(ePlayer.getKills() / ePlayer.getDeaths());
+                return decimalFormat.format(ePlayer.getKills() / ePlayer.getDeaths());
             case "nextlevel":
-                return String.valueOf(ePlayer.getLevel() + 1);
+                return decimalFormat.format(ePlayer.getLevel() + 1);
             case "neededfornextlevel":
-                return String.valueOf(EPlayer.experience(ePlayer.getLevel() + 1) - ePlayer.getExperience());
+                return decimalFormat.format(EPlayer.experience(ePlayer.getLevel() + 1) - ePlayer.getExperience());
+            case "boosterenabled":
+                return plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null
+                        ? plugin.getLocale().getMessage("general.word.enabled")
+                        : plugin.getLocale().getMessage("general.word.disabled");
+            case "booster":
+                if (plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null) return "1";
+                return decimalFormat.format(plugin.getBoostManager().getBoost(ePlayer.getUniqueId()).getMultiplier());
+            case "globalboosterenabled":
+                return plugin.getBoostManager().getGlobalBoost() == null
+                        ? plugin.getLocale().getMessage("general.word.enabled")
+                        : plugin.getLocale().getMessage("general.word.disabled");
+            case "globalbooster":
+                if (plugin.getBoostManager().getGlobalBoost() == null) return "1";
+                return decimalFormat.format(plugin.getBoostManager().getGlobalBoost().getMultiplier());
             default:
                 return null;
         }
@@ -47,7 +71,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return EpicLevels.getInstance().getDescription().getVersion();
+        return plugin.getDescription().getVersion();
     }
 
     @Override
