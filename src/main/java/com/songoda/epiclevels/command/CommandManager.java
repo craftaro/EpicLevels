@@ -37,6 +37,7 @@ public class CommandManager implements CommandExecutor {
         addCommand(new CommandRemoveBoost(commandEpicLevels));
         addCommand(new CommandGlobalBoost(commandEpicLevels));
         addCommand(new CommandRemoveGlobalBoost(commandEpicLevels));
+        addCommand(new CommandReset(commandEpicLevels));
 
         for (AbstractCommand abstractCommand : commands) {
             if (abstractCommand.getParent() != null) continue;

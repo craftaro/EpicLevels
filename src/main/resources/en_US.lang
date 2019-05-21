@@ -26,6 +26,8 @@ command.addexp.success = "&7Added &6%amount% &7experience to &6%player% &7succes
 command.general.notonline = "&cThe player &4%name% &ccould not be found."
 command.general.notint = "&6%number%&7 is not a number."
 
+command.reset.success = "&7You have reset the player &6%player% &7successfully."
+
 event.boost.globalannounce = "&6%player% &7activated a global boost (&6%multiplier%x&7) for everyone lasting &6%duration%&7."
 event.boost.globalsuccess = "&7You created a global boost with the multiplier of &6%multiplier% &7and the duration &6%duration%&7."
 event.boost.globalexpire = "&7The global boost has expired."
