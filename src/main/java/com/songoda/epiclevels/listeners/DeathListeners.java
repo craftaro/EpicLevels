@@ -1,7 +1,10 @@
 package com.songoda.epiclevels.listeners;
 
 import com.songoda.epiclevels.EpicLevels;
+import com.songoda.epiclevels.killstreaks.Killstreak;
+import com.songoda.epiclevels.levels.Level;
 import com.songoda.epiclevels.players.EPlayer;
+import com.songoda.epiclevels.utils.Rewards;
 import com.songoda.epiclevels.utils.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -83,9 +86,13 @@ public class DeathListeners implements Listener {
             ePlayer.increaseKillstreak();
             ePlayer.addPlayerKill(killed.getUniqueId());
 
-            int every = SettingsManager.Setting.ANNOUNCE_KILLSTREAK_EVERY.getInt();
+            int every = SettingsManager.Setting.RUN_KILLSTREAK_EVERY.getInt();
             if (every != 0 && ePlayer.getKillstreak() % every == 0) {
-                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.announce", player.getName(), ePlayer.getKillstreak()));
+                Killstreak def = plugin.getKillstreakManager().getKillstreak(-1);
+                if (def != null)
+                    Rewards.run(def.getRewards(), player, ePlayer.getKillstreak(), true);
+                if (plugin.getKillstreakManager().getKillstreak(ePlayer.getKillstreak()) == null) return;
+                Rewards.run(plugin.getKillstreakManager().getKillstreak(ePlayer.getKillstreak()).getRewards(), player, ePlayer.getKillstreak(), true);
             }
 
             long playerExpBefore = ePlayer.getExperience();

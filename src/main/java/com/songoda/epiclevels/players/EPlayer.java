@@ -3,6 +3,7 @@ package com.songoda.epiclevels.players;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.levels.Level;
+import com.songoda.epiclevels.utils.Rewards;
 import com.songoda.epiclevels.utils.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -85,9 +86,9 @@ public class EPlayer {
             for (int i = currentLevel; i <= getLevel() ; i++) {
                 Level def = plugin.getLevelManager().getLevel(-1);
                 if (def != null)
-                    def.run(player, i, i == getLevel());
+                    Rewards.run(def.getRewards(), player, i, i == getLevel());
                 if (plugin.getLevelManager().getLevel(i) == null) continue;
-                plugin.getLevelManager().getLevel(i).run(player, i, i == getLevel());
+                Rewards.run(plugin.getLevelManager().getLevel(i).getRewards(), player, i, i == getLevel());
             }
 
             if (SettingsManager.Setting.SEND_BROADCAST_LEVELUP_MESSAGE.getBoolean()
