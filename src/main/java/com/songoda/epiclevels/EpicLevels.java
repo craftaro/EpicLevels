@@ -7,6 +7,7 @@ import com.songoda.epiclevels.economy.Economy;
 import com.songoda.epiclevels.economy.VaultEconomy;
 import com.songoda.epiclevels.levels.LevelManager;
 import com.songoda.epiclevels.listeners.DeathListeners;
+import com.songoda.epiclevels.placeholder.PlaceholderManager;
 import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.players.PlayerManager;
 import com.songoda.epiclevels.storage.Storage;
@@ -101,6 +102,10 @@ public class EpicLevels extends JavaPlugin {
 
         int timeout = SettingsManager.Setting.AUTOSAVE.getInt() * 60 * 20;
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveToFile, timeout, timeout);
+
+        // Register Placeholders
+        if (pluginManager.isPluginEnabled("PlaceholderAPI"))
+            new PlaceholderManager().register();
 
         // Start Metrics
         new Metrics(this);
