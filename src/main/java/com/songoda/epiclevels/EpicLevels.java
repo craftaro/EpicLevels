@@ -17,6 +17,9 @@ import com.songoda.epiclevels.tasks.ModifierTask;
 import com.songoda.epiclevels.utils.Methods;
 import com.songoda.epiclevels.utils.ServerVersion;
 import com.songoda.epiclevels.utils.SettingsManager;
+import com.songoda.epiclevels.utils.gui.updateModules.LocaleModule;
+import com.songoda.update.Plugin;
+import com.songoda.update.SongodaUpdate;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -62,6 +65,11 @@ public class EpicLevels extends JavaPlugin {
         Locale.init(this);
         Locale.saveDefaultLocale("en_US");
         this.locale = Locale.getLocale(getConfig().getString("System.Language Mode", langMode));
+
+        //Running Songoda Updater
+        Plugin plugin = new Plugin(this, 44);
+        plugin.addModule(new LocaleModule());
+        SongodaUpdate.load(plugin);
 
         this.references = new References();
 
