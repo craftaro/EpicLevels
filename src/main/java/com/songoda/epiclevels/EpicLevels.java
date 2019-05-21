@@ -15,6 +15,7 @@ import com.songoda.epiclevels.storage.types.StorageYaml;
 import com.songoda.epiclevels.tasks.BoostTask;
 import com.songoda.epiclevels.tasks.ModifierTask;
 import com.songoda.epiclevels.utils.Methods;
+import com.songoda.epiclevels.utils.Metrics;
 import com.songoda.epiclevels.utils.ServerVersion;
 import com.songoda.epiclevels.utils.SettingsManager;
 import com.songoda.epiclevels.utils.gui.updateModules.LocaleModule;
@@ -100,6 +101,9 @@ public class EpicLevels extends JavaPlugin {
 
         int timeout = SettingsManager.Setting.AUTOSAVE.getInt() * 60 * 20;
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveToFile, timeout, timeout);
+
+        // Start Metrics
+        new Metrics(this);
 
         console.sendMessage(Methods.formatText("&a============================="));
     }
