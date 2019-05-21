@@ -4,6 +4,8 @@ general.nametag.prefix = "&7[&6EpicLevels&7]"
 general.word.enabled = "Enabled"
 general.word.disabled = "Disabled"
 
+event.general.nopermission = "&cYou do not have permission to use that command."
+
 event.mob.killed = "&7You killed a &6%type% &7and gained &6%exp% Experience&7."
 
 event.player.killed = "&7You killed &6%name% &7and you gained &6%exp% Experience&7."
