@@ -120,7 +120,7 @@ public class GUILevels extends AbstractGUI {
             double nextLevel = EPlayer.experience(selected.getLevel() + 1) - EPlayer.experience(selected.getLevel());
 
 
-            String prog = Methods.generateProgressBar(exp, nextLevel);
+            String prog = Methods.generateProgressBar(exp, nextLevel, false);
 
             int slot = 37 + i;
 

@@ -58,7 +58,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "progressbar":
                 long exp = ePlayer.getExperience() - EPlayer.experience(ePlayer.getLevel());
                 double nextLevel = EPlayer.experience(ePlayer.getLevel() + 1) - EPlayer.experience(ePlayer.getLevel());
-                return Methods.generateProgressBar(exp, nextLevel);
+                return Methods.generateProgressBar(exp, nextLevel, true);
             default:
                 return null;
         }

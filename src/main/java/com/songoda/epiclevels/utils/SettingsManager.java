@@ -199,6 +199,9 @@ public class SettingsManager implements Listener {
         RUN_KILLSTREAK_EVERY("Main.Run Killstreaks Reward Every", 3),
         KILLSTREAK_BONUS_EXP("Main.Killstreak Bonus Experience", 0.2),
 
+        PROGRESS_BAR_LENGTH("Main.Progress Bar Length", 36),
+        PROGRESS_BAR_LENGTH_PLACEHOLDER("Main.Progress Bar Length Placeholder", 20),
+
         BOOST_ITEMS("Boost.Items Enabled", true),
         BOOST_EXP("Boost.Experience Enabled", true),
 
