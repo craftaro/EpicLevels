@@ -36,7 +36,7 @@ public class CommandAddExp extends AbstractCommand {
         instance.getPlayerManager().getPlayer(player).addExperience(amount);
 
 
-        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.addexp.success", player.getName(), amount));
+        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.addexp.success", amount, player.getName()));
 
         return ReturnType.SUCCESS;
     }

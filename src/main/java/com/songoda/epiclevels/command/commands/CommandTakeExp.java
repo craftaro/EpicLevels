@@ -37,7 +37,7 @@ public class CommandTakeExp extends AbstractCommand {
 
         instance.getPlayerManager().getPlayer(player).addExperience(0L - amount);
 
-        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.removeexp.success", player.getName(), amount));
+        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.removeexp.success", amount, player.getName()));
 
         return ReturnType.SUCCESS;
     }

@@ -16,7 +16,7 @@ event.levelup.announcement = "&6%player% &7leveled up to level &6%level%&7."
 
 event.antigrinder.trigger = "&7You have killed &6%killed% &7too many times recently and therefore have not gained experience. Please wait before killing this person again."
 
-command.removeexp.success = "&7Removed &6%amount% &7experience to &6%player% &7successfully."
+command.removeexp.success = "&7Removed &6%amount% &7experience from &6%player% &7successfully."
 command.addexp.success = "&7Added &6%amount% &7experience to &6%player% &7successfully."
 
 command.general.notonline = "&cThe player &4%name% &ccould not be found."
