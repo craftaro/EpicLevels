@@ -50,6 +50,6 @@ public class CommandReset extends AbstractCommand {
 
     @Override
     public String getDescription() {
-        return "Reset all stats for a player.";
+        return "Resets all stats for a player.";
     }
 }
