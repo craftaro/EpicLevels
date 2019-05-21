@@ -3,6 +3,7 @@ package com.songoda.epiclevels.levels;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.utils.Methods;
 import com.songoda.epiclevels.utils.ServerVersion;
+import com.songoda.epiclevels.utils.Title;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Firework;
@@ -74,6 +75,12 @@ public class Level {
                         if (last)
                             player.playSound(player.getLocation(), Sound.valueOf(line), 1L, 1L);
                         break;
+                    case "TITLE":
+                        Title.sendTitle(player, Methods.formatText(line.trim()), null, 20, 100, 20);
+                        break;
+                    case "SUBTITLE":
+                        Title.sendTitle(player, null, Methods.formatTitle(line.trim()), 20, 100, 20);
+                        break;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -87,6 +94,8 @@ public class Level {
 
     private String replace(Player player, int level, String line) {
         line = line.replace("MSG", "")
+                .replace("SUBTITLE", "")
+                .replace("TITLE", "")
                 .replace("CMD", "")
                 .replace("ITEM", "")
                 .replace("ECONOMY", "")
