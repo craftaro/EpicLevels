@@ -2,6 +2,7 @@ package com.songoda.epiclevels.placeholder;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.players.EPlayer;
+import com.songoda.epiclevels.utils.Methods;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 
@@ -54,6 +55,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "globalbooster":
                 if (plugin.getBoostManager().getGlobalBoost() == null) return "1";
                 return decimalFormat.format(plugin.getBoostManager().getGlobalBoost().getMultiplier());
+            case "progressbar":
+                long exp = ePlayer.getExperience() - EPlayer.experience(ePlayer.getLevel());
+                double nextLevel = EPlayer.experience(ePlayer.getLevel() + 1) - EPlayer.experience(ePlayer.getLevel());
+                return Methods.generateProgressBar(exp, nextLevel);
             default:
                 return null;
         }

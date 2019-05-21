@@ -119,12 +119,8 @@ public class GUILevels extends AbstractGUI {
 
             double nextLevel = EPlayer.experience(selected.getLevel() + 1) - EPlayer.experience(selected.getLevel());
 
-            double length = 36;
-            double progress = (exp / nextLevel) * length;
 
-            StringBuilder prog = new StringBuilder();
-            for (int j = 0; j < length; j++)
-                prog.append("&").append(j > progress ? "c" : "a").append("|");
+            String prog = Methods.generateProgressBar(exp, nextLevel);
 
             int slot = 37 + i;
 
@@ -134,7 +130,7 @@ public class GUILevels extends AbstractGUI {
             createButton(slot, head, plugin.getLocale().getMessage("gui.levels.name", current + 1, targetPlayer.getName()),
                     plugin.getLocale().getMessage("gui.levels.level", decimalFormat.format(selected.getLevel())),
                     plugin.getLocale().getMessage("gui.levels.exp", decimalFormat.format(selected.getExperience()), decimalFormat.format(EPlayer.experience(selected.getLevel() + 1))),
-                    prog.toString());
+                    prog);
 
             if (current == position)
                 createButton(slot - 9, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.stats"),

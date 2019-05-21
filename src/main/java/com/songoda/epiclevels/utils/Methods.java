@@ -112,4 +112,14 @@ public class Methods {
         }
         return 0;
     }
+
+    public static String generateProgressBar(double exp, double nextLevel) {
+        double length = 36;
+        double progress = (exp / nextLevel) * length;
+
+        StringBuilder prog = new StringBuilder();
+        for (int j = 0; j < length; j++)
+            prog.append("&").append(j > progress ? "c" : "a").append("|");
+        return prog.toString();
+    }
 }
