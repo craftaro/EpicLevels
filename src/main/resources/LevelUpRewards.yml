@@ -1,4 +1,5 @@
 # MSG - Will send the user a message.
+# BROADCAST - WIll send everyone on the server a message.
 # ITEM - Will send the user an item.
 # ECONOMY - Will send the user money.
 # CMD - Will run a command as console.

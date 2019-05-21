@@ -5,6 +5,7 @@ import com.songoda.epiclevels.boost.BoostManager;
 import com.songoda.epiclevels.command.CommandManager;
 import com.songoda.epiclevels.economy.Economy;
 import com.songoda.epiclevels.economy.VaultEconomy;
+import com.songoda.epiclevels.killstreaks.KillstreakManager;
 import com.songoda.epiclevels.levels.LevelManager;
 import com.songoda.epiclevels.listeners.DeathListeners;
 import com.songoda.epiclevels.placeholder.PlaceholderManager;
@@ -40,6 +41,7 @@ public class EpicLevels extends JavaPlugin {
     private PlayerManager playerManager;
     private CommandManager commandManager;
     private LevelManager levelManager;
+    private KillstreakManager killstreakManager;
     private BoostManager boostManager;
 
     private References references;
@@ -78,9 +80,9 @@ public class EpicLevels extends JavaPlugin {
         this.playerManager = new PlayerManager();
         this.commandManager = new CommandManager(this);
         this.levelManager = new LevelManager();
+        this.killstreakManager = new KillstreakManager();
         this.boostManager = new BoostManager();
         this.storage = new StorageYaml(this);
-
 
         if (getServer().getPluginManager().getPlugin("Vault") != null)
             this.economy = new VaultEconomy(this);
@@ -92,6 +94,9 @@ public class EpicLevels extends JavaPlugin {
 
         // Loading levels
         levelManager.load();
+
+        // Loading killstreaks
+        killstreakManager.load();
 
         // Load Data
         loadData();
@@ -218,6 +223,8 @@ public class EpicLevels extends JavaPlugin {
     public LevelManager getLevelManager() {
         return levelManager;
     }
+
+    public KillstreakManager getKillstreakManager() { return killstreakManager; }
 
     public BoostManager getBoostManager() {
         return boostManager;
