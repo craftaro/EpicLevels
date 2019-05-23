@@ -59,7 +59,6 @@ public class DeathListeners implements Listener {
         EPlayer ePlayer = plugin.getPlayerManager().getPlayer(player);
 
         if (event.getEntity() instanceof Player) {
-            if (expPlayer == 0) return;
             Player killed = (Player) event.getEntity();
             EPlayer eKilled = plugin.getPlayerManager().getPlayer(killed);
 
@@ -101,7 +100,6 @@ public class DeathListeners implements Listener {
                 player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.killed", ChatColor.stripColor(killed.getDisplayName()), playerExpAfter - playerExpBefore));
 
         } else {
-            if (expMob == 0) return;
             ePlayer.addMobKill();
             long playerExpBefore = ePlayer.getExperience();
             long playerExpAfter = ePlayer.addExperience(expMob);

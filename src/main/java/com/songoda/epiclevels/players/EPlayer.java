@@ -63,6 +63,7 @@ public class EPlayer {
     }
 
     public long addExperience(long experience) {
+        if (experience == 0) return experience;
         EpicLevels plugin = EpicLevels.getInstance();
         if (experience < 0L) {
             if (this.experience + experience < 0L && !Setting.ALLOW_NEGATIVE.getBoolean())
