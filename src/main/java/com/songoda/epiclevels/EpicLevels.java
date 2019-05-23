@@ -19,8 +19,9 @@ import com.songoda.epiclevels.tasks.ModifierTask;
 import com.songoda.epiclevels.utils.Methods;
 import com.songoda.epiclevels.utils.Metrics;
 import com.songoda.epiclevels.utils.ServerVersion;
-import com.songoda.epiclevels.utils.SettingsManager;
 import com.songoda.epiclevels.utils.gui.updateModules.LocaleModule;
+import com.songoda.epiclevels.utils.settings.Setting;
+import com.songoda.epiclevels.utils.settings.SettingsManager;
 import com.songoda.update.Plugin;
 import com.songoda.update.SongodaUpdate;
 import org.apache.commons.lang.ArrayUtils;
@@ -62,10 +63,10 @@ public class EpicLevels extends JavaPlugin {
         console.sendMessage(Methods.formatText("&7Action: &aEnabling&7..."));
 
         this.settingsManager = new SettingsManager(this);
-        this.setupConfig();
+        settingsManager.setupConfig();
 
         // Setup language
-        String langMode = SettingsManager.Setting.LANGUGE_MODE.getString();
+        String langMode = Setting.LANGUGE_MODE.getString();
         Locale.init(this);
         Locale.saveDefaultLocale("en_US");
         this.locale = Locale.getLocale(getConfig().getString("System.Language Mode", langMode));
@@ -105,7 +106,7 @@ public class EpicLevels extends JavaPlugin {
         if (isServerVersionAtLeast(ServerVersion.V1_9)) ModifierTask.startTask(this);
         BoostTask.startTask(this);
 
-        int timeout = SettingsManager.Setting.AUTOSAVE.getInt() * 60 * 20;
+        int timeout = Setting.AUTOSAVE.getInt() * 60 * 20;
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveToFile, timeout, timeout);
 
         // Register Placeholders
@@ -136,14 +137,7 @@ public class EpicLevels extends JavaPlugin {
         locale.reloadMessages();
         references = new References();
         levelManager.load();
-        this.setupConfig();
-        saveConfig();
-    }
-
-    private void setupConfig() {
-        settingsManager.updateSettings();
-        this.getConfig().options().copyDefaults(true);
-        this.saveConfig();
+        settingsManager.reloadConfig();
     }
 
     private void loadData() {

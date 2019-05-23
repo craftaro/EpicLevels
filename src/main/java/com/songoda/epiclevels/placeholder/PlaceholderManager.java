@@ -36,7 +36,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "bestkillstreak":
                 return decimalFormat.format(ePlayer.getBestKillstreak());
             case "kdr":
-                return decimalFormat.format(ePlayer.getDeaths() == 0 ? 0 : ePlayer.getKills() / ePlayer.getDeaths());
+                return decimalFormat.format(ePlayer.getDeaths() == 0 ? ePlayer.getKills() : ePlayer.getKills() / ePlayer.getDeaths());
             case "nextlevel":
                 return decimalFormat.format(ePlayer.getLevel() + 1);
             case "neededfornextlevel":

@@ -138,7 +138,7 @@ public class GUILevels extends AbstractGUI {
                         plugin.getLocale().getMessage("gui.levels.playerkills", decimalFormat.format(selected.getPlayerKills())),
                         plugin.getLocale().getMessage("gui.levels.mobkills", decimalFormat.format(selected.getMobKills())),
                         plugin.getLocale().getMessage("gui.levels.deaths", decimalFormat.format(selected.getDeaths())),
-                        plugin.getLocale().getMessage("gui.levels.kdr", selected.getDeaths() == 0 ? selected.getPlayerKills() : decimalFormat.format(((double) selected.getPlayerKills()) / selected.getDeaths())),
+                        plugin.getLocale().getMessage("gui.levels.kdr", decimalFormat.format(selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double) selected.getPlayerKills()) / selected.getDeaths())),
                         plugin.getLocale().getMessage("gui.levels.killstreak", decimalFormat.format(selected.getKillstreak())),
                         plugin.getLocale().getMessage("gui.levels.bestkillstreak", decimalFormat.format(selected.getBestKillstreak())));
 
