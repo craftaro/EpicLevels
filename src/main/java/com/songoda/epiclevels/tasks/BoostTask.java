@@ -1,13 +1,7 @@
 package com.songoda.epiclevels.tasks;
 
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.boost.BoostManager;
-import com.songoda.epiclevels.utils.SettingsManager;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BoostTask extends BukkitRunnable {

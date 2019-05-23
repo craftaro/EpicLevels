@@ -1,6 +1,8 @@
 package com.songoda.epiclevels.utils;
 
 import com.songoda.epiclevels.EpicLevels;
+import com.songoda.epiclevels.utils.settings.Setting;
+import com.songoda.epiclevels.utils.settings.SettingsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -114,8 +116,8 @@ public class Methods {
     }
 
     public static String generateProgressBar(double exp, double nextLevel, boolean placeholder) {
-        double length = placeholder ? SettingsManager.Setting.PROGRESS_BAR_LENGTH_PLACEHOLDER.getInt()
-                : SettingsManager.Setting.PROGRESS_BAR_LENGTH.getInt();
+        double length = placeholder ? Setting.PROGRESS_BAR_LENGTH_PLACEHOLDER.getInt()
+                : Setting.PROGRESS_BAR_LENGTH.getInt();
         double progress = (exp / nextLevel) * length;
 
         StringBuilder prog = new StringBuilder();
