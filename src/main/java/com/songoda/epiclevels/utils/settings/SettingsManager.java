@@ -109,7 +109,7 @@ public class SettingsManager implements Listener {
     }
 
     public void openSettingsManager(Player player) {
-        Inventory inventory = Bukkit.createInventory(null, 27,  plugin.getName() + " Settings Manager");
+        Inventory inventory = Bukkit.createInventory(null, 27, plugin.getName() + " Settings Manager");
         ItemStack glass = Methods.getGlass();
         for (int i = 0; i < inventory.getSize(); i++) {
             inventory.setItem(i, glass);
@@ -217,41 +217,74 @@ public class SettingsManager implements Listener {
             boolean first = true;
 
             String line;
+            int currentTab = 0;
             String category = "";
+
             while ((line = bufReader.readLine()) != null) {
                 if (line.trim().startsWith("#")) continue;
-                if (line.endsWith(":") && !line.startsWith("  ")) {
-                    category = line.substring(0, line.length() - 1);
 
-                    if (!first) {
-                        config.append("\n\n");
-                    } else {
-                        first = false;
-                    }
-
-                    config.append("#").append("\n");
-                    try {
-                        Category categoryObj = Category.valueOf(category.toUpperCase().replace(" ", "_"));
-                        for (String l : categoryObj.getComments())
-                            config.append("# ").append(l).append("\n");
-                    } catch (IllegalArgumentException e) {
-                        config.append("# ").append(category).append("\n");
-                    }
-                    config.append("#").append("\n");
-
-                    config.append(line).append("\n");
-                    continue;
+                int tabChange = line.length() - line.trim().length();
+                if (currentTab != tabChange) {
+                    category = category.contains(".") && tabChange != 0 ? category.substring(0, category.indexOf(".")) : "";
+                    currentTab = tabChange;
                 }
+
+                if (line.endsWith(":")) {
+                    bufReader.mark(1000);
+                    String found = bufReader.readLine();
+                    bufReader.reset();
+
+                    if (!found.trim().startsWith("-")) {
+
+                        String newCategory = line.substring(0, line.length() - 1).trim();
+
+                        if (category.equals(""))
+                            category = newCategory;
+                        else
+                            category += "." + newCategory;
+
+                        currentTab = tabChange + 2;
+
+                        if (!first) {
+                            config.append("\n\n");
+                        } else {
+                            first = false;
+                        }
+
+                        if (!category.contains("."))
+                            config.append("#").append("\n");
+                        try {
+                            Category categoryObj = Category.valueOf(category.toUpperCase()
+                                    .replace(" ", "_")
+                                    .replace(".", "_"));
+
+                            config.append(new String(new char[tabChange]).replace('\0', ' '));
+                            for (String l : categoryObj.getComments())
+                                config.append("# ").append(l).append("\n");
+                        } catch (IllegalArgumentException e) {
+                            config.append("# ").append(category).append("\n");
+                        }
+                        if (!category.contains("."))
+                            config.append("#").append("\n");
+
+                        config.append(line).append("\n");
+
+                        continue;
+                    }
+                }
+
                 if (line.trim().startsWith("-")) {
                     config.append(line).append("\n");
                     continue;
                 }
+
                 String key = category + "." + (line.split(":")[0].trim());
                 for (Setting setting : Setting.values()) {
                     if (!setting.getSetting().equals(key) || setting.getComments() == null) continue;
                     config.append("  ").append("\n");
                     for (String l : setting.getComments()) {
-                        config.append("  # ").append(l).append("\n");
+                        config.append(new String(new char[currentTab]).replace('\0', ' '));
+                        config.append("# ").append(l).append("\n");
                     }
                 }
                 config.append(line).append("\n");
