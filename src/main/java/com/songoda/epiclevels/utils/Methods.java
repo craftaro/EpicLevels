@@ -2,7 +2,6 @@ package com.songoda.epiclevels.utils;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.utils.settings.Setting;
-import com.songoda.epiclevels.utils.settings.SettingsManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
