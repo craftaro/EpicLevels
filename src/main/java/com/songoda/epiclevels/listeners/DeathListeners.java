@@ -29,7 +29,7 @@ public class DeathListeners implements Listener {
         if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) return;
 
         EPlayer damaged = plugin.getPlayerManager().getPlayer(event.getEntity().getUniqueId()); // A very sensitive person with a troubling past.
-        EPlayer damager = plugin.getPlayerManager().getPlayer(event.getDamager().getUniqueId());
+        EPlayer damager = plugin.getPlayerManager().getPlayer(event.getDamager().getUniqueId()); // The douche who ruined the guys life.
 
         if (Setting.BLACKLISTED_WORLDS.getStringList().stream()
                 .anyMatch(worldStr -> worldStr.equalsIgnoreCase(event.getEntity().getWorld().getName())))
@@ -37,9 +37,10 @@ public class DeathListeners implements Listener {
 
         if (damager.getLevel() < Setting.START_PVP_LEVEL.getInt()) {
             damager.getPlayer().getPlayer().sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage(" event.pvp.deny"));
-            return;
+            event.setCancelled(true);
         } else if (damaged.getLevel() < Setting.START_PVP_LEVEL.getInt()) {
             damager.getPlayer().getPlayer().sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage(" event.pvp.denythem"));
+            event.setCancelled(true);
         }
     }
 
