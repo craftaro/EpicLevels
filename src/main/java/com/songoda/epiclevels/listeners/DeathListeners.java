@@ -36,10 +36,10 @@ public class DeathListeners implements Listener {
             return;
 
         if (damager.getLevel() < Setting.START_PVP_LEVEL.getInt()) {
-            damager.getPlayer().getPlayer().sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage(" event.pvp.deny"));
+            damager.getPlayer().getPlayer().sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.pvp.deny"));
             event.setCancelled(true);
         } else if (damaged.getLevel() < Setting.START_PVP_LEVEL.getInt()) {
-            damager.getPlayer().getPlayer().sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage(" event.pvp.denythem"));
+            damager.getPlayer().getPlayer().sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.pvp.denythem"));
             event.setCancelled(true);
         }
     }
