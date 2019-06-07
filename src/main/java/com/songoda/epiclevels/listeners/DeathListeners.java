@@ -97,14 +97,16 @@ public class DeathListeners implements Listener {
             long playerExpBefore = ePlayer.getExperience();
             long playerExpAfter = ePlayer.addExperience(expPlayer);
 
-            if (Setting.SEND_KILL_MESSAGE.getBoolean())
+            if (Setting.SEND_PLAYER_KILL_MESSAGE.getBoolean())
                 player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.killed", ChatColor.stripColor(killed.getDisplayName()), playerExpAfter - playerExpBefore));
 
         } else {
             ePlayer.addMobKill();
             long playerExpBefore = ePlayer.getExperience();
             long playerExpAfter = ePlayer.addExperience(expMob);
-            player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.mob.killed", event.getEntity().getName(), playerExpAfter - playerExpBefore));
+
+            if (Setting.SEND_MOB_KILL_MESSAGE.getBoolean())
+                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.mob.killed", event.getEntity().getName(), playerExpAfter - playerExpBefore));
         }
 
     }

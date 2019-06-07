@@ -27,8 +27,11 @@ public enum Setting {
     ALLOW_NEGATIVE("Main.Allow Negative Experience", false,
             "Allow players to lose experience into negative?"),
 
-    SEND_KILL_MESSAGE("Main.Send Message On Kill", true,
+    SEND_PLAYER_KILL_MESSAGE("Main.Send Message On Player Kill", true,
             "Should Players be notified when they kill another player?"),
+
+    SEND_MOB_KILL_MESSAGE("Main.Send Message On Mob Kill", true,
+            "Should Players be notified when they kill a mob?"),
 
     SEND_DEATH_MESSAGE("Main.Send Message On Death", true,
             "Should players be notified when killed?"),
