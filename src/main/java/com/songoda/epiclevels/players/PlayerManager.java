@@ -23,7 +23,7 @@ public class PlayerManager {
     }
 
     public List<EPlayer> getPlayers() {
-        List<EPlayer> players = registeredPlayers.values().stream().sorted(Comparator.comparingLong(EPlayer::getExperience)).collect(Collectors.toList());
+        List<EPlayer> players = registeredPlayers.values().stream().sorted(Comparator.comparingDouble(EPlayer::getExperience)).collect(Collectors.toList());
         Collections.reverse(players);
         return players;
     }

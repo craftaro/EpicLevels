@@ -56,7 +56,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
                 if (plugin.getBoostManager().getGlobalBoost() == null) return "1";
                 return decimalFormat.format(plugin.getBoostManager().getGlobalBoost().getMultiplier());
             case "progressbar":
-                long exp = ePlayer.getExperience() - EPlayer.experience(ePlayer.getLevel());
+                double exp = ePlayer.getExperience() - EPlayer.experience(ePlayer.getLevel());
                 double nextLevel = EPlayer.experience(ePlayer.getLevel() + 1) - EPlayer.experience(ePlayer.getLevel());
                 return Methods.generateProgressBar(exp, nextLevel, true);
             default:

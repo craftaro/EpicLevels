@@ -14,13 +14,13 @@ public enum Setting {
             "restarts. With that said it is advised to keep this enabled.",
             "If however you enjoy living on the edge, feel free to turn it off."),
 
-    EXP_MOB("Main.Experience Gained Per Mob Kill", 2L,
+    EXP_MOB("Main.Experience Gained Per Mob Kill", 2.5,
             "The amount of experience gained per monster kill."),
 
-    EXP_PLAYER("Main.Experience Gained Per Player Kill", 250L,
+    EXP_PLAYER("Main.Experience Gained Per Player Kill", 250,
             "The amount of experience gained per player kill."),
 
-    EXP_DEATH("Main.Experience lost On Death", 200L,
+    EXP_DEATH("Main.Experience lost On Death", 200,
             "The amount of experience lost when a player is killed",
             "by another player."),
 
@@ -51,10 +51,10 @@ public enum Setting {
             "Note that once reached players will still earn experience beyond",
             "the the maximum level without the ability to level up."),
 
-    MAX_EXP("Main.Max Experience", 200000000L,
+    MAX_EXP("Main.Max Experience", 200000000,
             "The maximum allowed experience."),
 
-    START_EXP("Main.Starting Experience", 0L,
+    START_EXP("Main.Starting Experience", 0,
             "The amount of experience players start with."),
 
     START_PVP_LEVEL("Main.Level Required For PVP", 0,

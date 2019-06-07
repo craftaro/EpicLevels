@@ -115,7 +115,7 @@ public class GUILevels extends AbstractGUI {
                 meta.setOwner(targetPlayer.getName());
             head.setItemMeta(meta);
 
-            long exp = selected.getExperience() - EPlayer.experience(selected.getLevel());
+            double exp = selected.getExperience() - EPlayer.experience(selected.getLevel());
 
             double nextLevel = EPlayer.experience(selected.getLevel() + 1) - EPlayer.experience(selected.getLevel());
 

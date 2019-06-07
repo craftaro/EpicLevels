@@ -53,8 +53,8 @@ public class DeathListeners implements Listener {
                 .anyMatch(worldStr -> worldStr.equalsIgnoreCase(event.getEntity().getWorld().getName())))
             return;
 
-        long expPlayer = Setting.EXP_PLAYER.getLong();
-        long expMob = Setting.EXP_MOB.getLong();
+        double expPlayer = Setting.EXP_PLAYER.getDouble();
+        double expMob = Setting.EXP_MOB.getDouble();
 
         Player player = event.getEntity().getKiller();
         EPlayer ePlayer = plugin.getPlayerManager().getPlayer(player);
@@ -66,8 +66,8 @@ public class DeathListeners implements Listener {
             eKilled.addDeath();
             eKilled.resetKillstreak();
 
-            long killedExpBefore = eKilled.getExperience();
-            long killedExpAfter = eKilled.addExperience(0L - Setting.EXP_DEATH.getLong());
+            double killedExpBefore = eKilled.getExperience();
+            double killedExpAfter = eKilled.addExperience(0L - Setting.EXP_DEATH.getDouble());
 
             if (Setting.SEND_DEATH_MESSAGE.getBoolean())
                 killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getName()), -(killedExpAfter - killedExpBefore)));
@@ -94,16 +94,16 @@ public class DeathListeners implements Listener {
                 Rewards.run(plugin.getKillstreakManager().getKillstreak(ePlayer.getKillstreak()).getRewards(), player, ePlayer.getKillstreak(), true);
             }
 
-            long playerExpBefore = ePlayer.getExperience();
-            long playerExpAfter = ePlayer.addExperience(expPlayer);
+            double playerExpBefore = ePlayer.getExperience();
+            double playerExpAfter = ePlayer.addExperience(expPlayer);
 
             if (Setting.SEND_PLAYER_KILL_MESSAGE.getBoolean())
                 player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.killed", ChatColor.stripColor(killed.getDisplayName()), playerExpAfter - playerExpBefore));
 
         } else {
             ePlayer.addMobKill();
-            long playerExpBefore = ePlayer.getExperience();
-            long playerExpAfter = ePlayer.addExperience(expMob);
+            double playerExpBefore = ePlayer.getExperience();
+            double playerExpAfter = ePlayer.addExperience(expMob);
 
             if (Setting.SEND_MOB_KILL_MESSAGE.getBoolean())
                 player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.mob.killed", event.getEntity().getName(), playerExpAfter - playerExpBefore));
