@@ -3,6 +3,7 @@ package com.songoda.epiclevels.listeners;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.killstreaks.Killstreak;
 import com.songoda.epiclevels.players.EPlayer;
+import com.songoda.epiclevels.utils.Methods;
 import com.songoda.epiclevels.utils.Rewards;
 import com.songoda.epiclevels.utils.settings.Setting;
 import org.bukkit.Bukkit;
@@ -105,8 +106,9 @@ public class DeathListeners implements Listener {
             double playerExpBefore = ePlayer.getExperience();
             double playerExpAfter = ePlayer.addExperience(expMob);
 
-            if (Setting.SEND_MOB_KILL_MESSAGE.getBoolean())
-                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.mob.killed", event.getEntity().getName(), playerExpAfter - playerExpBefore));
+            if (Setting.SEND_MOB_KILL_MESSAGE.getBoolean()) {
+                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.mob.killed", Methods.formatText(event.getEntity().getType().name(), true), playerExpAfter - playerExpBefore));
+            }
         }
 
     }
