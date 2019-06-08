@@ -148,7 +148,7 @@ public class EpicLevels extends JavaPlugin {
 
                 EPlayer player = new EPlayer(
                         UUID.fromString(row.get("uuid").asString()),
-                        row.get("experience").asLong(),
+                        row.get("experience").asDouble(),
                         row.get("mobKills").asInt(),
                         row.get("playerKills").asInt(),
                         row.get("deaths").asInt(),
