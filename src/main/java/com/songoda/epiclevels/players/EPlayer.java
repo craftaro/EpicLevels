@@ -85,7 +85,7 @@ public class EPlayer {
 
         Player player = getPlayer().getPlayer();
         if ((currentLevel != getLevel() || currentLevel > getLevel()) && player != null) {
-            for (int i = currentLevel; i <= getLevel() ; i++) {
+            for (int i = currentLevel + 1; i <= getLevel() ; i++) {
                 Level def = plugin.getLevelManager().getLevel(-1);
                 if (def != null)
                     Rewards.run(def.getRewards(), player, i, i == getLevel());
