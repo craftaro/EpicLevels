@@ -79,22 +79,36 @@ public class Methods {
     public static String makeReadable(Long time) {
         if (time == null)
             return "";
-        return String.format("%dd %dh %dm",
-                TimeUnit.MILLISECONDS.toDays(time),
-                TimeUnit.MILLISECONDS.toHours(time) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(time)),
-                TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)));
+
+        StringBuilder sb = new StringBuilder();
+
+        long days = TimeUnit.MILLISECONDS.toDays(time);
+        long hours = TimeUnit.MILLISECONDS.toHours(time) - TimeUnit.DAYS.toHours(TimeUnit.MILLISECONDS.toDays(time));
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time));
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time));
+
+        if (days != 0L)
+            sb.append(" ").append(days).append("d");
+        if (hours != 0L)
+            sb.append(" ").append(hours).append("h");
+        if (minutes != 0L)
+            sb.append(" ").append(minutes).append("m");
+        if (seconds != 0L)
+            sb.append(" ").append(seconds).append("s");
+        return sb.toString().trim();
     }
+
 
     public static long parseTime(String input) {
         long result = 0;
-        String number = "";
+        StringBuilder number = new StringBuilder();
         for (int i = 0; i < input.length(); i++) {
             char c = input.charAt(i);
             if (Character.isDigit(c)) {
-                number += c;
-            } else if (Character.isLetter(c) && !number.isEmpty()) {
-                result += convert(Integer.parseInt(number), c);
-                number = "";
+                number.append(c);
+            } else if (Character.isLetter(c) && (number.length() > 0)) {
+                result += convert(Integer.parseInt(number.toString()), c);
+                number = new StringBuilder();
             }
         }
         return result;
@@ -113,7 +127,6 @@ public class Methods {
         }
         return 0;
     }
-
     public static String generateProgressBar(double exp, double nextLevel, boolean placeholder) {
         double length = placeholder ? Setting.PROGRESS_BAR_LENGTH_PLACEHOLDER.getInt()
                 : Setting.PROGRESS_BAR_LENGTH.getInt();
