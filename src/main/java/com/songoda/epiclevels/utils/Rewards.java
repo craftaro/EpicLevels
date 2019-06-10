@@ -72,7 +72,7 @@ public class Rewards {
                         Title.sendTitle(player, Methods.formatText(line.trim()), null, 20, 100, 20);
                         break;
                     case "SUBTITLE":
-                        Title.sendTitle(player, Methods.formatText("&7"), Methods.formatText(line.trim()), 20, 100, 20);
+                        Title.sendTitle(player, null, Methods.formatText(line.trim()), 20, 100, 20);
                         break;
                 }
             } catch (Exception e) {
