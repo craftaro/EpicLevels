@@ -64,6 +64,8 @@ public class DeathListeners implements Listener {
             Player killed = (Player) event.getEntity();
             EPlayer eKilled = plugin.getPlayerManager().getPlayer(killed);
 
+            if (player == killed) return;
+
             eKilled.addDeath();
             eKilled.resetKillstreak();
 
