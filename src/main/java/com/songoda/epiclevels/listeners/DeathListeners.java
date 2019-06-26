@@ -8,6 +8,7 @@ import com.songoda.epiclevels.utils.Rewards;
 import com.songoda.epiclevels.utils.settings.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -89,7 +90,7 @@ public class DeathListeners implements Listener {
                 player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.broke", eKilled.getKillstreak()));
             }
 
-            if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
+            if (Setting.SEND_BROADCAST_BROKEN_KILLSTREAK.getBoolean())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
                     pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.brokenannounce", player.getName(), killed.getName(), eKilled.getKillstreak()));
 

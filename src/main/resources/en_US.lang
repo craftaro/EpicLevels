@@ -36,7 +36,7 @@ event.boost.success = "&7You created a boost for &6%player% &7with the multiplie
 event.boost.expire = "&7Your boost has expired."
 
 event.killstreak.broke = "&cYou broke &6%killed%'s &7killstreak of &6%streak%&7!"
-event.killstreak.broken = "&cYour killstreak has ended at &4&%streak%&c..."
+event.killstreak.broken = "&cYour killstreak has ended at &4%streak%&c..."
 event.killstreak.brokenannounce = "&6%player% &7just broke &6%killed%'s &7killstreak of &6%streak%&7!"
 
 gui.levels.title = "Showing Top %type%"
