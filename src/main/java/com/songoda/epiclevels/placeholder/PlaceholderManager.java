@@ -29,6 +29,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
                 return decimalFormat.format(ePlayer.getExperience());
             case "kills":
                 return decimalFormat.format(ePlayer.getKills());
+            case "playerkills":
+                return decimalFormat.format(ePlayer.getPlayerKills());
+            case "mobkills":
+                return decimalFormat.format(ePlayer.getMobKills());
             case "deaths":
                 return decimalFormat.format(ePlayer.getDeaths());
             case "killstreak":
