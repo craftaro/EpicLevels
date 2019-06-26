@@ -66,8 +66,13 @@ public class DeathListeners implements Listener {
 
             if (player == killed) return;
 
+            if (!ePlayer.canGainExperience(killed.getUniqueId()) && Setting.ANTI_GRINDER.getBoolean()) {
+                if (Setting.GRINDER_ALERT.getBoolean())
+                    player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.antigrinder.trigger", killed.getPlayer().getName()));
+                return;
+            }
+
             eKilled.addDeath();
-            eKilled.resetKillstreak();
 
             double killedExpBefore = eKilled.getExperience();
             double killedExpAfter = eKilled.addExperience(0L - Setting.EXP_DEATH.getDouble());
@@ -75,15 +80,20 @@ public class DeathListeners implements Listener {
             if (Setting.SEND_DEATH_MESSAGE.getBoolean())
                 killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getName()), -(killedExpAfter - killedExpBefore)));
 
-            if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
+            if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
                     pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death.broadcast", killed.getName(), player.getName()));
 
-            if (!ePlayer.canGainExperience(killed.getUniqueId()) && Setting.ANTI_GRINDER.getBoolean()) {
-                if (Setting.GRINDER_ALERT.getBoolean())
-                    player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.antigrinder.trigger", killed.getPlayer().getName()));
-                return;
+            if (Setting.SEND_KILLSTREAK_BROKEN_MESSAGE.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt()) {
+                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.broken", eKilled.getKillstreak()));
+                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.broke", eKilled.getKillstreak()));
             }
+
+            if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
+                for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
+                    pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.brokenannounce", player.getName(), killed.getName(), eKilled.getKillstreak()));
+
+            eKilled.resetKillstreak();
 
             ePlayer.increaseKillstreak();
             ePlayer.addPlayerKill(killed.getUniqueId());

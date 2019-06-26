@@ -42,6 +42,16 @@ public enum Setting {
     SEND_BROADCAST_LEVELUP_MESSAGE("Main.Send Broadcast On Levelup", true,
             "Broadcasts a players level up to the whole server."),
 
+    SEND_BROADCAST_BROKEN_KILLSTREAK("Main.Send Broadcast On Broken Killstreak", true,
+            "Broadcasts a broken killstreak to the whole server."),
+
+    SEND_KILLSTREAK_BROKEN_MESSAGE("Main.Send Killstreak Broken Message", true,
+            "Should players be notified when a killstreak is broken?"),
+
+    SEND_KILLSTREAK_ALERTS_AFTER("Main.Send Killstreak Alerts After", 5,
+            "Kill streak message and broadcasts will only display if a",
+            "killstreak of this value or greater is reached."),
+
     BROADCAST_LEVELUP_EVERY("Main.Broadcast Levelup Every", 5,
             "How often should a level up be announced?",
             "If you enter 5 every 5 levels players will be notified."),
