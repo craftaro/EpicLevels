@@ -8,7 +8,6 @@ import com.songoda.epiclevels.utils.Rewards;
 import com.songoda.epiclevels.utils.settings.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -79,7 +78,7 @@ public class DeathListeners implements Listener {
             double killedExpAfter = eKilled.addExperience(0L - Setting.EXP_DEATH.getDouble());
 
             if (Setting.SEND_DEATH_MESSAGE.getBoolean())
-                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getName()), -(killedExpAfter - killedExpBefore)));
+                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getName()), Methods.formatDecimal(-(killedExpAfter - killedExpBefore))));
 
             if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
@@ -112,7 +111,7 @@ public class DeathListeners implements Listener {
             double playerExpAfter = ePlayer.addExperience(expPlayer);
 
             if (Setting.SEND_PLAYER_KILL_MESSAGE.getBoolean())
-                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.killed", ChatColor.stripColor(killed.getDisplayName()), playerExpAfter - playerExpBefore));
+                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.killed", ChatColor.stripColor(killed.getDisplayName()), Methods.formatDecimal(playerExpAfter - playerExpBefore)));
 
         } else {
             ePlayer.addMobKill();
@@ -120,7 +119,7 @@ public class DeathListeners implements Listener {
             double playerExpAfter = ePlayer.addExperience(expMob);
 
             if (Setting.SEND_MOB_KILL_MESSAGE.getBoolean()) {
-                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.mob.killed", Methods.formatText(event.getEntity().getType().name(), true), playerExpAfter - playerExpBefore));
+                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.mob.killed", Methods.formatText(event.getEntity().getType().name(), true), Methods.formatDecimal(playerExpAfter - playerExpBefore)));
             }
         }
 

@@ -12,8 +12,6 @@ public class PlaceholderManager extends PlaceholderExpansion {
 
     private final EpicLevels plugin;
 
-    private DecimalFormat decimalFormat = new DecimalFormat("###,###.###");
-
     public PlaceholderManager(EpicLevels plugin) {
         this.plugin = plugin;
     }
@@ -24,41 +22,41 @@ public class PlaceholderManager extends PlaceholderExpansion {
         
         switch (identifier) {
             case "level":
-                return decimalFormat.format(ePlayer.getLevel());
+                return Methods.formatDecimal(ePlayer.getLevel());
             case "experience":
-                return decimalFormat.format(ePlayer.getExperience());
+                return Methods.formatDecimal(ePlayer.getExperience());
             case "kills":
-                return decimalFormat.format(ePlayer.getKills());
+                return Methods.formatDecimal(ePlayer.getKills());
             case "playerkills":
-                return decimalFormat.format(ePlayer.getPlayerKills());
+                return Methods.formatDecimal(ePlayer.getPlayerKills());
             case "mobkills":
-                return decimalFormat.format(ePlayer.getMobKills());
+                return Methods.formatDecimal(ePlayer.getMobKills());
             case "deaths":
-                return decimalFormat.format(ePlayer.getDeaths());
+                return Methods.formatDecimal(ePlayer.getDeaths());
             case "killstreak":
-                return decimalFormat.format(ePlayer.getKillstreak());
+                return Methods.formatDecimal(ePlayer.getKillstreak());
             case "bestkillstreak":
-                return decimalFormat.format(ePlayer.getBestKillstreak());
+                return Methods.formatDecimal(ePlayer.getBestKillstreak());
             case "kdr":
-                return decimalFormat.format(ePlayer.getDeaths() == 0 ? ePlayer.getPlayerKills() : ePlayer.getPlayerKills() / ePlayer.getDeaths());
+                return Methods.formatDecimal(ePlayer.getDeaths() == 0 ? ePlayer.getPlayerKills() : (double)ePlayer.getPlayerKills() / (double)ePlayer.getDeaths());
             case "nextlevel":
-                return decimalFormat.format(ePlayer.getLevel() + 1);
+                return Methods.formatDecimal(ePlayer.getLevel() + 1);
             case "neededfornextlevel":
-                return decimalFormat.format(EPlayer.experience(ePlayer.getLevel() + 1) - ePlayer.getExperience());
+                return Methods.formatDecimal(EPlayer.experience(ePlayer.getLevel() + 1) - ePlayer.getExperience());
             case "boosterenabled":
                 return plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null
                         ? plugin.getLocale().getMessage("general.word.enabled")
                         : plugin.getLocale().getMessage("general.word.disabled");
             case "booster":
                 if (plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null) return "1";
-                return decimalFormat.format(plugin.getBoostManager().getBoost(ePlayer.getUniqueId()).getMultiplier());
+                return Methods.formatDecimal(plugin.getBoostManager().getBoost(ePlayer.getUniqueId()).getMultiplier());
             case "globalboosterenabled":
                 return plugin.getBoostManager().getGlobalBoost() == null
                         ? plugin.getLocale().getMessage("general.word.enabled")
                         : plugin.getLocale().getMessage("general.word.disabled");
             case "globalbooster":
                 if (plugin.getBoostManager().getGlobalBoost() == null) return "1";
-                return decimalFormat.format(plugin.getBoostManager().getGlobalBoost().getMultiplier());
+                return Methods.formatDecimal(plugin.getBoostManager().getGlobalBoost().getMultiplier());
             case "progressbar":
                 double exp = ePlayer.getExperience() - EPlayer.experience(ePlayer.getLevel());
                 double nextLevel = EPlayer.experience(ePlayer.getLevel() + 1) - EPlayer.experience(ePlayer.getLevel());

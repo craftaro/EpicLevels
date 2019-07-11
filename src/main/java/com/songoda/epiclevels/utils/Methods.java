@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.TimeUnit;
 
 public class Methods {
@@ -74,6 +75,10 @@ public class Methods {
         }
         text = formatText(text);
         return text;
+    }
+
+    public static String formatDecimal(double decimal) {
+        return new DecimalFormat("###,###.###").format(decimal);
     }
 
     public static String makeReadable(Long time) {

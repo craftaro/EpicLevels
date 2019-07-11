@@ -30,8 +30,6 @@ public class GUILevels extends AbstractGUI {
 
     private Sorting sortingBy = Sorting.LEVELS;
 
-    private DecimalFormat decimalFormat = new DecimalFormat("###,###.###");
-
     public GUILevels(EpicLevels plugin, Player player, EPlayer target) {
         super(player);
         plugin.getPlayerManager().getPlayer(player);
@@ -128,19 +126,19 @@ public class GUILevels extends AbstractGUI {
                 createButton(slot + 9, Material.ARROW, plugin.getLocale().getMessage("gui.levels.selected"));
 
             createButton(slot, head, plugin.getLocale().getMessage("gui.levels.name", current + 1, targetPlayer.getName()),
-                    plugin.getLocale().getMessage("gui.levels.level", decimalFormat.format(selected.getLevel())),
-                    plugin.getLocale().getMessage("gui.levels.exp", decimalFormat.format(selected.getExperience()), decimalFormat.format(EPlayer.experience(selected.getLevel() + 1))),
+                    plugin.getLocale().getMessage("gui.levels.level", Methods.formatDecimal(selected.getLevel())),
+                    plugin.getLocale().getMessage("gui.levels.exp", Methods.formatDecimal(selected.getExperience()), Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))),
                     prog);
 
             if (current == position)
                 createButton(slot - 9, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.stats"),
-                        plugin.getLocale().getMessage("gui.levels.totalkills", decimalFormat.format(selected.getKills())),
-                        plugin.getLocale().getMessage("gui.levels.playerkills", decimalFormat.format(selected.getPlayerKills())),
-                        plugin.getLocale().getMessage("gui.levels.mobkills", decimalFormat.format(selected.getMobKills())),
-                        plugin.getLocale().getMessage("gui.levels.deaths", decimalFormat.format(selected.getDeaths())),
-                        plugin.getLocale().getMessage("gui.levels.kdr", decimalFormat.format(selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double) selected.getPlayerKills()) / selected.getDeaths())),
-                        plugin.getLocale().getMessage("gui.levels.killstreak", decimalFormat.format(selected.getKillstreak())),
-                        plugin.getLocale().getMessage("gui.levels.bestkillstreak", decimalFormat.format(selected.getBestKillstreak())));
+                        plugin.getLocale().getMessage("gui.levels.totalkills", Methods.formatDecimal(selected.getKills())),
+                        plugin.getLocale().getMessage("gui.levels.playerkills", Methods.formatDecimal(selected.getPlayerKills())),
+                        plugin.getLocale().getMessage("gui.levels.mobkills", Methods.formatDecimal(selected.getMobKills())),
+                        plugin.getLocale().getMessage("gui.levels.deaths", Methods.formatDecimal(selected.getDeaths())),
+                        plugin.getLocale().getMessage("gui.levels.kdr", Methods.formatDecimal(selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double) selected.getPlayerKills()) / (double)selected.getDeaths())),
+                        plugin.getLocale().getMessage("gui.levels.killstreak", Methods.formatDecimal(selected.getKillstreak())),
+                        plugin.getLocale().getMessage("gui.levels.bestkillstreak", Methods.formatDecimal(selected.getBestKillstreak())));
 
             registerClickable(slot, ((player1, inventory1, cursor, slot1, type) -> {
                 position = current;
