@@ -22,6 +22,7 @@ import com.songoda.epiclevels.utils.Methods;
 import com.songoda.epiclevels.utils.Metrics;
 import com.songoda.epiclevels.utils.ServerVersion;
 import com.songoda.epiclevels.utils.gui.updateModules.LocaleModule;
+import com.songoda.epiclevels.utils.locale.Locale;
 import com.songoda.epiclevels.utils.settings.Setting;
 import com.songoda.epiclevels.utils.settings.SettingsManager;
 import com.songoda.update.Plugin;
@@ -47,7 +48,6 @@ public class EpicLevels extends JavaPlugin {
     private KillstreakManager killstreakManager;
     private BoostManager boostManager;
 
-    private References references;
     private Storage storage;
     private Economy economy;
     private Locale locale;
@@ -68,17 +68,13 @@ public class EpicLevels extends JavaPlugin {
         settingsManager.setupConfig();
 
         // Setup language
-        String langMode = Setting.LANGUGE_MODE.getString();
-        Locale.init(this);
-        Locale.saveDefaultLocale("en_US");
-        this.locale = Locale.getLocale(getConfig().getString("System.Language Mode", langMode));
+        new Locale(this, "en_US");
+        this.locale = Locale.getLocale(getConfig().getString("System.Language Mode"));
 
         //Running Songoda Updater
         Plugin plugin = new Plugin(this, 44);
         plugin.addModule(new LocaleModule());
         SongodaUpdate.load(plugin);
-
-        this.references = new References();
 
         this.playerManager = new PlayerManager();
         this.commandManager = new CommandManager(this);
@@ -141,8 +137,8 @@ public class EpicLevels extends JavaPlugin {
 
     public void reload() {
         saveToFile();
-        locale.reloadMessages();
-        references = new References();
+        this.locale = Locale.getLocale(getConfig().getString("System.Language Mode"));
+        this.locale.reloadMessages();
         levelManager.load();
         settingsManager.reloadConfig();
     }
@@ -199,10 +195,6 @@ public class EpicLevels extends JavaPlugin {
 
     public Locale getLocale() {
         return locale;
-    }
-
-    public References getReferences() {
-        return references;
     }
 
     public PlayerManager getPlayerManager() {

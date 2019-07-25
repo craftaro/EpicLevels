@@ -37,10 +37,10 @@ public class DeathListeners implements Listener {
             return;
 
         if (damager.getLevel() < Setting.START_PVP_LEVEL.getInt()) {
-            damager.getPlayer().getPlayer().sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.pvp.deny"));
+            plugin.getLocale().getMessage("event.pvp.deny").sendPrefixedMessage(damager.getPlayer().getPlayer());
             event.setCancelled(true);
         } else if (damaged.getLevel() < Setting.START_PVP_LEVEL.getInt()) {
-            damager.getPlayer().getPlayer().sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.pvp.denythem"));
+            plugin.getLocale().getMessage("event.pvp.denythem").sendPrefixedMessage(damager.getPlayer().getPlayer());
             event.setCancelled(true);
         }
     }
@@ -68,7 +68,9 @@ public class DeathListeners implements Listener {
 
             if (!ePlayer.canGainExperience(killed.getUniqueId()) && Setting.ANTI_GRINDER.getBoolean()) {
                 if (Setting.GRINDER_ALERT.getBoolean())
-                    player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.antigrinder.trigger", killed.getPlayer().getName()));
+                    plugin.getLocale().getMessage("event.antigrinder.trigger")
+                            .processPlaceholder("killed", killed.getPlayer().getName())
+                            .sendPrefixedMessage(player);
                 return;
             }
 
@@ -78,20 +80,33 @@ public class DeathListeners implements Listener {
             double killedExpAfter = eKilled.addExperience(0L - Setting.EXP_DEATH.getDouble());
 
             if (Setting.SEND_DEATH_MESSAGE.getBoolean())
-                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death", ChatColor.stripColor(player.getName()), Methods.formatDecimal(-(killedExpAfter - killedExpBefore))));
+                plugin.getLocale().getMessage("event.player.death").processPlaceholder("name", ChatColor.stripColor(player.getName()))
+                        .processPlaceholder("exp", Methods.formatDecimal(-(killedExpAfter - killedExpBefore))).sendPrefixedMessage(killed);
 
             if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
-                    pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.death.broadcast", killed.getName(), player.getName()));
+                    plugin.getLocale().getMessage("event.player.death.broadcast")
+                            .processPlaceholder("killed", killed.getName())
+                            .processPlaceholder("exp", player.getName())
+                            .sendPrefixedMessage(pl);
 
             if (Setting.SEND_KILLSTREAK_BROKEN_MESSAGE.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt()) {
-                killed.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.broken", eKilled.getKillstreak()));
-                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.broke", eKilled.getKillstreak()));
+                plugin.getLocale().getMessage("event.killstreak.broken")
+                        .processPlaceholder("streak", eKilled.getKillstreak())
+                        .sendPrefixedMessage(killed);
+                plugin.getLocale().getMessage("event.killstreak.broke")
+                        .processPlaceholder("killed", killed.getName())
+                        .processPlaceholder("streak", eKilled.getKillstreak())
+                        .sendPrefixedMessage(player);
             }
 
             if (Setting.SEND_BROADCAST_BROKEN_KILLSTREAK.getBoolean())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
-                    pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.killstreak.brokenannounce", player.getName(), killed.getName(), eKilled.getKillstreak()));
+                    plugin.getLocale().getMessage("event.killstreak.brokenannounce")
+                            .processPlaceholder("player", player.getName())
+                            .processPlaceholder("killed", killed.getName())
+                            .processPlaceholder("streak", eKilled.getKillstreak())
+                            .sendPrefixedMessage(pl);
 
             eKilled.resetKillstreak();
 
@@ -111,7 +126,10 @@ public class DeathListeners implements Listener {
             double playerExpAfter = ePlayer.addExperience(expPlayer);
 
             if (Setting.SEND_PLAYER_KILL_MESSAGE.getBoolean())
-                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.player.killed", ChatColor.stripColor(killed.getDisplayName()), Methods.formatDecimal(playerExpAfter - playerExpBefore)));
+                plugin.getLocale().getMessage("event.player.killed")
+                        .processPlaceholder("name", ChatColor.stripColor(killed.getDisplayName()))
+                        .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
+                        .sendPrefixedMessage(player);
 
         } else {
             ePlayer.addMobKill();
@@ -119,7 +137,10 @@ public class DeathListeners implements Listener {
             double playerExpAfter = ePlayer.addExperience(expMob);
 
             if (Setting.SEND_MOB_KILL_MESSAGE.getBoolean()) {
-                player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.mob.killed", Methods.formatText(event.getEntity().getType().name(), true), Methods.formatDecimal(playerExpAfter - playerExpBefore)));
+                plugin.getLocale().getMessage("event.mob.killed")
+                        .processPlaceholder("type", Methods.formatText(event.getEntity().getType().name(), true))
+                        .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
+                        .sendPrefixedMessage(player);
             }
         }
 

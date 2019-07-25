@@ -1,4 +1,4 @@
-package com.songoda.ultimatekits.utils.locale;
+package com.songoda.epiclevels.utils.locale;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

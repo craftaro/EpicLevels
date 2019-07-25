@@ -33,12 +33,10 @@ public class Rewards {
                 switch (s.split(" ")[0]) {
                     case "MSG":
                         if (last)
-                            player.sendMessage(EpicLevels.getInstance().getReferences().getPrefix() +
-                                    Methods.formatText(line.trim()));
+                            EpicLevels.getInstance().getLocale().newMessage(line.trim()).sendPrefixedMessage(player);
                         break;
                     case "BROADCAST":
-                        Bukkit.broadcastMessage(EpicLevels.getInstance().getReferences().getPrefix() +
-                                Methods.formatText(line.trim()));
+                        Bukkit.broadcastMessage(EpicLevels.getInstance().getLocale().newMessage(line.trim()).getMessage());
                         break;
                     case "CMD":
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line.replace("/", "").trim());

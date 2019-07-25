@@ -5,7 +5,6 @@ import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.levels.Level;
 import com.songoda.epiclevels.utils.Rewards;
 import com.songoda.epiclevels.utils.settings.Setting;
-import com.songoda.epiclevels.utils.settings.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -85,7 +84,7 @@ public class EPlayer {
 
         Player player = getPlayer().getPlayer();
         if ((currentLevel != getLevel() || currentLevel > getLevel()) && player != null) {
-            for (int i = currentLevel + 1; i <= getLevel() ; i++) {
+            for (int i = currentLevel + 1; i <= getLevel(); i++) {
                 Level def = plugin.getLevelManager().getLevel(-1);
                 if (def != null)
                     Rewards.run(def.getRewards(), player, i, i == getLevel());
@@ -96,7 +95,10 @@ public class EPlayer {
             if (Setting.SEND_BROADCAST_LEVELUP_MESSAGE.getBoolean()
                     && getLevel() % Setting.BROADCAST_LEVELUP_EVERY.getInt() == 0)
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).collect(Collectors.toList()))
-                    pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.levelup.announcement", player.getName(), getLevel()));
+                    plugin.getLocale().getMessage("event.levelup.announcement")
+                            .processPlaceholder("player", player.getName())
+                            .processPlaceholder("level", getLevel())
+                            .sendPrefixedMessage(pl);
         }
         if (this.experience > Setting.MAX_EXP.getDouble())
             this.experience = Setting.MAX_EXP.getDouble();

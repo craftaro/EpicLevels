@@ -14,16 +14,16 @@ import java.util.List;
 
 public class CommandManager implements CommandExecutor {
 
-    private EpicLevels instance;
+    private EpicLevels plugin;
     private TabManager tabManager;
 
     private List<AbstractCommand> commands = new ArrayList<>();
 
-    public CommandManager(EpicLevels instance) {
-        this.instance = instance;
+    public CommandManager(EpicLevels plugin) {
+        this.plugin = plugin;
         this.tabManager = new TabManager(this);
 
-        instance.getCommand("EpicLevels").setExecutor(this);
+        plugin.getCommand("EpicLevels").setExecutor(this);
 
         AbstractCommand commandEpicLevels = addCommand(new CommandEpicLevels());
 
@@ -41,7 +41,7 @@ public class CommandManager implements CommandExecutor {
 
         for (AbstractCommand abstractCommand : commands) {
             if (abstractCommand.getParent() != null) continue;
-            instance.getCommand(abstractCommand.getCommand()).setTabCompleter(tabManager);
+            plugin.getCommand(abstractCommand.getCommand()).setTabCompleter(tabManager);
         }
     }
 
@@ -69,24 +69,24 @@ public class CommandManager implements CommandExecutor {
                 }
             }
         }
-        commandSender.sendMessage(instance.getReferences().getPrefix() + Methods.formatText("&7The commands you entered does not exist or is spelt incorrectly."));
+        plugin.getLocale().newMessage("&7The command you entered does not exist or is spelt incorrectly.").sendPrefixedMessage(commandSender);
         return true;
     }
 
     private void processRequirements(AbstractCommand command, CommandSender sender, String[] strings) {
         if (!(sender instanceof Player) && command.isNoConsole()) {
-            sender.sendMessage("You must be a player to use this commands.");
+            sender.sendMessage("You must be a player to use this command.");
             return;
         }
         if (command.getPermissionNode() == null || sender.hasPermission(command.getPermissionNode())) {
-            AbstractCommand.ReturnType returnType = command.runCommand(instance, sender, strings);
+            AbstractCommand.ReturnType returnType = command.runCommand(plugin, sender, strings);
             if (returnType == AbstractCommand.ReturnType.SYNTAX_ERROR) {
-                sender.sendMessage(instance.getReferences().getPrefix() + Methods.formatText("&cInvalid Syntax!"));
-                sender.sendMessage(instance.getReferences().getPrefix() + Methods.formatText("&7The valid syntax is: &6" + command.getSyntax() + "&7."));
+                plugin.getLocale().newMessage("&cInvalid Syntax!").sendPrefixedMessage(sender);
+                plugin.getLocale().newMessage("&7The valid syntax is: &6" + command.getSyntax() + "&7.").sendPrefixedMessage(sender);
             }
             return;
         }
-        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.general.nopermission"));
+        plugin.getLocale().newMessage("event.general.nopermission").sendPrefixedMessage(sender);
     }
 
     public List<AbstractCommand> getCommands() {

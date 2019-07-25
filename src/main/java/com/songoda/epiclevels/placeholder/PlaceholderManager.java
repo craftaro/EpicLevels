@@ -45,15 +45,15 @@ public class PlaceholderManager extends PlaceholderExpansion {
                 return Methods.formatDecimal(EPlayer.experience(ePlayer.getLevel() + 1) - ePlayer.getExperience());
             case "boosterenabled":
                 return plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null
-                        ? plugin.getLocale().getMessage("general.word.enabled")
-                        : plugin.getLocale().getMessage("general.word.disabled");
+                        ? plugin.getLocale().getMessage("general.word.enabled").getMessage()
+                        : plugin.getLocale().getMessage("general.word.disabled").getMessage();
             case "booster":
                 if (plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null) return "1";
                 return Methods.formatDecimal(plugin.getBoostManager().getBoost(ePlayer.getUniqueId()).getMultiplier());
             case "globalboosterenabled":
                 return plugin.getBoostManager().getGlobalBoost() == null
-                        ? plugin.getLocale().getMessage("general.word.enabled")
-                        : plugin.getLocale().getMessage("general.word.disabled");
+                        ? plugin.getLocale().getMessage("general.word.enabled").getMessage()
+                        : plugin.getLocale().getMessage("general.word.disabled").getMessage();
             case "globalbooster":
                 if (plugin.getBoostManager().getGlobalBoost() == null) return "1";
                 return Methods.formatDecimal(plugin.getBoostManager().getGlobalBoost().getMultiplier());

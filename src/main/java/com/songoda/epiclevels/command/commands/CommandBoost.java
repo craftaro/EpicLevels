@@ -5,12 +5,10 @@ import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.command.AbstractCommand;
 import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommandBoost extends AbstractCommand {
 
@@ -25,12 +23,16 @@ public class CommandBoost extends AbstractCommand {
         Player player = Bukkit.getPlayer(args[1].toLowerCase());
 
         if (player == null) {
-            sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notonline", args[1]));
+            instance.getLocale().getMessage("command.general.notonline")
+                    .processPlaceholder("name", args[1])
+                    .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
 
         if (!Methods.isInt(args[2])) {
-            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint", args[2])));
+            instance.getLocale().getMessage("command.general.notint")
+                    .processPlaceholder("number", args[2])
+                    .sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
         }
         int multiplier = Integer.parseInt(args[2]);
@@ -39,15 +41,23 @@ public class CommandBoost extends AbstractCommand {
         for (int i = 2; i < args.length; i++) {
             String line = args[i];
             long time = Methods.parseTime(line);
-                duration += time;
+            duration += time;
         }
 
         instance.getBoostManager().addBoost(player.getUniqueId(), new Boost(duration + System.currentTimeMillis(), multiplier));
 
-        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.success", player.getName(), multiplier, Methods.makeReadable(duration)));
+        instance.getLocale().getMessage("event.boost.success")
+                .processPlaceholder("player", player.getName())
+                .processPlaceholder("multiplier", multiplier)
+                .processPlaceholder("duration", Methods.makeReadable(duration))
+                .sendPrefixedMessage(sender);
 
         if (player.isOnline())
-            player.getPlayer().sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("event.boost.announce", sender.getName(), multiplier, Methods.makeReadable(duration)));
+            instance.getLocale().getMessage("event.boost.announce")
+                    .processPlaceholder("player", sender.getName())
+                    .processPlaceholder("multiplier", multiplier)
+                    .processPlaceholder("duration", Methods.makeReadable(duration))
+                    .sendPrefixedMessage(player);
 
 
         return ReturnType.SUCCESS;

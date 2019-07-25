@@ -26,7 +26,7 @@ public class BoostManager {
             else {
                 globalBoost = null;
                 Bukkit.getOnlinePlayers().forEach(player ->
-                        player.sendMessage(epicLevels.getReferences().getPrefix() + epicLevels.getLocale().getMessage("event.boost.globalexpire")));
+                        epicLevels.getLocale().getMessage("event.boost.globalexpire").sendPrefixedMessage(player));
             }
         }
         Boost boost = registeredBoosts.get(uuid);
@@ -35,7 +35,7 @@ public class BoostManager {
             return boost;
         else {
             registeredBoosts.remove(uuid);
-            Bukkit.getPlayer(uuid).sendMessage(epicLevels.getReferences().getPrefix() + epicLevels.getLocale().getMessage("event.boost.expire"));
+            epicLevels.getLocale().getMessage("event.boost.expire").sendPrefixedMessage(Bukkit.getPlayer(uuid));
         }
         return null;
     }

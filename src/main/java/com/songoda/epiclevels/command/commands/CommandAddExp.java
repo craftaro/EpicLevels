@@ -23,12 +23,16 @@ public class CommandAddExp extends AbstractCommand {
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
 
         if (!player.hasPlayedBefore() && !player.isOnline()) {
-            sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notonline", args[1]));
+            instance.getLocale().getMessage("command.general.notonline")
+                    .processPlaceholder("notonline", args[1])
+                    .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
 
         if (!Methods.isInt(args[2]) && !player.isOnline()) {
-            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint", args[2])));
+            instance.getLocale().getMessage("command.general.notint")
+                    .processPlaceholder("number", args[2])
+                    .sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
         }
 
@@ -36,7 +40,10 @@ public class CommandAddExp extends AbstractCommand {
         instance.getPlayerManager().getPlayer(player).addExperience(amount);
 
 
-        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.addexp.success", amount, player.getName()));
+        instance.getLocale().getMessage("command.addexp.success")
+                .processPlaceholder("amount", amount)
+                .processPlaceholder("player", player.getName())
+                .sendPrefixedMessage(sender);
 
         return ReturnType.SUCCESS;
     }
