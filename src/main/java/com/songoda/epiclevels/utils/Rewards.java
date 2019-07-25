@@ -52,7 +52,7 @@ public class Rewards {
                                 player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
                         break;
                     case "ECONOMY":
-                        EpicLevels.getInstance().getEconomy().AddToBalance(player, Double.parseDouble(line.replace("$", "")));
+                        EpicLevels.getInstance().getEconomy().deposit(player, Double.parseDouble(line.replace("$", "")));
                         break;
                     case "HEAL":
                         if (EpicLevels.getInstance().isServerVersionAtLeast(ServerVersion.V1_9))

@@ -117,6 +117,15 @@ public enum Setting {
     GRINDER_ALERT("Anti Grinder.Alert When Triggered", true,
             "Should we alert the killer when they have reached the threshold?"),
 
+    VAULT_ECONOMY("Economy.Use Vault Economy", true,
+            "Should Vault be used?"),
+
+    RESERVE_ECONOMY("Economy.Use Reserve Economy", true,
+            "Should Reserve be used?"),
+
+    PLAYER_POINTS_ECONOMY("Economy.Use Player Points Economy", false,
+            "Should PlayerPoints be used?"),
+
     LEVELING_FORMULA("Formula.Leveling", "EXPONENTIAL",
             "This is the formula used when calculating a players level",
             "", "LINEAR: All levels require the same amount of experience to reach the next level.",

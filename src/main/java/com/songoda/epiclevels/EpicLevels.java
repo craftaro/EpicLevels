@@ -4,6 +4,8 @@ import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.boost.BoostManager;
 import com.songoda.epiclevels.command.CommandManager;
 import com.songoda.epiclevels.economy.Economy;
+import com.songoda.epiclevels.economy.PlayerPointsEconomy;
+import com.songoda.epiclevels.economy.ReserveEconomy;
 import com.songoda.epiclevels.economy.VaultEconomy;
 import com.songoda.epiclevels.killstreaks.KillstreakManager;
 import com.songoda.epiclevels.levels.LevelManager;
@@ -85,10 +87,15 @@ public class EpicLevels extends JavaPlugin {
         this.boostManager = new BoostManager();
         this.storage = new StorageYaml(this);
 
-        if (getServer().getPluginManager().getPlugin("Vault") != null)
-            this.economy = new VaultEconomy(this);
+        PluginManager pluginManager = getServer().getPluginManager();
 
-        PluginManager pluginManager = Bukkit.getPluginManager();
+        // Setup Economy
+        if (Setting.VAULT_ECONOMY.getBoolean() && pluginManager.isPluginEnabled("Vault"))
+            this.economy = new VaultEconomy();
+        else if (Setting.RESERVE_ECONOMY.getBoolean() && pluginManager.isPluginEnabled("Reserve"))
+            this.economy = new ReserveEconomy();
+        else if (Setting.PLAYER_POINTS_ECONOMY.getBoolean() && pluginManager.isPluginEnabled("PlayerPoints"))
+            this.economy = new PlayerPointsEconomy();
 
         // Listener Registration
         pluginManager.registerEvents(new DeathListeners(this), this);
