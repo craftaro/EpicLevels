@@ -24,10 +24,7 @@ public class PlayerManager {
     }
 
     public EPlayer addPlayer(EPlayer player) {
-        registeredPlayers.remove(player.getUniqueId());
-        EpicLevels.getInstance().getDataManager().deletePlayer(player);
         registeredPlayers.put(player.getUniqueId(), player);
-        EpicLevels.getInstance().getDataManager().createPlayer(player);
         return player;
     }
 

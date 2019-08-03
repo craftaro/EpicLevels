@@ -2,6 +2,7 @@ package com.songoda.epiclevels.listeners;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.players.EPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -17,13 +18,17 @@ public class LoginListeners implements Listener {
 
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
-        plugin.getDataManager().getPlayer(event.getPlayer(), (ePlayer ->
-                plugin.getPlayerManager().addPlayer(ePlayer)));
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            plugin.getDataManager().getPlayer(event.getPlayer(), (ePlayer ->
+                    plugin.getPlayerManager().addPlayer(ePlayer)));
+        }, 45L);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        EPlayer ePlayer = plugin.getPlayerManager().getPlayer(event.getPlayer());
-        plugin.getDataManager().updatePlayer(ePlayer);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            EPlayer ePlayer = plugin.getPlayerManager().getPlayer(event.getPlayer());
+            plugin.getDataManager().updatePlayer(ePlayer);
+        }, 45L);
     }
 }

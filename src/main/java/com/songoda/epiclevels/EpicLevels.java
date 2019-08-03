@@ -159,7 +159,8 @@ public class EpicLevels extends JavaPlugin {
     public void onDisable() {
         this.dataManager.bulkUpdatePlayers(this.playerManager.getPlayers());
         this.dataManager.bulkUpdateBoosts(this.boostManager.getBoosts().values());
-        this.dataManager.updateBoost(this.boostManager.getGlobalBoost());
+        if (this.boostManager.getGlobalBoost() != null)
+            this.dataManager.updateBoost(this.boostManager.getGlobalBoost());
         console.sendMessage(Methods.formatText("&a============================="));
         console.sendMessage(Methods.formatText("&7EpicLevels " + this.getDescription().getVersion() + " by &5Songoda <3!"));
         console.sendMessage(Methods.formatText("&7Action: &cDisabling&7..."));

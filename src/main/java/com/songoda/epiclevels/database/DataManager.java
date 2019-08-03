@@ -135,8 +135,8 @@ public class DataManager {
 
             try (PreparedStatement statement = connection.prepareStatement(selectPlayers)) {
                 statement.setString(1, player.getUniqueId().toString());
-                ResultSet result = statement.executeQuery(selectPlayers);
-                while (result.next()) {
+                ResultSet result = statement.executeQuery();
+                if (result.next()) {
                     UUID uuid = UUID.fromString(result.getString("uuid"));
 
                     double experience = result.getDouble("experience");
@@ -165,13 +165,14 @@ public class DataManager {
             try (Statement statement = connection.createStatement()) {
                 ResultSet result = statement.executeQuery(selectBoosts);
                 while (result.next()) {
+                    int id = result.getInt("id");
                     UUID uuid = UUID.fromString(result.getString("uuid"));
 
                     long expiration = result.getLong("expiration");
                     double multiplier = result.getInt("multiplier");
 
 
-                    boosts.put(uuid, new Boost(expiration, multiplier));
+                    boosts.put(uuid, new Boost(id, expiration, multiplier));
                 }
             }
 
@@ -201,13 +202,13 @@ public class DataManager {
             }
 
             int boostId = this.lastInsertedId(connection);
-            
+
             this.sync(() -> boost.setId(boostId));
         }));
     }
 
     public void updateBoost(Boost boost) {
-        this.async(() -> this.databaseConnector.connect(connection -> {
+        this.databaseConnector.connect(connection -> {
             String updateBoost = "UPDATE " + this.getTablePrefix() + "boosts SET expiration = ?, multiplier = ? WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(updateBoost)) {
                 statement.setLong(1, boost.getExpiration());
@@ -217,7 +218,7 @@ public class DataManager {
 
                 statement.executeUpdate();
             }
-        }));
+        });
     }
 
     public void bulkUpdateBoosts(Collection<Boost> boosts) {

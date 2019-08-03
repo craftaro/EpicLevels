@@ -12,6 +12,11 @@ public class Boost {
         this.multiplier = multiplier;
     }
 
+    public Boost(int id, long expiration, double multiplier) {
+        this(expiration, multiplier);
+        this.id = id;
+    }
+
     public void expire() {
         expiration = -1;
     }
