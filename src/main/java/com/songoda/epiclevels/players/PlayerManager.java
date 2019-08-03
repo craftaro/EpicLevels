@@ -1,5 +1,7 @@
 package com.songoda.epiclevels.players;
 
+import com.songoda.epiclevels.EpicLevels;
+import com.songoda.epiclevels.boost.Boost;
 import org.bukkit.OfflinePlayer;
 
 import java.util.*;
@@ -7,10 +9,14 @@ import java.util.stream.Collectors;
 
 public class PlayerManager {
 
-    private static final Map<UUID, EPlayer> registeredPlayers = new HashMap<>();
+    private final Map<UUID, EPlayer> registeredPlayers = new HashMap<>();
 
     public EPlayer getPlayer(UUID uuid) {
-        return registeredPlayers.computeIfAbsent(uuid, u -> new EPlayer(uuid));
+        return registeredPlayers.computeIfAbsent(uuid, u -> {
+            EPlayer ePlayer = new EPlayer(uuid);
+            EpicLevels.getInstance().getDataManager().createPlayer(ePlayer);
+            return ePlayer;
+        });
     }
 
     public EPlayer getPlayer(OfflinePlayer player) {
@@ -18,8 +24,15 @@ public class PlayerManager {
     }
 
     public EPlayer addPlayer(EPlayer player) {
+        registeredPlayers.remove(player.getUniqueId());
+        EpicLevels.getInstance().getDataManager().deletePlayer(player);
         registeredPlayers.put(player.getUniqueId(), player);
+        EpicLevels.getInstance().getDataManager().createPlayer(player);
         return player;
+    }
+
+    public void addPlayers(Map<UUID, EPlayer> players) {
+        registeredPlayers.putAll(players);
     }
 
     public List<EPlayer> getPlayers() {
@@ -28,8 +41,7 @@ public class PlayerManager {
         return players;
     }
 
-    public void resetPlayer(UUID uuid) {
-        registeredPlayers.remove(uuid);
+    public EPlayer resetPlayer(UUID uuid) {
+        return registeredPlayers.remove(uuid);
     }
-
 }

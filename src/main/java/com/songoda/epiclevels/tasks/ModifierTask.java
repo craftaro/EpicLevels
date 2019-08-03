@@ -22,7 +22,7 @@ public class ModifierTask extends BukkitRunnable {
         plugin = plug;
         if (instance == null) {
             instance = new ModifierTask(plugin);
-            instance.runTaskTimer(plugin, 0, 20);
+            instance.runTaskTimer(plugin, 40, 20);
         }
 
         return instance;

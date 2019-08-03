@@ -8,12 +8,6 @@ import java.util.stream.Collectors;
 
 public enum Setting {
 
-    AUTOSAVE("Main.Auto Save Interval In Seconds", 15,
-            "The amount of time in between saving to file.",
-            "This is purely a safety function to prevent against unplanned crashes or",
-            "restarts. With that said it is advised to keep this enabled.",
-            "If however you enjoy living on the edge, feel free to turn it off."),
-
     EXP_MOB("Main.Experience Gained Per Mob Kill", 2.5,
             "The amount of experience gained per monster kill."),
 
@@ -152,7 +146,15 @@ public enum Setting {
 
     LANGUGE_MODE("System.Language Mode", "en_US",
             "The enabled language file.",
-            "More language files (if available) can be found in the plugins data folder.");
+            "More language files (if available) can be found in the plugins data folder."),
+
+    MYSQL_ENABLED("MySQL.Enabled", false, "Set to 'true' to use MySQL instead of SQLite for data storage."),
+    MYSQL_HOSTNAME("MySQL.Hostname", "localhost"),
+    MYSQL_PORT("MySQL.Port", 3306),
+    MYSQL_DATABASE("MySQL.Database", "your-database"),
+    MYSQL_USERNAME("MySQL.Username", "user"),
+    MYSQL_PASSWORD("MySQL.Password", "pass"),
+    MYSQL_USE_SSL("MySQL.Use SSL", false);
 
     private String setting;
     private Object option;

@@ -2,6 +2,8 @@ package com.songoda.epiclevels.boost;
 
 public class Boost {
 
+    private int id;
+
     private long expiration;
     private final double multiplier;
 
@@ -12,6 +14,14 @@ public class Boost {
 
     public void expire() {
         expiration = -1;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public long getExpiration() {

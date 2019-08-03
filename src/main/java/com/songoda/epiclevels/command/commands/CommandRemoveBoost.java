@@ -1,6 +1,7 @@
 package com.songoda.epiclevels.command.commands;
 
 import com.songoda.epiclevels.EpicLevels;
+import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.command.AbstractCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

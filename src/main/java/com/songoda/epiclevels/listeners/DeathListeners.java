@@ -32,6 +32,7 @@ public class DeathListeners implements Listener {
         EPlayer damaged = plugin.getPlayerManager().getPlayer(event.getEntity().getUniqueId()); // A very sensitive person with a troubling past.
         EPlayer damager = plugin.getPlayerManager().getPlayer(event.getDamager().getUniqueId()); // The douche who ruined the guys life.
 
+
         if (Setting.BLACKLISTED_WORLDS.getStringList().stream()
                 .anyMatch(worldStr -> worldStr.equalsIgnoreCase(event.getEntity().getWorld().getName())))
             return;
@@ -113,6 +114,9 @@ public class DeathListeners implements Listener {
             ePlayer.increaseKillstreak();
             ePlayer.addPlayerKill(killed.getUniqueId());
 
+            plugin.getDataManager().updatePlayer(ePlayer);
+            plugin.getDataManager().updatePlayer(eKilled);
+
             int every = Setting.RUN_KILLSTREAK_EVERY.getInt();
             if (every != 0 && ePlayer.getKillstreak() % every == 0) {
                 Killstreak def = plugin.getKillstreakManager().getKillstreak(-1);
@@ -135,6 +139,8 @@ public class DeathListeners implements Listener {
             ePlayer.addMobKill();
             double playerExpBefore = ePlayer.getExperience();
             double playerExpAfter = ePlayer.addExperience(expMob);
+
+            plugin.getDataManager().updatePlayer(ePlayer);
 
             if (Setting.SEND_MOB_KILL_MESSAGE.getBoolean()) {
                 plugin.getLocale().getMessage("event.mob.killed")

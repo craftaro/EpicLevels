@@ -2,6 +2,7 @@ package com.songoda.epiclevels.command.commands;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.command.AbstractCommand;
+import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -28,7 +29,8 @@ public class CommandReset extends AbstractCommand {
             return ReturnType.FAILURE;
         }
 
-        instance.getPlayerManager().resetPlayer(player.getUniqueId());
+        EPlayer ePlayer = instance.getPlayerManager().resetPlayer(player.getUniqueId());
+        instance.getDataManager().deletePlayer(ePlayer);
 
         instance.getLocale().getMessage("command.reset.success")
                 .processPlaceholder("player", player.getName())

@@ -2,6 +2,7 @@ package com.songoda.epiclevels.command.commands;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.command.AbstractCommand;
+import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -36,7 +37,9 @@ public class CommandTakeExp extends AbstractCommand {
 
         long amount = Long.parseLong(args[2]);
 
-        instance.getPlayerManager().getPlayer(player).addExperience(0L - amount);
+        EPlayer ePlayer = instance.getPlayerManager().getPlayer(player);
+        ePlayer.addExperience(0L - amount);
+        instance.getDataManager().updatePlayer(ePlayer);
 
         instance.getLocale().getMessage("command.removeexp.success")
                 .processPlaceholder("amount", amount)
