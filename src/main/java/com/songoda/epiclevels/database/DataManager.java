@@ -193,7 +193,7 @@ public class DataManager {
         this.async(() -> this.databaseConnector.connect(connection -> {
             String createBoost = "INSERT INTO " + this.getTablePrefix() + "boosts (uuid, expiration, multiplier) VALUES (?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(createBoost)) {
-                statement.setString(1, uuid.toString());
+                statement.setString(1, uuid == null ? null : uuid.toString());
 
                 statement.setLong(2, boost.getExpiration());
                 statement.setDouble(3, boost.getMultiplier());
