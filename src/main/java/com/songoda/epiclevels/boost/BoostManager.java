@@ -48,7 +48,12 @@ public class BoostManager {
     }
 
     public void addBoosts(Map<UUID, Boost> uuidBoostMap) {
-        this.registeredBoosts.putAll(uuidBoostMap);
+        for (Map.Entry<UUID, Boost> entry : uuidBoostMap.entrySet()) {
+            if (entry.getKey() == null)
+                this.globalBoost = entry.getValue();
+            else
+                this.registeredBoosts.put(entry.getKey(), entry.getValue());
+        }
     }
 
     public Boost removeBoost(UUID uuid) {

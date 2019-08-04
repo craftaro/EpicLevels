@@ -166,7 +166,9 @@ public class DataManager {
                 ResultSet result = statement.executeQuery(selectBoosts);
                 while (result.next()) {
                     int id = result.getInt("id");
-                    UUID uuid = UUID.fromString(result.getString("uuid"));
+
+                    String uuidStr = result.getString("uuid");
+                    UUID uuid = uuidStr == null ? null : UUID.fromString(uuidStr);
 
                     long expiration = result.getLong("expiration");
                     double multiplier = result.getInt("multiplier");
