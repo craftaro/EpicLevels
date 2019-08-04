@@ -100,7 +100,7 @@ public class EpicLevels extends JavaPlugin {
 
         // Listener Registration
         pluginManager.registerEvents(new DeathListeners(this), this);
-        pluginManager.registerEvents(new LoginListeners(this), this);
+        Bukkit.getScheduler().runTaskLater(this, () -> pluginManager.registerEvents(new LoginListeners(this), this), 100L);
 
         // Loading levels
         levelManager.load();
