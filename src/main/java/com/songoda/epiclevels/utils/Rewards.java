@@ -64,7 +64,7 @@ public class Rewards {
                         break;
                     case "SOUND":
                         if (last)
-                            player.playSound(player.getLocation(), Sound.valueOf(line), 1L, 1L);
+                            player.playSound(player.getLocation(), Sound.valueOf(line.trim()), 1L, 1L);
                         break;
                     case "TITLE":
                         Title.sendTitle(player, Methods.formatText(line.trim()), null, 20, 100, 20);

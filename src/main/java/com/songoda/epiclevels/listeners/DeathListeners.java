@@ -101,7 +101,7 @@ public class DeathListeners implements Listener {
                         .sendPrefixedMessage(player);
             }
 
-            if (Setting.SEND_BROADCAST_BROKEN_KILLSTREAK.getBoolean())
+            if (Setting.SEND_BROADCAST_BROKEN_KILLSTREAK.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
                     plugin.getLocale().getMessage("event.killstreak.brokenannounce")
                             .processPlaceholder("player", player.getName())
