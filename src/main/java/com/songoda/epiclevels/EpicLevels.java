@@ -170,6 +170,12 @@ public class EpicLevels extends JavaPlugin {
     public void reload() {
         this.locale = Locale.getLocale(getConfig().getString("System.Language Mode"));
         this.locale.reloadMessages();
+
+        // Loading levels
+        levelManager.load();
+        // Loading killstreaks
+        killstreakManager.load();
+
         levelManager.load();
         settingsManager.reloadConfig();
     }

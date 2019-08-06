@@ -17,6 +17,8 @@ public class KillstreakManager {
     private static final Map<Integer, Killstreak> killstreaks = new HashMap<>();
 
     public void load() {
+        killstreaksFile.reloadConfig();
+        killstreaks.clear();
         EpicLevels.getInstance().saveResource("KillstreakRewards.yml", false);
         FileConfiguration killstreaksConfig = killstreaksFile.getConfig();
         for (String key : killstreaksConfig.getKeys(false)) {
