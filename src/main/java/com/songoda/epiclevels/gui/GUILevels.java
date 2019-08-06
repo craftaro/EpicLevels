@@ -99,7 +99,8 @@ public class GUILevels extends AbstractGUI {
 
         for (int i = 0; i < 7; i++) {
             int current = i + (position - 3 < 0 ? 0 : (position + 3 > (players.size() - 1) ? (players.size() - 7) : position - 3));
-            if (current > (players.size() - 1)) break;
+
+            if (current < 0 || current > players.size() - 1) continue;
             EPlayer selected = players.get(current);
             if (selected.getPlayer() == null || selected.getPlayer().getName() == null)
                 continue;
