@@ -5,7 +5,6 @@ import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.levels.Level;
 import com.songoda.epiclevels.utils.Rewards;
 import com.songoda.epiclevels.utils.settings.Setting;
-import com.songoda.epiclevels.utils.settings.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -23,7 +22,7 @@ public class EPlayer {
 
     private final UUID uuid;
 
-    private long experience;
+    private double experience;
 
     private int mobKills;
     private int playerKills;
@@ -35,7 +34,7 @@ public class EPlayer {
 
     private static ScriptEngine engine = null;
 
-    public EPlayer(UUID uuid, long experience, int mobKills, int playerKills, int deaths, int killstreak, int bestKillstreak) {
+    public EPlayer(UUID uuid, double experience, int mobKills, int playerKills, int deaths, int killstreak, int bestKillstreak) {
         this.uuid = uuid;
         this.experience = experience;
         this.mobKills = mobKills;
@@ -51,7 +50,7 @@ public class EPlayer {
     }
 
     public EPlayer(UUID uuid) {
-        this(uuid, Setting.START_EXP.getLong(), 0, 0, 0, 0, 0);
+        this(uuid, Setting.START_EXP.getDouble(), 0, 0, 0, 0, 0);
     }
 
     public UUID getUniqueId() {
@@ -62,7 +61,8 @@ public class EPlayer {
         return Bukkit.getOfflinePlayer(uuid);
     }
 
-    public long addExperience(long experience) {
+    public double addExperience(double experience) {
+        if (experience == 0) return experience;
         EpicLevels plugin = EpicLevels.getInstance();
         if (experience < 0L) {
             if (this.experience + experience < 0L && !Setting.ALLOW_NEGATIVE.getBoolean())
@@ -84,7 +84,7 @@ public class EPlayer {
 
         Player player = getPlayer().getPlayer();
         if ((currentLevel != getLevel() || currentLevel > getLevel()) && player != null) {
-            for (int i = currentLevel; i <= getLevel() ; i++) {
+            for (int i = currentLevel + 1; i <= getLevel(); i++) {
                 Level def = plugin.getLevelManager().getLevel(-1);
                 if (def != null)
                     Rewards.run(def.getRewards(), player, i, i == getLevel());
@@ -95,10 +95,13 @@ public class EPlayer {
             if (Setting.SEND_BROADCAST_LEVELUP_MESSAGE.getBoolean()
                     && getLevel() % Setting.BROADCAST_LEVELUP_EVERY.getInt() == 0)
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).collect(Collectors.toList()))
-                    pl.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("event.levelup.announcement", player.getName(), getLevel()));
+                    plugin.getLocale().getMessage("event.levelup.announcement")
+                            .processPlaceholder("player", player.getName())
+                            .processPlaceholder("level", getLevel())
+                            .sendPrefixedMessage(pl);
         }
-        if (this.experience > Setting.MAX_EXP.getLong())
-            this.experience = Setting.MAX_EXP.getLong();
+        if (this.experience > Setting.MAX_EXP.getDouble())
+            this.experience = Setting.MAX_EXP.getDouble();
         return this.experience;
     }
 
@@ -119,7 +122,7 @@ public class EPlayer {
         return multiplier;
     }
 
-    public long getExperience() {
+    public double getExperience() {
         return experience;
     }
 

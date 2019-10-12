@@ -1,12 +1,12 @@
 package com.songoda.epiclevels.economy;
 
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 public interface Economy {
 
-    boolean AddToBalance(Player player, double amount);
+    boolean hasBalance(OfflinePlayer player, double cost);
 
-    boolean hasBalance(Player player, double cost);
+    boolean withdrawBalance(OfflinePlayer player, double cost);
 
-    boolean withdrawBalance(Player player, double cost);
+    boolean deposit(OfflinePlayer player, double amount);
 }

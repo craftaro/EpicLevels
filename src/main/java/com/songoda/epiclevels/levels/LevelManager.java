@@ -16,6 +16,8 @@ public class LevelManager {
     private static final Map<Integer, Level> levels = new HashMap<>();
 
     public void load() {
+        levelsFile.reloadConfig();
+        levels.clear();
         EpicLevels.getInstance().saveResource("LevelUpRewards.yml", false);
         FileConfiguration levelsConfig = levelsFile.getConfig();
         for (String key : levelsConfig.getKeys(false)) {

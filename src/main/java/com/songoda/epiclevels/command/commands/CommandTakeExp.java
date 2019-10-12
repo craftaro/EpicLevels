@@ -2,6 +2,7 @@ package com.songoda.epiclevels.command.commands;
 
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.command.AbstractCommand;
+import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -23,21 +24,27 @@ public class CommandTakeExp extends AbstractCommand {
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
 
         if (!player.hasPlayedBefore()) {
-            sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notonline", args[1]));
+            instance.getLocale().getMessage("command.general.notonline")
+                    .processPlaceholder("name", args[1]).sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
 
         if (!Methods.isInt(args[2])) {
-            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint")));
-            sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.general.notint", args[2])));
+            instance.getLocale().getMessage("command.general.notint")
+                    .processPlaceholder("number", args[2]).sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
         }
 
         long amount = Long.parseLong(args[2]);
 
-        instance.getPlayerManager().getPlayer(player).addExperience(0L - amount);
+        EPlayer ePlayer = instance.getPlayerManager().getPlayer(player);
+        ePlayer.addExperience(0L - amount);
+        instance.getDataManager().updatePlayer(ePlayer);
 
-        sender.sendMessage(instance.getReferences().getPrefix() + instance.getLocale().getMessage("command.removeexp.success", amount, player.getName()));
+        instance.getLocale().getMessage("command.removeexp.success")
+                .processPlaceholder("amount", amount)
+                .processPlaceholder("player", player.getName())
+                .sendPrefixedMessage(sender);
 
         return ReturnType.SUCCESS;
     }

@@ -24,9 +24,10 @@ public class BoostManager {
             if (globalBoost.getExpiration() > System.currentTimeMillis())
                 return globalBoost;
             else {
+                epicLevels.getDataManager().deleteBoost(globalBoost);
                 globalBoost = null;
                 Bukkit.getOnlinePlayers().forEach(player ->
-                        player.sendMessage(epicLevels.getReferences().getPrefix() + epicLevels.getLocale().getMessage("event.boost.globalexpire")));
+                        epicLevels.getLocale().getMessage("event.boost.globalexpire").sendPrefixedMessage(player));
             }
         }
         Boost boost = registeredBoosts.get(uuid);
@@ -34,8 +35,9 @@ public class BoostManager {
         if (boost.getExpiration() > System.currentTimeMillis())
             return boost;
         else {
+            epicLevels.getDataManager().deleteBoost(boost);
             registeredBoosts.remove(uuid);
-            Bukkit.getPlayer(uuid).sendMessage(epicLevels.getReferences().getPrefix() + epicLevels.getLocale().getMessage("event.boost.expire"));
+            epicLevels.getLocale().getMessage("event.boost.expire").sendPrefixedMessage(Bukkit.getPlayer(uuid));
         }
         return null;
     }
@@ -43,6 +45,15 @@ public class BoostManager {
     public Boost addBoost(UUID uuid, Boost boost) {
         removeBoost(uuid);
         return registeredBoosts.put(uuid, boost);
+    }
+
+    public void addBoosts(Map<UUID, Boost> uuidBoostMap) {
+        for (Map.Entry<UUID, Boost> entry : uuidBoostMap.entrySet()) {
+            if (entry.getKey() == null)
+                this.globalBoost = entry.getValue();
+            else
+                this.registeredBoosts.put(entry.getKey(), entry.getValue());
+        }
     }
 
     public Boost removeBoost(UUID uuid) {

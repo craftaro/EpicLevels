@@ -1,33 +1,28 @@
 package com.songoda.epiclevels.economy;
 
-import com.songoda.epiclevels.EpicLevels;
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 
 public class VaultEconomy implements Economy {
-
-    private final EpicLevels plugin;
-
     private final net.milkbowl.vault.economy.Economy vault;
 
-    public VaultEconomy(EpicLevels plugin) {
-        this.plugin = plugin;
-
-        this.vault = plugin.getServer().getServicesManager().
+    public VaultEconomy() {
+        this.vault = Bukkit.getServicesManager().
                 getRegistration(net.milkbowl.vault.economy.Economy.class).getProvider();
     }
 
     @Override
-    public boolean AddToBalance(Player player, double amount) {
-        return vault.depositPlayer(player, amount).transactionSuccess();
-    }
-
-    @Override
-    public boolean hasBalance(Player player, double cost) {
+    public boolean hasBalance(OfflinePlayer player, double cost) {
         return vault.has(player, cost);
     }
 
     @Override
-    public boolean withdrawBalance(Player player, double cost) {
+    public boolean withdrawBalance(OfflinePlayer player, double cost) {
         return vault.withdrawPlayer(player, cost).transactionSuccess();
+    }
+
+    @Override
+    public boolean deposit(OfflinePlayer player, double amount) {
+        return vault.depositPlayer(player, amount).transactionSuccess();
     }
 }

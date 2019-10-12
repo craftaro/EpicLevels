@@ -16,7 +16,8 @@ public class CommandHelp extends AbstractCommand {
     @Override
     protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
         sender.sendMessage("");
-        sender.sendMessage(Methods.formatText(instance.getReferences().getPrefix() + "&7Version " + instance.getDescription().getVersion() + " Created with <3 by &5&l&oSongoda"));
+        instance.getLocale().newMessage("&7Version " + instance.getDescription().getVersion()
+                + " Created with <3 by &5&l&oSongoda").sendPrefixedMessage(sender);
         sender.sendMessage("");
         sender.sendMessage(Methods.formatText("&7Welcome to EpicLevels! To get started try using the /levels command to access the leaderboard."));
         sender.sendMessage("");

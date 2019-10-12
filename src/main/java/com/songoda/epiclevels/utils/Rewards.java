@@ -33,12 +33,10 @@ public class Rewards {
                 switch (s.split(" ")[0]) {
                     case "MSG":
                         if (last)
-                            player.sendMessage(EpicLevels.getInstance().getReferences().getPrefix() +
-                                    Methods.formatText(line.trim()));
+                            EpicLevels.getInstance().getLocale().newMessage(line.trim()).sendPrefixedMessage(player);
                         break;
                     case "BROADCAST":
-                        Bukkit.broadcastMessage(EpicLevels.getInstance().getReferences().getPrefix() +
-                                Methods.formatText(line.trim()));
+                        Bukkit.broadcastMessage(EpicLevels.getInstance().getLocale().newMessage(line.trim()).getMessage());
                         break;
                     case "CMD":
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line.replace("/", "").trim());
@@ -52,7 +50,7 @@ public class Rewards {
                                 player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
                         break;
                     case "ECONOMY":
-                        EpicLevels.getInstance().getEconomy().AddToBalance(player, Double.parseDouble(line.replace("$", "")));
+                        EpicLevels.getInstance().getEconomy().deposit(player, Double.parseDouble(line.replace("$", "")));
                         break;
                     case "HEAL":
                         if (EpicLevels.getInstance().isServerVersionAtLeast(ServerVersion.V1_9))
@@ -66,13 +64,13 @@ public class Rewards {
                         break;
                     case "SOUND":
                         if (last)
-                            player.playSound(player.getLocation(), Sound.valueOf(line), 1L, 1L);
+                            player.playSound(player.getLocation(), Sound.valueOf(line.trim()), 1L, 1L);
                         break;
                     case "TITLE":
                         Title.sendTitle(player, Methods.formatText(line.trim()), null, 20, 100, 20);
                         break;
                     case "SUBTITLE":
-                        Title.sendTitle(player, Methods.formatText("&7"), Methods.formatText(line.trim()), 20, 100, 20);
+                        Title.sendTitle(player, null, Methods.formatText(line.trim()), 20, 100, 20);
                         break;
                 }
             } catch (Exception e) {

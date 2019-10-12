@@ -8,27 +8,24 @@ import java.util.stream.Collectors;
 
 public enum Setting {
 
-    AUTOSAVE("Main.Auto Save Interval In Seconds", 15,
-            "The amount of time in between saving to file.",
-            "This is purely a safety function to prevent against unplanned crashes or",
-            "restarts. With that said it is advised to keep this enabled.",
-            "If however you enjoy living on the edge, feel free to turn it off."),
-
-    EXP_MOB("Main.Experience Gained Per Mob Kill", 2L,
+    EXP_MOB("Main.Experience Gained Per Mob Kill", 2.5,
             "The amount of experience gained per monster kill."),
 
-    EXP_PLAYER("Main.Experience Gained Per Player Kill", 250L,
+    EXP_PLAYER("Main.Experience Gained Per Player Kill", 250,
             "The amount of experience gained per player kill."),
 
-    EXP_DEATH("Main.Experience lost On Death", 200L,
+    EXP_DEATH("Main.Experience lost On Death", 200,
             "The amount of experience lost when a player is killed",
             "by another player."),
 
     ALLOW_NEGATIVE("Main.Allow Negative Experience", false,
             "Allow players to lose experience into negative?"),
 
-    SEND_KILL_MESSAGE("Main.Send Message On Kill", true,
+    SEND_PLAYER_KILL_MESSAGE("Main.Send Message On Player Kill", true,
             "Should Players be notified when they kill another player?"),
+
+    SEND_MOB_KILL_MESSAGE("Main.Send Message On Mob Kill", true,
+            "Should Players be notified when they kill a mob?"),
 
     SEND_DEATH_MESSAGE("Main.Send Message On Death", true,
             "Should players be notified when killed?"),
@@ -39,6 +36,16 @@ public enum Setting {
     SEND_BROADCAST_LEVELUP_MESSAGE("Main.Send Broadcast On Levelup", true,
             "Broadcasts a players level up to the whole server."),
 
+    SEND_BROADCAST_BROKEN_KILLSTREAK("Main.Send Broadcast On Broken Killstreak", true,
+            "Broadcasts a broken killstreak to the whole server."),
+
+    SEND_KILLSTREAK_BROKEN_MESSAGE("Main.Send Killstreak Broken Message", true,
+            "Should players be notified when a killstreak is broken?"),
+
+    SEND_KILLSTREAK_ALERTS_AFTER("Main.Send Killstreak Alerts After", 5,
+            "Kill streak message and broadcasts will only display if a",
+            "killstreak of this value or greater is reached."),
+
     BROADCAST_LEVELUP_EVERY("Main.Broadcast Levelup Every", 5,
             "How often should a level up be announced?",
             "If you enter 5 every 5 levels players will be notified."),
@@ -48,10 +55,10 @@ public enum Setting {
             "Note that once reached players will still earn experience beyond",
             "the the maximum level without the ability to level up."),
 
-    MAX_EXP("Main.Max Experience", 200000000L,
+    MAX_EXP("Main.Max Experience", 200000000,
             "The maximum allowed experience."),
 
-    START_EXP("Main.Starting Experience", 0L,
+    START_EXP("Main.Starting Experience", 0,
             "The amount of experience players start with."),
 
     START_PVP_LEVEL("Main.Level Required For PVP", 0,
@@ -104,6 +111,15 @@ public enum Setting {
     GRINDER_ALERT("Anti Grinder.Alert When Triggered", true,
             "Should we alert the killer when they have reached the threshold?"),
 
+    VAULT_ECONOMY("Economy.Use Vault Economy", true,
+            "Should Vault be used?"),
+
+    RESERVE_ECONOMY("Economy.Use Reserve Economy", true,
+            "Should Reserve be used?"),
+
+    PLAYER_POINTS_ECONOMY("Economy.Use Player Points Economy", false,
+            "Should PlayerPoints be used?"),
+
     LEVELING_FORMULA("Formula.Leveling", "EXPONENTIAL",
             "This is the formula used when calculating a players level",
             "", "LINEAR: All levels require the same amount of experience to reach the next level.",
@@ -130,7 +146,15 @@ public enum Setting {
 
     LANGUGE_MODE("System.Language Mode", "en_US",
             "The enabled language file.",
-            "More language files (if available) can be found in the plugins data folder.");
+            "More language files (if available) can be found in the plugins data folder."),
+
+    MYSQL_ENABLED("MySQL.Enabled", false, "Set to 'true' to use MySQL instead of SQLite for data storage."),
+    MYSQL_HOSTNAME("MySQL.Hostname", "localhost"),
+    MYSQL_PORT("MySQL.Port", 3306),
+    MYSQL_DATABASE("MySQL.Database", "your-database"),
+    MYSQL_USERNAME("MySQL.Username", "user"),
+    MYSQL_PASSWORD("MySQL.Password", "pass"),
+    MYSQL_USE_SSL("MySQL.Use SSL", false);
 
     private String setting;
     private Object option;

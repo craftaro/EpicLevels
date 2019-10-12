@@ -30,8 +30,6 @@ public class GUILevels extends AbstractGUI {
 
     private Sorting sortingBy = Sorting.LEVELS;
 
-    private DecimalFormat decimalFormat = new DecimalFormat("###,###.###");
-
     public GUILevels(EpicLevels plugin, Player player, EPlayer target) {
         super(player);
         plugin.getPlayerManager().getPlayer(player);
@@ -44,7 +42,8 @@ public class GUILevels extends AbstractGUI {
     }
 
     private void updateTitle() {
-        init(plugin.getLocale().getMessage("gui.levels.title", sortingBy.getName()), 54);
+        init(plugin.getLocale().getMessage("gui.levels.title")
+                .processPlaceholder("type", sortingBy.getName()).getMessage(), 54);
         constructGUI();
     }
 
@@ -89,18 +88,19 @@ public class GUILevels extends AbstractGUI {
         inventory.setItem(53, Methods.getBackgroundGlass(true));
 
 
-        createButton(2, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.EXPERIENCE_BOTTLE : Material.valueOf("EXP_BOTTLE"), plugin.getLocale().getMessage("gui.levels.toplevels"));
-        createButton(3, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.SKELETON_SKULL : new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (byte) 0), plugin.getLocale().getMessage("gui.levels.topmobs"));
-        createButton(5, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.PLAYER_HEAD : new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (byte) 3), plugin.getLocale().getMessage("gui.levels.topplayers"));
-        createButton(6, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.topkillstreaks"));
-        createButton(16, Material.COMPASS, plugin.getLocale().getMessage("gui.levels.search"));
+        createButton(2, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.EXPERIENCE_BOTTLE : Material.valueOf("EXP_BOTTLE"), plugin.getLocale().getMessage("gui.levels.toplevels").getMessage());
+        createButton(3, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.SKELETON_SKULL : new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (byte) 0), plugin.getLocale().getMessage("gui.levels.topmobs").getMessage());
+        createButton(5, plugin.isServerVersionAtLeast(ServerVersion.V1_13) ? Material.PLAYER_HEAD : new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (byte) 3), plugin.getLocale().getMessage("gui.levels.topplayers").getMessage());
+        createButton(6, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.topkillstreaks").getMessage());
+        createButton(16, Material.COMPASS, plugin.getLocale().getMessage("gui.levels.search").getMessage());
 
-        createButton(13, Material.REDSTONE, plugin.getLocale().getMessage("gui.levels.sortingby", sortingBy.getName()),
-                plugin.getLocale().getMessage("gui.levels.you"));
+        createButton(13, Material.REDSTONE, plugin.getLocale().getMessage("gui.levels.sortingby").processPlaceholder("type", sortingBy.getName()).getMessage(),
+                plugin.getLocale().getMessage("gui.levels.you").getMessage());
 
         for (int i = 0; i < 7; i++) {
             int current = i + (position - 3 < 0 ? 0 : (position + 3 > (players.size() - 1) ? (players.size() - 7) : position - 3));
-            if (current > (players.size() - 1)) break;
+
+            if (current < 0 || current > players.size() - 1) continue;
             EPlayer selected = players.get(current);
             if (selected.getPlayer() == null || selected.getPlayer().getName() == null)
                 continue;
@@ -115,7 +115,7 @@ public class GUILevels extends AbstractGUI {
                 meta.setOwner(targetPlayer.getName());
             head.setItemMeta(meta);
 
-            long exp = selected.getExperience() - EPlayer.experience(selected.getLevel());
+            double exp = selected.getExperience() - EPlayer.experience(selected.getLevel());
 
             double nextLevel = EPlayer.experience(selected.getLevel() + 1) - EPlayer.experience(selected.getLevel());
 
@@ -125,22 +125,22 @@ public class GUILevels extends AbstractGUI {
             int slot = 37 + i;
 
             if (current == position)
-                createButton(slot + 9, Material.ARROW, plugin.getLocale().getMessage("gui.levels.selected"));
+                createButton(slot + 9, Material.ARROW, plugin.getLocale().getMessage("gui.levels.selected").getMessage());
 
-            createButton(slot, head, plugin.getLocale().getMessage("gui.levels.name", current + 1, targetPlayer.getName()),
-                    plugin.getLocale().getMessage("gui.levels.level", decimalFormat.format(selected.getLevel())),
-                    plugin.getLocale().getMessage("gui.levels.exp", decimalFormat.format(selected.getExperience()), decimalFormat.format(EPlayer.experience(selected.getLevel() + 1))),
+            createButton(slot, head, plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).getMessage(),
+                    plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
+                    plugin.getLocale().getMessage("gui.levels.exp").processPlaceholder("exp", Methods.formatDecimal(selected.getExperience())).processPlaceholder("expnext", Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))).getMessage(),
                     prog);
 
             if (current == position)
-                createButton(slot - 9, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.stats"),
-                        plugin.getLocale().getMessage("gui.levels.totalkills", decimalFormat.format(selected.getKills())),
-                        plugin.getLocale().getMessage("gui.levels.playerkills", decimalFormat.format(selected.getPlayerKills())),
-                        plugin.getLocale().getMessage("gui.levels.mobkills", decimalFormat.format(selected.getMobKills())),
-                        plugin.getLocale().getMessage("gui.levels.deaths", decimalFormat.format(selected.getDeaths())),
-                        plugin.getLocale().getMessage("gui.levels.kdr", decimalFormat.format(selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double) selected.getPlayerKills()) / selected.getDeaths())),
-                        plugin.getLocale().getMessage("gui.levels.killstreak", decimalFormat.format(selected.getKillstreak())),
-                        plugin.getLocale().getMessage("gui.levels.bestkillstreak", decimalFormat.format(selected.getBestKillstreak())));
+                createButton(slot - 9, Material.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.stats").getMessage(),
+                        plugin.getLocale().getMessage("gui.levels.totalkills").processPlaceholder("kills", Methods.formatDecimal(selected.getKills())).getMessage(),
+                        plugin.getLocale().getMessage("gui.levels.playerkills").processPlaceholder("kills", Methods.formatDecimal(selected.getPlayerKills())).getMessage(),
+                        plugin.getLocale().getMessage("gui.levels.mobkills").processPlaceholder("kills", Methods.formatDecimal(selected.getMobKills())).getMessage(),
+                        plugin.getLocale().getMessage("gui.levels.deaths").processPlaceholder("deaths", Methods.formatDecimal(selected.getDeaths())).getMessage(),
+                        plugin.getLocale().getMessage("gui.levels.kdr").processPlaceholder("kdr", Methods.formatDecimal(selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double) selected.getPlayerKills()) / (double)selected.getDeaths())).getMessage(),
+                        plugin.getLocale().getMessage("gui.levels.killstreak").processPlaceholder("killstreak", Methods.formatDecimal(selected.getKillstreak())).getMessage(),
+                        plugin.getLocale().getMessage("gui.levels.bestkillstreak").processPlaceholder("killstreak", Methods.formatDecimal(selected.getBestKillstreak())).getMessage());
 
             registerClickable(slot, ((player1, inventory1, cursor, slot1, type) -> {
                 position = current;
@@ -195,7 +195,7 @@ public class GUILevels extends AbstractGUI {
         }));
 
         registerClickable(16, ((player1, inventory1, cursor, slot, type) -> {
-            player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("gui.levels.nametosearch"));
+            plugin.getLocale().getMessage("gui.levels.nametosearch").sendPrefixedMessage(player);
             AbstractChatConfirm abstractChatConfirm = new AbstractChatConfirm(player, event -> {
                 Optional<EPlayer> targetOptional = players.stream()
                         .filter(ePlayer -> ePlayer.getPlayer().getName() != null
@@ -203,7 +203,7 @@ public class GUILevels extends AbstractGUI {
                         .limit(1).findAny();
 
                 if (!targetOptional.isPresent()) {
-                    player.sendMessage(plugin.getReferences().getPrefix() + plugin.getLocale().getMessage("gui.levels.noresults"));
+                    plugin.getLocale().getMessage("gui.levels.noresults").sendPrefixedMessage(player);
                     return;
                 }
                 target = targetOptional.get();
@@ -226,7 +226,7 @@ public class GUILevels extends AbstractGUI {
         KILLSTREAKS;
 
         public String getName() {
-            return EpicLevels.getInstance().getLocale().getMessage("gui.levels." + name().toLowerCase() + "type");
+            return EpicLevels.getInstance().getLocale().getMessage("gui.levels." + name().toLowerCase() + "type").getMessage();
         }
     }
 

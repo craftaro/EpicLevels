@@ -3,11 +3,15 @@ package com.songoda.epiclevels;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.boost.BoostManager;
 import com.songoda.epiclevels.command.CommandManager;
+import com.songoda.epiclevels.database.*;
 import com.songoda.epiclevels.economy.Economy;
+import com.songoda.epiclevels.economy.PlayerPointsEconomy;
+import com.songoda.epiclevels.economy.ReserveEconomy;
 import com.songoda.epiclevels.economy.VaultEconomy;
 import com.songoda.epiclevels.killstreaks.KillstreakManager;
 import com.songoda.epiclevels.levels.LevelManager;
 import com.songoda.epiclevels.listeners.DeathListeners;
+import com.songoda.epiclevels.listeners.LoginListeners;
 import com.songoda.epiclevels.placeholder.PlaceholderManager;
 import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.players.PlayerManager;
@@ -20,6 +24,7 @@ import com.songoda.epiclevels.utils.Methods;
 import com.songoda.epiclevels.utils.Metrics;
 import com.songoda.epiclevels.utils.ServerVersion;
 import com.songoda.epiclevels.utils.gui.updateModules.LocaleModule;
+import com.songoda.epiclevels.utils.locale.Locale;
 import com.songoda.epiclevels.utils.settings.Setting;
 import com.songoda.epiclevels.utils.settings.SettingsManager;
 import com.songoda.update.Plugin;
@@ -30,6 +35,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.UUID;
 
 public class EpicLevels extends JavaPlugin {
@@ -45,8 +51,10 @@ public class EpicLevels extends JavaPlugin {
     private KillstreakManager killstreakManager;
     private BoostManager boostManager;
 
-    private References references;
-    private Storage storage;
+    private DatabaseConnector databaseConnector;
+    private DataMigrationManager dataMigrationManager;
+    private DataManager dataManager;
+
     private Economy economy;
     private Locale locale;
 
@@ -66,32 +74,33 @@ public class EpicLevels extends JavaPlugin {
         settingsManager.setupConfig();
 
         // Setup language
-        String langMode = Setting.LANGUGE_MODE.getString();
-        Locale.init(this);
-        Locale.saveDefaultLocale("en_US");
-        this.locale = Locale.getLocale(getConfig().getString("System.Language Mode", langMode));
+        new Locale(this, "en_US");
+        this.locale = Locale.getLocale(getConfig().getString("System.Language Mode"));
 
         //Running Songoda Updater
         Plugin plugin = new Plugin(this, 44);
         plugin.addModule(new LocaleModule());
         SongodaUpdate.load(plugin);
 
-        this.references = new References();
-
         this.playerManager = new PlayerManager();
         this.commandManager = new CommandManager(this);
         this.levelManager = new LevelManager();
         this.killstreakManager = new KillstreakManager();
         this.boostManager = new BoostManager();
-        this.storage = new StorageYaml(this);
 
-        if (getServer().getPluginManager().getPlugin("Vault") != null)
-            this.economy = new VaultEconomy(this);
+        PluginManager pluginManager = getServer().getPluginManager();
 
-        PluginManager pluginManager = Bukkit.getPluginManager();
+        // Setup Economy
+        if (Setting.VAULT_ECONOMY.getBoolean() && pluginManager.isPluginEnabled("Vault"))
+            this.economy = new VaultEconomy();
+        else if (Setting.RESERVE_ECONOMY.getBoolean() && pluginManager.isPluginEnabled("Reserve"))
+            this.economy = new ReserveEconomy();
+        else if (Setting.PLAYER_POINTS_ECONOMY.getBoolean() && pluginManager.isPluginEnabled("PlayerPoints"))
+            this.economy = new PlayerPointsEconomy();
 
         // Listener Registration
         pluginManager.registerEvents(new DeathListeners(this), this);
+        Bukkit.getScheduler().runTaskLater(this, () -> pluginManager.registerEvents(new LoginListeners(this), this), 100L);
 
         // Loading levels
         levelManager.load();
@@ -99,15 +108,9 @@ public class EpicLevels extends JavaPlugin {
         // Loading killstreaks
         killstreakManager.load();
 
-        // Load Data
-        loadData();
-
         // Start Tasks
         if (isServerVersionAtLeast(ServerVersion.V1_9)) ModifierTask.startTask(this);
         BoostTask.startTask(this);
-
-        int timeout = Setting.AUTOSAVE.getInt() * 60 * 20;
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, this::saveToFile, timeout, timeout);
 
         // Register Placeholders
         if (pluginManager.isPluginEnabled("PlaceholderAPI"))
@@ -116,31 +119,73 @@ public class EpicLevels extends JavaPlugin {
         // Start Metrics
         new Metrics(this);
 
+        // Load Legacy Data
+        Bukkit.getScheduler().runTaskLater(this, this::loadLegacyData, 10);
+
+        // Database stuff, go!
+        try {
+            if (Setting.MYSQL_ENABLED.getBoolean()) {
+                String hostname = Setting.MYSQL_HOSTNAME.getString();
+                int port = Setting.MYSQL_PORT.getInt();
+                String database = Setting.MYSQL_DATABASE.getString();
+                String username = Setting.MYSQL_USERNAME.getString();
+                String password = Setting.MYSQL_PASSWORD.getString();
+                boolean useSSL = Setting.MYSQL_USE_SSL.getBoolean();
+
+                this.databaseConnector = new MySQLConnector(this, hostname, port, database, username, password, useSSL);
+                this.getLogger().info("Data handler connected using MySQL.");
+            } else {
+                this.databaseConnector = new SQLiteConnector(this);
+                this.getLogger().info("Data handler connected using SQLite.");
+            }
+        } catch (Exception ex) {
+            this.getLogger().severe("Fatal error trying to connect to database. Please make sure all your connection settings are correct and try again. Plugin has been disabled.");
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
+
+        this.dataManager = new DataManager(this.databaseConnector, this);
+        this.dataMigrationManager = new DataMigrationManager(this.databaseConnector, this.dataManager);
+        this.dataMigrationManager.runMigrations();
+
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            this.dataManager.getPlayers((player) -> this.playerManager.addPlayers(player));
+            this.dataManager.getBoosts((uuidBoostMap -> this.boostManager.addBoosts(uuidBoostMap)));
+        }, 20L);
+
         console.sendMessage(Methods.formatText("&a============================="));
     }
 
     @Override
     public void onDisable() {
-        saveToFile();
+        this.dataManager.bulkUpdatePlayers(this.playerManager.getPlayers());
+        this.dataManager.bulkUpdateBoosts(this.boostManager.getBoosts().values());
+        if (this.boostManager.getGlobalBoost() != null)
+            this.dataManager.updateBoost(this.boostManager.getGlobalBoost());
         console.sendMessage(Methods.formatText("&a============================="));
         console.sendMessage(Methods.formatText("&7EpicLevels " + this.getDescription().getVersion() + " by &5Songoda <3!"));
         console.sendMessage(Methods.formatText("&7Action: &cDisabling&7..."));
         console.sendMessage(Methods.formatText("&a============================="));
     }
 
-    private void saveToFile() {
-        storage.doSave();
-    }
-
     public void reload() {
-        saveToFile();
-        locale.reloadMessages();
-        references = new References();
+        this.locale = Locale.getLocale(getConfig().getString("System.Language Mode"));
+        this.locale.reloadMessages();
+
+        // Loading levels
+        levelManager.load();
+        // Loading killstreaks
+        killstreakManager.load();
+
         levelManager.load();
         settingsManager.reloadConfig();
     }
 
-    private void loadData() {
+    private void loadLegacyData() {
+        File folder = getDataFolder();
+        File dataFile = new File(folder, "data.yml");
+
+        if (!dataFile.exists()) return;
+        Storage storage = new StorageYaml(this);
         if (storage.containsGroup("players")) {
             for (StorageRow row : storage.getRowsByGroup("players")) {
                 if (row.get("uuid").asObject() == null)
@@ -148,30 +193,30 @@ public class EpicLevels extends JavaPlugin {
 
                 EPlayer player = new EPlayer(
                         UUID.fromString(row.get("uuid").asString()),
-                        row.get("experience").asLong(),
+                        row.get("experience").asDouble(),
                         row.get("mobKills").asInt(),
                         row.get("playerKills").asInt(),
                         row.get("deaths").asInt(),
                         row.get("killstreak").asInt(),
                         row.get("bestKillstreak").asInt());
+                getDataManager().createPlayer(player);
 
                 this.playerManager.addPlayer(player);
             }
         }
+
         if (storage.containsGroup("boosts")) {
             for (StorageRow row : storage.getRowsByGroup("boosts")) {
 
                 Boost boost = new Boost(row.get("expiration").asLong(), row.get("multiplier").asDouble());
 
                 if (row.get("global") != null)
-                    boostManager.setGlobalBoost(boost);
+                    dataManager.createBoost(null, boost);
                 else
-                    boostManager.addBoost(UUID.fromString(row.get("uuid").asString()), boost);
+                    dataManager.createBoost(UUID.fromString(row.get("uuid").asString()), boost);
             }
         }
-
-        // Save data initially so that if the person reloads again fast they don't lose all their data.
-        this.saveToFile();
+        dataFile.delete();
     }
 
     public ServerVersion getServerVersion() {
@@ -194,10 +239,6 @@ public class EpicLevels extends JavaPlugin {
         return locale;
     }
 
-    public References getReferences() {
-        return references;
-    }
-
     public PlayerManager getPlayerManager() {
         return playerManager;
     }
@@ -218,9 +259,19 @@ public class EpicLevels extends JavaPlugin {
         return levelManager;
     }
 
-    public KillstreakManager getKillstreakManager() { return killstreakManager; }
+    public KillstreakManager getKillstreakManager() {
+        return killstreakManager;
+    }
 
     public BoostManager getBoostManager() {
         return boostManager;
+    }
+
+    public DatabaseConnector getDatabaseConnector() {
+        return databaseConnector;
+    }
+
+    public DataManager getDataManager() {
+        return dataManager;
     }
 }

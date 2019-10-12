@@ -20,18 +20,18 @@
   - "ITEM DIAMOND (3 * %level%)"
   - "HEAL"
   - "FIREWORK"
-1:
+2:
   - "MSG You leveled up to level 1!"
   - "CMD /say HELLO %player%"
   - "ITEM EMERALD 2"
   - "ECONOMY $10000"
-2:
-  - "MSG You leveled up to level 2!"
 3:
-  - "MSG You leveled up to level 3!"
+  - "MSG You leveled up to level 2!"
 4:
-  - "MSG You leveled up to level 4!"
+  - "MSG You leveled up to level 3!"
 5:
+  - "MSG You leveled up to level 4!"
+6:
   - "MSG You leveled up to level 5!"
 50:
   - "OVERRIDE"
