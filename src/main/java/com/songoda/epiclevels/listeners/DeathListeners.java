@@ -84,7 +84,7 @@ public class DeathListeners implements Listener {
                 plugin.getLocale().getMessage("event.player.death").processPlaceholder("name", ChatColor.stripColor(player.getName()))
                         .processPlaceholder("exp", Methods.formatDecimal(-(killedExpAfter - killedExpBefore))).sendPrefixedMessage(killed);
 
-            if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt())
+            if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
                     plugin.getLocale().getMessage("event.player.death.broadcast")
                             .processPlaceholder("killed", killed.getName())
