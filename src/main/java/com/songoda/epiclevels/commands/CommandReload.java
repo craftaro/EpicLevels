@@ -1,27 +1,29 @@
-package com.songoda.epiclevels.command.commands;
+package com.songoda.epiclevels.commands;
 
+import com.songoda.core.commands.AbstractCommand;
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.command.AbstractCommand;
-import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
 public class CommandReload extends AbstractCommand {
 
-    public CommandReload(AbstractCommand parent) {
-        super(parent, false, "reload");
+    EpicLevels instance;
+
+    public CommandReload(EpicLevels instance) {
+        super(CommandType.CONSOLE_OK, "reload");
+        this.instance = instance;
     }
 
     @Override
-    protected AbstractCommand.ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
-        instance.reload();
+    protected ReturnType runCommand(CommandSender sender, String... args) {
+        instance.reloadConfig();
         instance.getLocale().getMessage("&7Configuration and Language files reloaded.").sendPrefixedMessage(sender);
-        return ReturnType.SUCCESS;
+        return AbstractCommand.ReturnType.SUCCESS;
     }
 
     @Override
-    protected List<String> onTab(EpicLevels instance, CommandSender sender, String... args) {
+    protected List<String> onTab(CommandSender sender, String... args) {
         return null;
     }
 

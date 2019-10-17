@@ -1,8 +1,8 @@
 package com.songoda.epiclevels.database.migrations;
 
+import com.songoda.core.database.DataMigration;
+import com.songoda.core.database.MySQLConnector;
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.database.DataMigration;
-import com.songoda.epiclevels.database.MySQLConnector;
 
 import java.sql.Connection;
 import java.sql.SQLException;

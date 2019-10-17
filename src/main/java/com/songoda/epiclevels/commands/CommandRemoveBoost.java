@@ -1,8 +1,7 @@
-package com.songoda.epiclevels.command.commands;
+package com.songoda.epiclevels.commands;
 
+import com.songoda.core.commands.AbstractCommand;
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.boost.Boost;
-import com.songoda.epiclevels.command.AbstractCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -11,19 +10,22 @@ import java.util.List;
 
 public class CommandRemoveBoost extends AbstractCommand {
 
-    public CommandRemoveBoost(AbstractCommand parent) {
-        super(parent, false, "RemoveBoost");
+    EpicLevels instance;
+
+    public CommandRemoveBoost(EpicLevels instance) {
+        super(CommandType.CONSOLE_OK, "RemoveBoost");
+        this.instance = instance;
     }
 
     @Override
-    protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
-        if (args.length != 2) return ReturnType.SYNTAX_ERROR;
+    protected ReturnType runCommand(CommandSender sender, String... args) {
+        if (args.length != 1) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getPlayer(args[1].toLowerCase());
+        OfflinePlayer player = Bukkit.getPlayer(args[0].toLowerCase());
 
         if (player == null) {
             instance.getLocale().getMessage("command.general.notonline")
-                    .processPlaceholder("name", args[1])
+                    .processPlaceholder("name", args[0])
                     .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
@@ -34,7 +36,7 @@ public class CommandRemoveBoost extends AbstractCommand {
     }
 
     @Override
-    protected List<String> onTab(EpicLevels instance, CommandSender sender, String... args) {
+    protected List<String> onTab(CommandSender sender, String... args) {
         return null;
     }
 

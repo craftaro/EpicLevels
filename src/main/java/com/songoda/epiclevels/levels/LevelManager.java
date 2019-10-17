@@ -1,7 +1,7 @@
 package com.songoda.epiclevels.levels;
 
+import com.songoda.core.configuration.Config;
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.utils.ConfigWrapper;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -11,15 +11,15 @@ import java.util.Map;
 
 public class LevelManager {
 
-    private ConfigWrapper levelsFile = new ConfigWrapper(EpicLevels.getInstance(), "", "LevelUpRewards.yml");
+    private Config levelsConfig = new Config(EpicLevels.getInstance(), "LevelUpRewards.yml");
 
     private static final Map<Integer, Level> levels = new HashMap<>();
 
     public void load() {
-        levelsFile.reloadConfig();
+        levelsConfig.load();
         levels.clear();
         EpicLevels.getInstance().saveResource("LevelUpRewards.yml", false);
-        FileConfiguration levelsConfig = levelsFile.getConfig();
+        FileConfiguration levelsConfig = this.levelsConfig.getFileConfig();
         for (String key : levelsConfig.getKeys(false)) {
             int level = Integer.parseInt(key);
             levels.put(Integer.parseInt(key), new Level(level, levelsConfig.getStringList(String.valueOf(level))));
@@ -32,5 +32,9 @@ public class LevelManager {
 
     public Level getLevel(int level) {
         return levels.get(level);
+    }
+
+    public Config getLevelsConfig() {
+        return levelsConfig;
     }
 }

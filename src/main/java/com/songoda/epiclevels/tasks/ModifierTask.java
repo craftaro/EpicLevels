@@ -1,7 +1,7 @@
 package com.songoda.epiclevels.tasks;
 
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.utils.settings.Setting;
+import com.songoda.epiclevels.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -30,8 +30,8 @@ public class ModifierTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        double healthPerLevel = Setting.EXTRA_HEALTH_PER_LEVEL.getDouble();
-        double damagePerLevel = Setting.EXTRA_DAMAGE_PER_LEVEL.getDouble();
+        double healthPerLevel = Settings.EXTRA_HEALTH_PER_LEVEL.getDouble();
+        double damagePerLevel = Settings.EXTRA_DAMAGE_PER_LEVEL.getDouble();
         Bukkit.getOnlinePlayers().forEach(player -> {
             updateHealthModifier(player, plugin.getPlayerManager().getPlayer(player).getLevel() * healthPerLevel);
             updateDamageModifier(player, plugin.getPlayerManager().getPlayer(player).getLevel() * damagePerLevel);
@@ -39,21 +39,21 @@ public class ModifierTask extends BukkitRunnable {
     }
 
     private void updateHealthModifier(Player player, double health) {
-        int maxHealth = Setting.MAX_EXTRA_HEALTH.getInt();
+        int maxHealth = Settings.MAX_EXTRA_HEALTH.getInt();
         if (health > maxHealth) health = maxHealth;
         AttributeInstance healthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         for (AttributeModifier modifier : healthAttribute.getModifiers()) {
             if (!modifier.getName().equals("EpicLevels"))
                 continue;
-            if (modifier.getAmount() == (int)health)
+            if (modifier.getAmount() == (int) health)
                 return;
             healthAttribute.removeModifier(modifier);
         }
-        healthAttribute.addModifier(new AttributeModifier("EpicLevels", (int)health, AttributeModifier.Operation.ADD_NUMBER));
+        healthAttribute.addModifier(new AttributeModifier("EpicLevels", (int) health, AttributeModifier.Operation.ADD_NUMBER));
     }
 
     private void updateDamageModifier(Player player, double damage) {
-        double maxDamage = Setting.MAX_EXTRA_DAMAGE.getDouble();
+        double maxDamage = Settings.MAX_EXTRA_DAMAGE.getDouble();
         if (damage > maxDamage) damage = maxDamage;
         AttributeInstance damageAttribute = player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
         for (AttributeModifier modifier : damageAttribute.getModifiers()) {
