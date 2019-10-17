@@ -1,7 +1,7 @@
-package com.songoda.epiclevels.command.commands;
+package com.songoda.epiclevels.commands;
 
+import com.songoda.core.commands.AbstractCommand;
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.command.AbstractCommand;
 import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
@@ -12,31 +12,34 @@ import java.util.List;
 
 public class CommandAddExp extends AbstractCommand {
 
-    public CommandAddExp(AbstractCommand parent) {
-        super(parent, false, "AddExp");
+    EpicLevels instance;
+
+    public CommandAddExp(EpicLevels instance) {
+        super(CommandType.CONSOLE_OK, "AddExp");
+        this.instance = instance;
     }
 
     @Override
-    protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
-        if (args.length != 3) return ReturnType.SYNTAX_ERROR;
+    protected ReturnType runCommand(CommandSender sender, String... args) {
+        if (args.length != 2) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
+        OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
 
         if (!player.hasPlayedBefore() && !player.isOnline()) {
             instance.getLocale().getMessage("command.general.notonline")
-                    .processPlaceholder("notonline", args[1])
+                    .processPlaceholder("notonline", args[0])
                     .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
 
-        if (!Methods.isInt(args[2]) && !player.isOnline()) {
+        if (!Methods.isInt(args[1]) && !player.isOnline()) {
             instance.getLocale().getMessage("command.general.notint")
-                    .processPlaceholder("number", args[2])
+                    .processPlaceholder("number", args[1])
                     .sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
         }
 
-        long amount = Long.parseLong(args[2]);
+        long amount = Long.parseLong(args[1]);
         EPlayer ePlayer = instance.getPlayerManager().getPlayer(player);
         ePlayer.addExperience(amount);
         instance.getDataManager().updatePlayer(ePlayer);
@@ -50,7 +53,7 @@ public class CommandAddExp extends AbstractCommand {
     }
 
     @Override
-    protected List<String> onTab(EpicLevels instance, CommandSender sender, String... args) {
+    protected List<String> onTab(CommandSender sender, String... args) {
         return null;
     }
 

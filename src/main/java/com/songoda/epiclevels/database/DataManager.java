@@ -1,5 +1,8 @@
 package com.songoda.epiclevels.database;
 
+import com.songoda.core.database.DataManagerAbstract;
+import com.songoda.core.database.DatabaseConnector;
+import com.songoda.core.database.SQLiteConnector;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.players.EPlayer;
 import org.bukkit.Bukkit;
@@ -13,14 +16,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class DataManager {
-
-    private final DatabaseConnector databaseConnector;
-    private final Plugin plugin;
+public class DataManager extends DataManagerAbstract {
 
     public DataManager(DatabaseConnector databaseConnector, Plugin plugin) {
-        this.databaseConnector = databaseConnector;
-        this.plugin = plugin;
+        super(databaseConnector, plugin);
     }
 
     /**
@@ -242,7 +241,7 @@ public class DataManager {
         });
     }
 
-    private int lastInsertedId(Connection connection) {
+    public int lastInsertedId(Connection connection) {
         String query;
         if (this.databaseConnector instanceof SQLiteConnector) {
             query = "SELECT last_insert_rowid()";

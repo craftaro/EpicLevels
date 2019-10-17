@@ -3,9 +3,9 @@ package com.songoda.epiclevels.listeners;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.killstreaks.Killstreak;
 import com.songoda.epiclevels.players.EPlayer;
+import com.songoda.epiclevels.settings.Settings;
 import com.songoda.epiclevels.utils.Methods;
 import com.songoda.epiclevels.utils.Rewards;
-import com.songoda.epiclevels.utils.settings.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -33,14 +33,14 @@ public class DeathListeners implements Listener {
         EPlayer damager = plugin.getPlayerManager().getPlayer(event.getDamager().getUniqueId()); // The douche who ruined the guys life.
 
 
-        if (Setting.BLACKLISTED_WORLDS.getStringList().stream()
+        if (Settings.BLACKLISTED_WORLDS.getStringList().stream()
                 .anyMatch(worldStr -> worldStr.equalsIgnoreCase(event.getEntity().getWorld().getName())))
             return;
 
-        if (damager.getLevel() < Setting.START_PVP_LEVEL.getInt()) {
+        if (damager.getLevel() < Settings.START_PVP_LEVEL.getInt()) {
             plugin.getLocale().getMessage("event.pvp.deny").sendPrefixedMessage(damager.getPlayer().getPlayer());
             event.setCancelled(true);
-        } else if (damaged.getLevel() < Setting.START_PVP_LEVEL.getInt()) {
+        } else if (damaged.getLevel() < Settings.START_PVP_LEVEL.getInt()) {
             plugin.getLocale().getMessage("event.pvp.denythem").sendPrefixedMessage(damager.getPlayer().getPlayer());
             event.setCancelled(true);
         }
@@ -51,12 +51,12 @@ public class DeathListeners implements Listener {
 
         if (event.getEntity().getKiller() == null) return;
 
-        if (Setting.BLACKLISTED_WORLDS.getStringList().stream()
+        if (Settings.BLACKLISTED_WORLDS.getStringList().stream()
                 .anyMatch(worldStr -> worldStr.equalsIgnoreCase(event.getEntity().getWorld().getName())))
             return;
 
-        double expPlayer = Setting.EXP_PLAYER.getDouble();
-        double expMob = Setting.EXP_MOB.getDouble();
+        double expPlayer = Settings.EXP_PLAYER.getDouble();
+        double expMob = Settings.EXP_MOB.getDouble();
 
         Player player = event.getEntity().getKiller();
         EPlayer ePlayer = plugin.getPlayerManager().getPlayer(player);
@@ -67,8 +67,8 @@ public class DeathListeners implements Listener {
 
             if (player == killed) return;
 
-            if (!ePlayer.canGainExperience(killed.getUniqueId()) && Setting.ANTI_GRINDER.getBoolean()) {
-                if (Setting.GRINDER_ALERT.getBoolean())
+            if (!ePlayer.canGainExperience(killed.getUniqueId()) && Settings.ANTI_GRINDER.getBoolean()) {
+                if (Settings.GRINDER_ALERT.getBoolean())
                     plugin.getLocale().getMessage("event.antigrinder.trigger")
                             .processPlaceholder("killed", killed.getPlayer().getName())
                             .sendPrefixedMessage(player);
@@ -78,20 +78,20 @@ public class DeathListeners implements Listener {
             eKilled.addDeath();
 
             double killedExpBefore = eKilled.getExperience();
-            double killedExpAfter = eKilled.addExperience(0L - Setting.EXP_DEATH.getDouble());
+            double killedExpAfter = eKilled.addExperience(0L - Settings.EXP_DEATH.getDouble());
 
-            if (Setting.SEND_DEATH_MESSAGE.getBoolean())
+            if (Settings.SEND_DEATH_MESSAGE.getBoolean())
                 plugin.getLocale().getMessage("event.player.death").processPlaceholder("name", ChatColor.stripColor(player.getName()))
                         .processPlaceholder("exp", Methods.formatDecimal(-(killedExpAfter - killedExpBefore))).sendPrefixedMessage(killed);
 
-            if (Setting.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
+            if (Settings.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
                     plugin.getLocale().getMessage("event.player.death.broadcast")
                             .processPlaceholder("killed", killed.getName())
                             .processPlaceholder("exp", player.getName())
                             .sendPrefixedMessage(pl);
 
-            if (Setting.SEND_KILLSTREAK_BROKEN_MESSAGE.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt()) {
+            if (Settings.SEND_KILLSTREAK_BROKEN_MESSAGE.getBoolean() && eKilled.getKillstreak() >= Settings.SEND_KILLSTREAK_ALERTS_AFTER.getInt()) {
                 plugin.getLocale().getMessage("event.killstreak.broken")
                         .processPlaceholder("streak", eKilled.getKillstreak())
                         .sendPrefixedMessage(killed);
@@ -101,7 +101,7 @@ public class DeathListeners implements Listener {
                         .sendPrefixedMessage(player);
             }
 
-            if (Setting.SEND_BROADCAST_BROKEN_KILLSTREAK.getBoolean() && eKilled.getKillstreak() >= Setting.SEND_KILLSTREAK_ALERTS_AFTER.getInt())
+            if (Settings.SEND_BROADCAST_BROKEN_KILLSTREAK.getBoolean() && eKilled.getKillstreak() >= Settings.SEND_KILLSTREAK_ALERTS_AFTER.getInt())
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player && p != killed).collect(Collectors.toList()))
                     plugin.getLocale().getMessage("event.killstreak.brokenannounce")
                             .processPlaceholder("player", player.getName())
@@ -117,7 +117,7 @@ public class DeathListeners implements Listener {
             plugin.getDataManager().updatePlayer(ePlayer);
             plugin.getDataManager().updatePlayer(eKilled);
 
-            int every = Setting.RUN_KILLSTREAK_EVERY.getInt();
+            int every = Settings.RUN_KILLSTREAK_EVERY.getInt();
             if (every != 0 && ePlayer.getKillstreak() % every == 0) {
                 Killstreak def = plugin.getKillstreakManager().getKillstreak(-1);
                 if (def != null)
@@ -129,7 +129,7 @@ public class DeathListeners implements Listener {
             double playerExpBefore = ePlayer.getExperience();
             double playerExpAfter = ePlayer.addExperience(expPlayer);
 
-            if (Setting.SEND_PLAYER_KILL_MESSAGE.getBoolean())
+            if (Settings.SEND_PLAYER_KILL_MESSAGE.getBoolean())
                 plugin.getLocale().getMessage("event.player.killed")
                         .processPlaceholder("name", ChatColor.stripColor(killed.getDisplayName()))
                         .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
@@ -142,7 +142,7 @@ public class DeathListeners implements Listener {
 
             plugin.getDataManager().updatePlayer(ePlayer);
 
-            if (Setting.SEND_MOB_KILL_MESSAGE.getBoolean()) {
+            if (Settings.SEND_MOB_KILL_MESSAGE.getBoolean()) {
                 plugin.getLocale().getMessage("event.mob.killed")
                         .processPlaceholder("type", Methods.formatText(event.getEntity().getType().name(), true))
                         .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))

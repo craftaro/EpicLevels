@@ -1,28 +1,29 @@
-package com.songoda.epiclevels.command.commands;
+package com.songoda.epiclevels.commands;
 
+import com.songoda.core.commands.AbstractCommand;
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.boost.Boost;
-import com.songoda.epiclevels.command.AbstractCommand;
-import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
 public class CommandRemoveGlobalBoost extends AbstractCommand {
 
-    public CommandRemoveGlobalBoost(AbstractCommand parent) {
-        super(parent, false, "RemoveGlobalBoost");
+    EpicLevels instance;
+
+    public CommandRemoveGlobalBoost(EpicLevels instance) {
+        super(CommandType.CONSOLE_OK, "RemoveGlobalBoost");
+        this.instance = instance;
     }
 
     @Override
-    protected ReturnType runCommand(EpicLevels instance, CommandSender sender, String... args) {
+    protected ReturnType runCommand(CommandSender sender, String... args) {
         instance.getBoostManager().clearGlobalBoost();
 
         return ReturnType.SUCCESS;
     }
 
     @Override
-    protected List<String> onTab(EpicLevels instance, CommandSender sender, String... args) {
+    protected List<String> onTab(CommandSender sender, String... args) {
         return null;
     }
 

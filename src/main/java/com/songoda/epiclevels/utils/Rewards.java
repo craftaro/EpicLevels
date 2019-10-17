@@ -1,5 +1,7 @@
 package com.songoda.epiclevels.utils;
 
+import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.hooks.EconomyManager;
 import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -50,10 +52,10 @@ public class Rewards {
                                 player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
                         break;
                     case "ECONOMY":
-                        EpicLevels.getInstance().getEconomy().deposit(player, Double.parseDouble(line.replace("$", "")));
+                        EconomyManager.deposit(player, Double.parseDouble(line.replace("$", "")));
                         break;
                     case "HEAL":
-                        if (EpicLevels.getInstance().isServerVersionAtLeast(ServerVersion.V1_9))
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9))
                             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
                         else
                             player.setHealth(20);

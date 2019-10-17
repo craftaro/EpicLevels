@@ -3,8 +3,8 @@ package com.songoda.epiclevels.players;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.levels.Level;
+import com.songoda.epiclevels.settings.Settings;
 import com.songoda.epiclevels.utils.Rewards;
-import com.songoda.epiclevels.utils.settings.Setting;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public class EPlayer {
     }
 
     public EPlayer(UUID uuid) {
-        this(uuid, Setting.START_EXP.getDouble(), 0, 0, 0, 0, 0);
+        this(uuid, Settings.START_EXP.getDouble(), 0, 0, 0, 0, 0);
     }
 
     public UUID getUniqueId() {
@@ -65,7 +65,7 @@ public class EPlayer {
         if (experience == 0) return experience;
         EpicLevels plugin = EpicLevels.getInstance();
         if (experience < 0L) {
-            if (this.experience + experience < 0L && !Setting.ALLOW_NEGATIVE.getBoolean())
+            if (this.experience + experience < 0L && !Settings.ALLOW_NEGATIVE.getBoolean())
                 this.experience = 0L;
             else
                 this.experience = this.experience + experience;
@@ -79,7 +79,7 @@ public class EPlayer {
 
         this.experience += ((this.experience + experience < 0 ? 0 : experience) * multiplier()) * boostMultiplier;
 
-        double bonus = Setting.KILLSTREAK_BONUS_EXP.getDouble();
+        double bonus = Settings.KILLSTREAK_BONUS_EXP.getDouble();
         this.experience += bonus * killstreak;
 
         Player player = getPlayer().getPlayer();
@@ -92,22 +92,22 @@ public class EPlayer {
                 Rewards.run(plugin.getLevelManager().getLevel(i).getRewards(), player, i, i == getLevel());
             }
 
-            if (Setting.SEND_BROADCAST_LEVELUP_MESSAGE.getBoolean()
-                    && getLevel() % Setting.BROADCAST_LEVELUP_EVERY.getInt() == 0)
+            if (Settings.SEND_BROADCAST_LEVELUP_MESSAGE.getBoolean()
+                    && getLevel() % Settings.BROADCAST_LEVELUP_EVERY.getInt() == 0)
                 for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).collect(Collectors.toList()))
                     plugin.getLocale().getMessage("event.levelup.announcement")
                             .processPlaceholder("player", player.getName())
                             .processPlaceholder("level", getLevel())
                             .sendPrefixedMessage(pl);
         }
-        if (this.experience > Setting.MAX_EXP.getDouble())
-            this.experience = Setting.MAX_EXP.getDouble();
+        if (this.experience > Settings.MAX_EXP.getDouble())
+            this.experience = Settings.MAX_EXP.getDouble();
         return this.experience;
     }
 
     public boolean canGainExperience(UUID uuid) {
-        int triggerAmount = Setting.GRINDER_MAX.getInt();
-        int maxInterval = Setting.GRINDER_INTERVAL.getInt() * 1000;
+        int triggerAmount = Settings.GRINDER_MAX.getInt();
+        int maxInterval = Settings.GRINDER_INTERVAL.getInt() * 1000;
         return kills.keySet().stream().filter(x -> kills.get(x).equals(uuid))
                 .filter(x -> System.currentTimeMillis() - x < maxInterval).count() < triggerAmount;
     }
@@ -176,7 +176,7 @@ public class EPlayer {
 
     public int getLevel() {
         int lastLevel = 0;
-        for (int i = 1; i <= Setting.MAX_LEVEL.getInt(); i++) {
+        for (int i = 1; i <= Settings.MAX_LEVEL.getInt(); i++) {
             if (experience(i) > experience) break;
             lastLevel++;
         }
@@ -184,24 +184,24 @@ public class EPlayer {
     }
 
     public static int experience(int level) {
-        Formula formula = Formula.valueOf(Setting.LEVELING_FORMULA.getString());
+        Formula formula = Formula.valueOf(Settings.LEVELING_FORMULA.getString());
         switch (formula) {
             case EXPONENTIAL: {
                 double a = 0;
                 for (int i = 1; i < level; i++)
-                    a += Math.floor(i + Setting.EXPONENTIAL_BASE.getDouble()
-                            * Math.pow(2, (i / Setting.EXPONENTIAL_DIVISOR.getDouble())));
+                    a += Math.floor(i + Settings.EXPONENTIAL_BASE.getDouble()
+                            * Math.pow(2, (i / Settings.EXPONENTIAL_DIVISOR.getDouble())));
                 return (int) Math.floor(a);
             }
             case LINEAR: {
                 int a = 0;
                 for (int i = 1; i < level; i++)
-                    a += Setting.LINEAR_INCREMENT.getInt();
+                    a += Settings.LINEAR_INCREMENT.getInt();
                 return a;
             }
             case CUSTOM: {
                 try {
-                    return Integer.parseInt(engine.eval(Setting.CUSTOM_FORMULA.getString()
+                    return Integer.parseInt(engine.eval(Settings.CUSTOM_FORMULA.getString()
                             .replace("level", String.valueOf(level))).toString());
                 } catch (ScriptException e) {
                     e.printStackTrace();
