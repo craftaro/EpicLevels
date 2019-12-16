@@ -2,7 +2,7 @@
     <groupId>com.songoda</groupId>
     <artifactId>EpicLevels</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>maven-version-number</version>
+    <version>1.2.2</version>
     <build>
         <defaultGoal>clean install</defaultGoal>
         <finalName>EpicLevels-${project.version}</finalName>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.14.4</version>
+            <version>1.15</version>
         </dependency>
         <dependency>
             <groupId>com.songoda</groupId>
