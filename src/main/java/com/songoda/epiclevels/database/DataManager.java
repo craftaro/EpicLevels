@@ -43,7 +43,6 @@ public class DataManager extends DataManagerAbstract {
                     statement.setInt(6, ePlayer.getBestKillstreak());
 
                     statement.setString(7, ePlayer.getUniqueId().toString());
-                    statement.executeUpdate();
                     statement.addBatch();
                 }
 
@@ -232,7 +231,6 @@ public class DataManager extends DataManagerAbstract {
                     statement.setDouble(2, boost.getMultiplier());
                     statement.setInt(3, boost.getId());
 
-                    statement.executeUpdate();
                     statement.addBatch();
                 }
 
