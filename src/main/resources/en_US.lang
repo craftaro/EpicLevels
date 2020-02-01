@@ -1,67 +1,74 @@
-#General Messages
+# General Messages
 
-general.nametag.prefix = "&7[&6EpicLevels&7]"
-general.word.enabled = "Enabled"
-general.word.disabled = "Disabled"
-
-event.general.nopermission = "&cYou do not have permission to use that command."
-
-event.mob.killed = "&7You killed a &6%type% &7and gained &6%exp% Experience&7."
-
-event.player.killed = "&7You killed &6%name% &7and you gained &6%exp% Experience&7."
-event.player.death = "&7You were killed by &6%name% &7and lost &6%exp% Experience&7."
-
-event.player.death.broadcast = "&6%killed% &7was killed by &6%killer%&7."
-
-event.pvp.deny = "&cYou can not attack this player because you are below the minimum PVP level."
-event.pvp.denythem = "&cYou can not attack this player because they are below the minimum PVP level."
-
-event.levelup.announcement = "&6%player% &7leveled up to level &6%level%&7."
-
-event.antigrinder.trigger = "&7You have killed &6%killed% &7too many times recently and therefore have not gained experience. Please wait before killing this person again."
-
-command.removeexp.success = "&7Removed &6%amount% &7experience from &6%player% &7successfully."
-command.addexp.success = "&7Added &6%amount% &7experience to &6%player% &7successfully."
-
-command.general.notonline = "&cThe player &4%name% &ccould not be found."
-command.general.notint = "&6%number%&7 is not a number."
-
-command.reset.success = "&7You have reset the player &6%player% &7successfully."
-
-event.boost.globalannounce = "&6%player% &7activated a global boost (&6%multiplier%x&7) for everyone lasting &6%duration%&7."
-event.boost.globalsuccess = "&7You created a global boost with the multiplier of &6%multiplier% &7and the duration &6%duration%&7."
-event.boost.globalexpire = "&7The global boost has expired."
-event.boost.announce = "&6%player% &7activated a boost (&6%multiplier%x&7) for you lasting &6%duration%&7."
-event.boost.success = "&7You created a boost for &6%player% &7with the multiplier of &6%multiplier% &7and the duration &6%duration%&7."
-event.boost.expire = "&7Your boost has expired."
-
-event.killstreak.broke = "&cYou broke &6%killed%'s &7killstreak of &6%streak%&7!"
-event.killstreak.broken = "&cYour killstreak has ended at &4%streak%&c..."
-event.killstreak.brokenannounce = "&6%player% &7just broke &6%killed%'s &7killstreak of &6%streak%&7!"
-
-gui.levels.title = "Showing Top %type%"
-gui.levels.toplevels = "&e&lTop Levels"
-gui.levels.topmobs = "&a&lTop Mob Killers"
-gui.levels.topplayers = "&c&lTop Player Killers"
-gui.levels.topkillstreaks = "&b&lTop Killstreaks"
-gui.levels.search = "&6&lSearch"
-gui.levels.sortingby = "&7Sorting by: &6%type%&7."
-gui.levels.you = "&8Click to go to you."
-gui.levels.selected = "&6Selected"
-gui.levels.name = "&e%position% &6&l%name%"
-gui.levels.level = "&7Level %level%"
-gui.levels.exp = "&7EXP: &6%exp%&7/&6%expnext%"
-gui.levels.stats = "&6&lStats"
-gui.levels.totalkills = "&7Total Kills: &6%kills%"
-gui.levels.playerkills = "&7Player Kills: &6%kills%"
-gui.levels.mobkills = "&7Mob Kills: &6%kills%"
-gui.levels.deaths = "&7Deaths: &6%deaths%"
-gui.levels.kdr = "&7KDR: &6%kdr%"
-gui.levels.killstreak = "&7Killstreak: &6%killstreak%"
-gui.levels.bestkillstreak = "&7Best Killstreak: &6%killstreak%"
-gui.levels.nametosearch = "&7Enter name to search..."
-gui.levels.noresults = "No results found..."
-gui.levels.levelstype = "Levels"
-gui.levels.mobkillstype = "Mob Kills"
-gui.levels.playerkillstype = "Player Kills"
-gui.levels.killstreakstype = "Killstreaks"
+general:
+  nametag:
+    prefix: '&7[&6EpicLevels&7]'
+  word:
+    enabled: Enabled
+    disabled: Disabled
+event:
+  general:
+    nopermission: '&cYou do not have permission to use that command.'
+  mob:
+    killed: '&7You killed a &6%type% &7and gained &6%exp% Experience&7.'
+  player:
+    killed: '&7You killed &6%name% &7and you gained &6%exp% Experience&7.'
+    death:
+      broadcast: '&6%killed% &7was killed by &6%killer%&7.'
+      message: '&7You were killed by &6%name% &7and lost &6%exp% Experience&7.'
+  pvp:
+    deny: '&cYou can not attack this player because you are below the minimum PVP level.'
+    denythem: '&cYou can not attack this player because they are below the minimum PVP level.'
+  levelup:
+    announcement: '&6%player% &7leveled up to level &6%level%&7.'
+  antigrinder:
+    trigger: '&7You have killed &6%killed% &7too many times recently and therefore have not gained experience. Please wait before killing this person again.'
+  boost:
+    globalannounce: '&6%player% &7activated a global boost (&6%multiplier%x&7) for everyone lasting &6%duration%&7.'
+    globalsuccess: '&7You created a global boost with the multiplier of &6%multiplier% &7and the duration &6%duration%&7.'
+    globalexpire: '&7The global boost has expired.'
+    announce: '&6%player% &7activated a boost (&6%multiplier%x&7) for you lasting &6%duration%&7.'
+    success: '&7You created a boost for &6%player% &7with the multiplier of &6%multiplier% &7and the duration &6%duration%&7.'
+    expire: '&7Your boost has expired.'
+  killstreak:
+    broke: '&cYou broke &6%killed%''s &7killstreak of &6%streak%&7!'
+    broken: '&cYour killstreak has ended at &4%streak%&c...'
+    brokenannounce: '&6%player% &7just broke &6%killed%''s &7killstreak of &6%streak%&7!'
+command:
+  removeexp:
+    success: '&7Removed &6%amount% &7experience from &6%player% &7successfully.'
+  addexp:
+    success: '&7Added &6%amount% &7experience to &6%player% &7successfully.'
+  general:
+    notonline: '&cThe player &4%name% &ccould not be found.'
+    notint: '&6%number%&7 is not a number.'
+  reset:
+    success: '&7You have reset the player &6%player% &7successfully.'
+gui:
+  levels:
+    title: Showing Top %type%
+    toplevels: '&e&lTop Levels'
+    topmobs: '&a&lTop Mob Killers'
+    topplayers: '&c&lTop Player Killers'
+    topkillstreaks: '&b&lTop Killstreaks'
+    search: '&6&lSearch'
+    sortingby: '&7Sorting by: &6%type%&7.'
+    you: '&8Click to go to you.'
+    selected: '&6Selected'
+    name: '&e%position% &6&l%name%'
+    level: '&7Level %level%'
+    exp: '&7EXP: &6%exp%&7/&6%expnext%'
+    stats: '&6&lStats'
+    totalkills: '&7Total Kills: &6%kills%'
+    playerkills: '&7Player Kills: &6%kills%'
+    mobkills: '&7Mob Kills: &6%kills%'
+    deaths: '&7Deaths: &6%deaths%'
+    kdr: '&7KDR: &6%kdr%'
+    killstreak: '&7Killstreak: &6%killstreak%'
+    bestkillstreak: '&7Best Killstreak: &6%killstreak%'
+    nametosearch: '&7Enter name to search...'
+    noresults: No results found...
+    levelstype: Levels
+    mobkillstype: Mob Kills
+    playerkillstype: Player Kills
+    killstreakstype: Killstreaks
