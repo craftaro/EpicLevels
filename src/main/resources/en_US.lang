@@ -12,10 +12,10 @@ event:
   mob:
     killed: '&7You killed a &6%type% &7and gained &6%exp% Experience&7.'
   player:
-    killed: '&7You killed &6%name% &7and you gained &6%exp% Experience&7.'
+    killed: '&7You killed &6%name% &7with &6%hearts% &7hearts left. &7You gained &6%exp% Experience&7.'
     death:
-      broadcast: '&6%killed% &7was killed by &6%killer%&7.'
-      message: '&7You were killed by &6%name% &7and lost &6%exp% Experience&7.'
+      broadcast: '&6%killed% &7was killed by &6%killer &7who had &6%hearts% &7left.'
+      message: '&7You were killed by &6%name% &7who had &6%hearts% &7left. &7&6%exp% experience list&7.'
   pvp:
     deny: '&cYou can not attack this player because you are below the minimum PVP level.'
     denythem: '&cYou can not attack this player because they are below the minimum PVP level.'
