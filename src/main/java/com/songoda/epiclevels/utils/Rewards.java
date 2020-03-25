@@ -2,6 +2,7 @@ package com.songoda.epiclevels.utils;
 
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -69,10 +70,10 @@ public class Rewards {
                             player.playSound(player.getLocation(), Sound.valueOf(line.trim()), 1L, 1L);
                         break;
                     case "TITLE":
-                        Title.sendTitle(player, Methods.formatText(line.trim()), null, 20, 100, 20);
+                        Title.sendTitle(player, TextUtils.formatText(line.trim()), null, 20, 100, 20);
                         break;
                     case "SUBTITLE":
-                        Title.sendTitle(player, null, Methods.formatText(line.trim()), 20, 100, 20);
+                        Title.sendTitle(player, null, TextUtils.formatText(line.trim()), 20, 100, 20);
                         break;
                 }
             } catch (Exception e) {

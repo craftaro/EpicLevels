@@ -1,6 +1,7 @@
 package com.songoda.epiclevels.commands;
 
 import com.songoda.core.commands.AbstractCommand;
+import com.songoda.core.utils.TimeUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.utils.Methods;
@@ -35,7 +36,7 @@ public class CommandGlobalBoost extends AbstractCommand {
         long duration = 0;
         for (int i = 0; i < args.length; i++) {
             String line = args[i];
-            long time = Methods.parseTime(line);
+            long time = TimeUtils.parseTime(line);
             duration += time;
         }
 
@@ -45,14 +46,14 @@ public class CommandGlobalBoost extends AbstractCommand {
 
         instance.getLocale().getMessage("event.boost.globalsuccess")
                 .processPlaceholder("multiplier", multiplier)
-                .processPlaceholder("duration", Methods.makeReadable(duration))
+                .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                 .sendPrefixedMessage(sender);
 
         for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != sender).collect(Collectors.toList()))
             instance.getLocale().getMessage("event.boost.globalannounce")
                     .processPlaceholder("player", sender.getName())
                     .processPlaceholder("multiplier", multiplier)
-                    .processPlaceholder("duration", Methods.makeReadable(duration))
+                    .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                     .sendPrefixedMessage(pl);
 
         return ReturnType.SUCCESS;

@@ -1,5 +1,6 @@
 package com.songoda.epiclevels.utils;
 
+import com.songoda.core.utils.TextUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -222,7 +223,7 @@ public class Title {
                 return;
             if (player == null)
                 return;
-            sendTitle(player, Methods.formatText(title), Methods.formatTitle(subtitle), fadeIn, stay, fadeOut);
+            sendTitle(player, TextUtils.formatText(title), TextUtils.formatText(subtitle, true), fadeIn, stay, fadeOut);
         }
     }
 

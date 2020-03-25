@@ -1,6 +1,7 @@
 package com.songoda.epiclevels.commands;
 
 import com.songoda.core.commands.AbstractCommand;
+import com.songoda.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.command.CommandSender;
@@ -22,12 +23,12 @@ public class CommandHelp extends AbstractCommand {
         instance.getLocale().newMessage("&7Version " + instance.getDescription().getVersion()
                 + " Created with <3 by &5&l&oSongoda").sendPrefixedMessage(sender);
         sender.sendMessage("");
-        sender.sendMessage(Methods.formatText("&7Welcome to EpicLevels! To get started try using the /levels command to access the leaderboard."));
+        sender.sendMessage(TextUtils.formatText("&7Welcome to EpicLevels! To get started try using the /levels command to access the leaderboard."));
         sender.sendMessage("");
-        sender.sendMessage(Methods.formatText("&6Commands:"));
+        sender.sendMessage(TextUtils.formatText("&6Commands:"));
         for (AbstractCommand command : instance.getCommandManager().getAllCommands()) {
             if (command.getPermissionNode() == null || sender.hasPermission(command.getPermissionNode())) {
-                sender.sendMessage(Methods.formatText("&8 - &a" + command.getSyntax() + "&7 - " + command.getDescription()));
+                sender.sendMessage(TextUtils.formatText("&8 - &a" + command.getSyntax() + "&7 - " + command.getDescription()));
             }
         }
         sender.sendMessage("");

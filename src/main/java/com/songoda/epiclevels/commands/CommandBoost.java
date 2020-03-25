@@ -1,6 +1,7 @@
 package com.songoda.epiclevels.commands;
 
 import com.songoda.core.commands.AbstractCommand;
+import com.songoda.core.utils.TimeUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.utils.Methods;
@@ -43,7 +44,7 @@ public class CommandBoost extends AbstractCommand {
         long duration = 0;
         for (int i = 1; i < args.length; i++) {
             String line = args[i];
-            long time = Methods.parseTime(line);
+            long time = TimeUtils.parseTime(line);
             duration += time;
         }
 
@@ -54,14 +55,14 @@ public class CommandBoost extends AbstractCommand {
         instance.getLocale().getMessage("event.boost.success")
                 .processPlaceholder("player", player.getName())
                 .processPlaceholder("multiplier", multiplier)
-                .processPlaceholder("duration", Methods.makeReadable(duration))
+                .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                 .sendPrefixedMessage(sender);
 
         if (player.isOnline())
             instance.getLocale().getMessage("event.boost.announce")
                     .processPlaceholder("player", sender.getName())
                     .processPlaceholder("multiplier", multiplier)
-                    .processPlaceholder("duration", Methods.makeReadable(duration))
+                    .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                     .sendPrefixedMessage(player);
 
 
