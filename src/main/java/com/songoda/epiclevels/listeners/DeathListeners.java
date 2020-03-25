@@ -1,5 +1,6 @@
 package com.songoda.epiclevels.listeners;
 
+import com.songoda.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.killstreaks.Killstreak;
 import com.songoda.epiclevels.players.EPlayer;
@@ -149,7 +150,7 @@ public class DeathListeners implements Listener {
 
             if (Settings.SEND_MOB_KILL_MESSAGE.getBoolean()) {
                 plugin.getLocale().getMessage("event.mob.killed")
-                        .processPlaceholder("type", Methods.formatText(event.getEntity().getType().name(), true))
+                        .processPlaceholder("type", TextUtils.formatText(event.getEntity().getType().name(), true))
                         .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
                         .sendPrefixedMessage(killer);
             }
