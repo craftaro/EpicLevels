@@ -122,15 +122,6 @@ public class DeathListeners implements Listener {
             plugin.getDataManager().updatePlayer(eKiller);
             plugin.getDataManager().updatePlayer(eKilled);
 
-            int every = Settings.RUN_KILLSTREAK_EVERY.getInt();
-            if (every != 0 && eKiller.getKillstreak() % every == 0) {
-                Killstreak def = plugin.getKillstreakManager().getKillstreak(-1);
-                if (def != null)
-                    Rewards.run(def.getRewards(), killer, eKiller.getKillstreak(), true);
-                if (plugin.getKillstreakManager().getKillstreak(eKiller.getKillstreak()) == null) return;
-                Rewards.run(plugin.getKillstreakManager().getKillstreak(eKiller.getKillstreak()).getRewards(), killer, eKiller.getKillstreak(), true);
-            }
-
             double playerExpBefore = eKiller.getExperience();
             double playerExpAfter = eKiller.addExperience(expPlayer);
 
@@ -140,6 +131,15 @@ public class DeathListeners implements Listener {
                         .processPlaceholder("hearts", Methods.formatDecimal(killer.getHealth()))
                         .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
                         .sendPrefixedMessage(killer);
+
+            int every = Settings.RUN_KILLSTREAK_EVERY.getInt();
+            if (every != 0 && eKiller.getKillstreak() % every == 0) {
+                Killstreak def = plugin.getKillstreakManager().getKillstreak(-1);
+                if (def != null)
+                    Rewards.run(def.getRewards(), killer, eKiller.getKillstreak(), true);
+                if (plugin.getKillstreakManager().getKillstreak(eKiller.getKillstreak()) == null) return;
+                Rewards.run(plugin.getKillstreakManager().getKillstreak(eKiller.getKillstreak()).getRewards(), killer, eKiller.getKillstreak(), true);
+            }
 
         } else {
             eKiller.addMobKill();
