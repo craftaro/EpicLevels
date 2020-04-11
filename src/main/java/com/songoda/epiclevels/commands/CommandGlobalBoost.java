@@ -25,13 +25,15 @@ public class CommandGlobalBoost extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         if (args.length < 2) return ReturnType.SYNTAX_ERROR;
 
-        if (!Methods.isInt(args[0])) {
+        double multiplier;
+        try {
+            multiplier = Double.parseDouble(args[0]);
+        } catch (Exception e) {
             instance.getLocale().getMessage("command.general.notint")
-                    .processPlaceholder("number", args[0])
+                    .processPlaceholder("number", args[1])
                     .sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
         }
-        int multiplier = Integer.parseInt(args[0]);
 
         long duration = 0;
         for (int i = 0; i < args.length; i++) {

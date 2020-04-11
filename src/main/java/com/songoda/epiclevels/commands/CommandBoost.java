@@ -4,7 +4,6 @@ import com.songoda.core.commands.AbstractCommand;
 import com.songoda.core.utils.TimeUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
-import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,13 +32,15 @@ public class CommandBoost extends AbstractCommand {
             return ReturnType.FAILURE;
         }
 
-        if (!Methods.isInt(args[1])) {
+        double multiplier;
+        try {
+            multiplier = Double.parseDouble(args[1]);
+        } catch (Exception e) {
             instance.getLocale().getMessage("command.general.notint")
                     .processPlaceholder("number", args[1])
                     .sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
         }
-        int multiplier = Integer.parseInt(args[1]);
 
         long duration = 0;
         for (int i = 1; i < args.length; i++) {
