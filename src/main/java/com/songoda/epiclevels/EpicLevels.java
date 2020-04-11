@@ -109,10 +109,10 @@ public class EpicLevels extends SongodaPlugin {
         this.boostManager = new BoostManager();
 
         // Loading levels
-        levelManager.load();
+        levelManager.load(this);
 
         // Loading killstreaks
-        killstreakManager.load();
+        killstreakManager.load(this);
 
         // Start Tasks
         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) ModifierTask.startTask(this);
@@ -160,11 +160,11 @@ public class EpicLevels extends SongodaPlugin {
         this.locale.reloadMessages();
 
         // Loading levels
-        levelManager.load();
+        levelManager.load(this);
         // Loading killstreaks
-        killstreakManager.load();
+        killstreakManager.load(this);
 
-        levelManager.load();
+        levelManager.load(this);
     }
 
     @Override

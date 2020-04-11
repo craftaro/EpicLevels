@@ -4,6 +4,7 @@ import com.songoda.core.configuration.Config;
 import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +16,12 @@ public class KillstreakManager {
 
     private static final Map<Integer, Killstreak> killstreaks = new HashMap<>();
 
-    public void load() {
+    public void load(EpicLevels plugin) {
         killstreaksConfig.load();
         killstreaks.clear();
-        EpicLevels.getInstance().saveResource("KillstreakRewards.yml", false);
+
+        if (!new File(plugin.getDataFolder(), "KillstreakRewards.yml").exists())
+            EpicLevels.getInstance().saveResource("KillstreakRewards.yml", false);
         FileConfiguration killstreaksConfig = this.killstreaksConfig.getFileConfig();
         for (String key : killstreaksConfig.getKeys(false)) {
             int killstreak = Integer.parseInt(key);

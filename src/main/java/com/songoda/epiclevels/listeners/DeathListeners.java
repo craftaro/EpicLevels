@@ -84,7 +84,7 @@ public class DeathListeners implements Listener {
             if (Settings.SEND_DEATH_MESSAGE.getBoolean())
                 plugin.getLocale().getMessage("event.player.death")
                         .processPlaceholder("name", ChatColor.stripColor(killer.getName()))
-                        .processPlaceholder("hearts", Methods.formatDecimal(killer.getHealth()))
+                        .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
                         .processPlaceholder("exp", Methods.formatDecimal(-(killedExpAfter - killedExpBefore))).sendPrefixedMessage(killed);
 
             if (Settings.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
@@ -92,7 +92,7 @@ public class DeathListeners implements Listener {
                     plugin.getLocale().getMessage("event.player.death.broadcast")
                             .processPlaceholder("killer", killer.getName())
                             .processPlaceholder("killed", killed.getName())
-                            .processPlaceholder("hearts", Methods.formatDecimal(killer.getHealth()))
+                            .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
                             .processPlaceholder("exp", killer.getName())
                             .sendPrefixedMessage(pl);
 
@@ -122,6 +122,16 @@ public class DeathListeners implements Listener {
             plugin.getDataManager().updatePlayer(eKiller);
             plugin.getDataManager().updatePlayer(eKilled);
 
+            double playerExpBefore = eKiller.getExperience();
+            double playerExpAfter = eKiller.addExperience(expPlayer);
+
+            if (Settings.SEND_PLAYER_KILL_MESSAGE.getBoolean())
+                plugin.getLocale().getMessage("event.player.killed")
+                        .processPlaceholder("name", ChatColor.stripColor(killed.getDisplayName()))
+                        .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
+                        .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
+                        .sendPrefixedMessage(killer);
+
             int every = Settings.RUN_KILLSTREAK_EVERY.getInt();
             if (every != 0 && eKiller.getKillstreak() % every == 0) {
                 Killstreak def = plugin.getKillstreakManager().getKillstreak(-1);
@@ -130,16 +140,6 @@ public class DeathListeners implements Listener {
                 if (plugin.getKillstreakManager().getKillstreak(eKiller.getKillstreak()) == null) return;
                 Rewards.run(plugin.getKillstreakManager().getKillstreak(eKiller.getKillstreak()).getRewards(), killer, eKiller.getKillstreak(), true);
             }
-
-            double playerExpBefore = eKiller.getExperience();
-            double playerExpAfter = eKiller.addExperience(expPlayer);
-
-            if (Settings.SEND_PLAYER_KILL_MESSAGE.getBoolean())
-                plugin.getLocale().getMessage("event.player.killed")
-                        .processPlaceholder("name", ChatColor.stripColor(killed.getDisplayName()))
-                        .processPlaceholder("hearts", Methods.formatDecimal(killer.getHealth()))
-                        .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
-                        .sendPrefixedMessage(killer);
 
         } else {
             eKiller.addMobKill();

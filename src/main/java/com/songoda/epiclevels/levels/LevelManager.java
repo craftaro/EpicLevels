@@ -4,6 +4,7 @@ import com.songoda.core.configuration.Config;
 import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +16,13 @@ public class LevelManager {
 
     private static final Map<Integer, Level> levels = new HashMap<>();
 
-    public void load() {
+    public void load(EpicLevels plugin) {
         levelsConfig.load();
         levels.clear();
-        EpicLevels.getInstance().saveResource("LevelUpRewards.yml", false);
+
+        if (!new File(plugin.getDataFolder(), "LevelUpRewards.yml").exists())
+            EpicLevels.getInstance().saveResource("LevelUpRewards.yml", false);
+
         FileConfiguration levelsConfig = this.levelsConfig.getFileConfig();
         for (String key : levelsConfig.getKeys(false)) {
             int level = Integer.parseInt(key);

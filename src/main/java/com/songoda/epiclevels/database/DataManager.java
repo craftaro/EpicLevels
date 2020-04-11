@@ -70,7 +70,7 @@ public class DataManager extends DataManagerAbstract {
     }
 
     public void createPlayer(EPlayer ePlayer) {
-        this.async(() -> this.databaseConnector.connect(connection -> {
+        this.sync(() -> this.databaseConnector.connect(connection -> {
 
             String createPlayer = "INSERT INTO " + this.getTablePrefix() + "players (uuid, experience, mob_kills, player_kills, deaths, killstreak, best_killstreak) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(createPlayer)) {
@@ -85,7 +85,7 @@ public class DataManager extends DataManagerAbstract {
                 statement.setInt(7, ePlayer.getBestKillstreak());
                 statement.executeUpdate();
             }
-        }));
+        }), "create");
     }
 
     public void deletePlayer(EPlayer ePlayer) {
@@ -201,7 +201,7 @@ public class DataManager extends DataManagerAbstract {
                 statement.executeUpdate();
             }
 
-            int boostId = this.lastInsertedId(connection);
+            int boostId = this.lastInsertedId(connection, "boosts");
 
             this.sync(() -> boost.setId(boostId));
         }));
@@ -238,31 +238,4 @@ public class DataManager extends DataManagerAbstract {
             }
         });
     }
-
-    public int lastInsertedId(Connection connection) {
-        String query;
-        if (this.databaseConnector instanceof SQLiteConnector) {
-            query = "SELECT last_insert_rowid()";
-        } else {
-            query = "SELECT LAST_INSERT_ID()";
-        }
-
-        try (Statement statement = connection.createStatement()) {
-            ResultSet result = statement.executeQuery(query);
-            result.next();
-            return result.getInt(1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
-    public void async(Runnable runnable) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, runnable);
-    }
-
-    public void sync(Runnable runnable) {
-        Bukkit.getScheduler().runTask(this.plugin, runnable);
-    }
-
 }
