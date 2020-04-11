@@ -84,7 +84,7 @@ public class DeathListeners implements Listener {
             if (Settings.SEND_DEATH_MESSAGE.getBoolean())
                 plugin.getLocale().getMessage("event.player.death")
                         .processPlaceholder("name", ChatColor.stripColor(killer.getName()))
-                        .processPlaceholder("hearts", Methods.formatDecimal(killer.getHealth()))
+                        .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
                         .processPlaceholder("exp", Methods.formatDecimal(-(killedExpAfter - killedExpBefore))).sendPrefixedMessage(killed);
 
             if (Settings.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
@@ -92,7 +92,7 @@ public class DeathListeners implements Listener {
                     plugin.getLocale().getMessage("event.player.death.broadcast")
                             .processPlaceholder("killer", killer.getName())
                             .processPlaceholder("killed", killed.getName())
-                            .processPlaceholder("hearts", Methods.formatDecimal(killer.getHealth()))
+                            .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
                             .processPlaceholder("exp", killer.getName())
                             .sendPrefixedMessage(pl);
 
@@ -128,7 +128,7 @@ public class DeathListeners implements Listener {
             if (Settings.SEND_PLAYER_KILL_MESSAGE.getBoolean())
                 plugin.getLocale().getMessage("event.player.killed")
                         .processPlaceholder("name", ChatColor.stripColor(killed.getDisplayName()))
-                        .processPlaceholder("hearts", Methods.formatDecimal(killer.getHealth()))
+                        .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
                         .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
                         .sendPrefixedMessage(killer);
 
