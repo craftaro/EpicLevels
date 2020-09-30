@@ -14,6 +14,9 @@ public class Settings {
 
     static final Config config = EpicLevels.getInstance().getCoreConfig();
 
+    public static final ConfigSetting ALLOW_MAX_MEMBERS = new ConfigSetting(config, "Main.Player Max In Inventory", -1,
+            "If you are a BIG SERVER (+500 membres unique), limited this, your server can crash");
+
     public static final ConfigSetting EXP_MOB= new ConfigSetting(config, "Main.Experience Gained Per Mob Kill", 2.5,
             "The amount of experience gained per monster kill.");
 

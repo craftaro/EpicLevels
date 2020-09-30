@@ -101,7 +101,7 @@ public class Rewards {
 
     private static void launchRandomFirework(Location loc){
         Random random = new Random();
-
+        if (loc.getWorld() == null) return;
         Firework firework = loc.getWorld().spawn(loc, Firework.class);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
         fireworkMeta.addEffect(FireworkEffect.builder()

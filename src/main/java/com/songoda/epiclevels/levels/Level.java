@@ -6,7 +6,7 @@ import java.util.List;
 public class Level {
 
     private final int level;
-    private List<String> rewards;
+    private final List<String> rewards;
 
     public Level(int level, List<String> rewards) {
         this.level = level;

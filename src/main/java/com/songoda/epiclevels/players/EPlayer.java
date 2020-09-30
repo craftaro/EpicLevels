@@ -30,7 +30,7 @@ public class EPlayer {
     private int killstreak;
     private int bestKillstreak;
 
-    private Map<Long, UUID> kills = new HashMap<>();
+    private final Map<Long, UUID> kills = new HashMap<>();
 
     private static ScriptEngine engine = null;
 
@@ -115,6 +115,7 @@ public class EPlayer {
     private int multiplier() {
         int multiplier = 1;
         if (!getPlayer().isOnline()) return multiplier;
+        if (getPlayer().getPlayer() == null) return multiplier;
         for (PermissionAttachmentInfo permissionAttachmentInfo : getPlayer().getPlayer().getEffectivePermissions()) {
             if (!permissionAttachmentInfo.getPermission().toLowerCase().startsWith("epiclevels.multiplier")) continue;
             multiplier = Integer.parseInt(permissionAttachmentInfo.getPermission().split("\\.")[2]);
@@ -138,21 +139,21 @@ public class EPlayer {
         return playerKills;
     }
 
-    public int addMobKill() {
-        return mobKills++;
+    public void addMobKill() {
+        mobKills++;
     }
 
-    public int addPlayerKill(UUID uuid) {
+    public void addPlayerKill(UUID uuid) {
         this.kills.put(System.currentTimeMillis(), uuid);
-        return playerKills++;
+        playerKills++;
     }
 
     public int getDeaths() {
         return deaths;
     }
 
-    public int addDeath() {
-        return deaths++;
+    public void addDeath() {
+        deaths++;
     }
 
     public int getKillstreak() {
@@ -163,11 +164,10 @@ public class EPlayer {
         return bestKillstreak;
     }
 
-    public int increaseKillstreak() {
+    public void increaseKillstreak() {
         killstreak++;
         if (killstreak > bestKillstreak)
             bestKillstreak = killstreak;
-        return killstreak;
     }
 
     public void resetKillstreak() {

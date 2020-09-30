@@ -43,7 +43,6 @@ public class EpicLevels extends SongodaPlugin {
     private BoostManager boostManager;
 
     private DatabaseConnector databaseConnector;
-    private DataMigrationManager dataMigrationManager;
     private DataManager dataManager;
 
     public static EpicLevels getInstance() {
@@ -61,6 +60,11 @@ public class EpicLevels extends SongodaPlugin {
         this.dataManager.bulkUpdateBoosts(this.boostManager.getBoosts().values());
         if (this.boostManager.getGlobalBoost() != null)
             this.dataManager.updateBoost(this.boostManager.getGlobalBoost());
+    }
+
+    @Override
+    public void onDataLoad() {
+
     }
 
     @Override
@@ -144,9 +148,9 @@ public class EpicLevels extends SongodaPlugin {
         }
 
         this.dataManager = new DataManager(this.databaseConnector, this);
-        this.dataMigrationManager = new DataMigrationManager(this.databaseConnector, this.dataManager,
+        DataMigrationManager dataMigrationManager = new DataMigrationManager(this.databaseConnector, this.dataManager,
                 new _1_InitialMigration());
-        this.dataMigrationManager.runMigrations();
+        dataMigrationManager.runMigrations();
 
         Bukkit.getScheduler().runTaskLater(this, () -> {
             this.dataManager.getPlayers((player) -> this.playerManager.addPlayers(player));

@@ -23,7 +23,7 @@ public class CommandTakeExp extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         if (args.length != 2) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
+        OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(args[0]);
 
         if (!player.hasPlayedBefore()) {
             instance.getLocale().getMessage("command.general.notonline")
@@ -31,7 +31,7 @@ public class CommandTakeExp extends AbstractCommand {
             return ReturnType.FAILURE;
         }
 
-        if (!Methods.isInt(args[1])) {
+        if (Methods.isInt(args[1])) {
             instance.getLocale().getMessage("command.general.notint")
                     .processPlaceholder("number", args[1]).sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
@@ -40,7 +40,7 @@ public class CommandTakeExp extends AbstractCommand {
         long amount = Long.parseLong(args[1]);
 
         EPlayer ePlayer = instance.getPlayerManager().getPlayer(player);
-        ePlayer.addExperience(0L - amount);
+        ePlayer.addExperience(-amount);
         instance.getDataManager().updatePlayer(ePlayer);
 
         instance.getLocale().getMessage("command.removeexp.success")

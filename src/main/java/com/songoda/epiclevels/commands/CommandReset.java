@@ -22,7 +22,7 @@ public class CommandReset extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         if (args.length != 1) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
+        OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(args[0]);
 
         if (!player.hasPlayedBefore()) {
             instance.getLocale().getMessage("command.general.notonline")

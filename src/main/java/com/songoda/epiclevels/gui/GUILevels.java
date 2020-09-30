@@ -147,6 +147,18 @@ public class GUILevels extends Gui {
             int current = i + (position - 3 < 0 ? 0 : (position + 3 > (players.size() - 1) ? (players.size() - 7) : position - 3));
 
             if (current < 0 || current > players.size() - 1) continue;
+
+            int slot = 37 + i;
+            if (Settings.ALLOW_MAX_MEMBERS.getInt() != -1) {
+                if (current >= Settings.ALLOW_MAX_MEMBERS.getInt()) {
+                    setItem(42, AIR);
+                    setItem(43, AIR);
+                    break;
+                }
+            }
+
+
+
             EPlayer selected = players.get(current);
             if (selected.getPlayer() == null || selected.getPlayer().getName() == null)
                 continue;
@@ -161,6 +173,7 @@ public class GUILevels extends Gui {
 
             ItemStack head = CompatibleMaterial.PLAYER_HEAD.getItem();
             SkullMeta meta = ((SkullMeta) head.getItemMeta());
+            if (meta == null) return;
             if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13))
                 meta.setOwningPlayer(targetPlayer);
             else
@@ -169,8 +182,6 @@ public class GUILevels extends Gui {
             meta.setLore(Arrays.asList(plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
                     plugin.getLocale().getMessage("gui.levels.exp").processPlaceholder("exp", Methods.formatDecimal(selected.getExperience())).processPlaceholder("expnext", Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))).getMessage(), prog));
             head.setItemMeta(meta);
-
-            int slot = 37 + i;
 
             if (current == position)
                 setItem(slot + 9, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,

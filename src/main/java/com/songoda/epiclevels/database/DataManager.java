@@ -70,7 +70,7 @@ public class DataManager extends DataManagerAbstract {
     }
 
     public void createPlayer(EPlayer ePlayer) {
-        this.sync(() -> this.databaseConnector.connect(connection -> {
+        this.async(() -> this.databaseConnector.connect(connection -> {
 
             String createPlayer = "INSERT INTO " + this.getTablePrefix() + "players (uuid, experience, mob_kills, player_kills, deaths, killstreak, best_killstreak) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(createPlayer)) {
@@ -85,8 +85,9 @@ public class DataManager extends DataManagerAbstract {
                 statement.setInt(7, ePlayer.getBestKillstreak());
                 statement.executeUpdate();
             }
-        }), "create");
+        }));
     }
+
 
     public void deletePlayer(EPlayer ePlayer) {
         this.async(() -> this.databaseConnector.connect(connection -> {
@@ -237,5 +238,13 @@ public class DataManager extends DataManagerAbstract {
                 statement.executeBatch();
             }
         });
+    }
+
+    public void async(Runnable runnable) {
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, runnable);
+    }
+
+    public void sync(Runnable runnable) {
+        Bukkit.getScheduler().runTask(this.plugin, runnable);
     }
 }

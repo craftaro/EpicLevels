@@ -11,9 +11,9 @@ import java.lang.reflect.Method;
 
 public class Title {
 
-    private static Class<?> chatComponentDeclared = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0];
-    private static Class<?> packetPlayOutTitle = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0];
-    private static Class<?> chatComponent = getNMSClass("IChatBaseComponent");
+    private static final Class<?> chatComponentDeclared = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0];
+    private static final Class<?> packetPlayOutTitle = getNMSClass("PacketPlayOutTitle").getDeclaredClasses()[0];
+    private static final Class<?> chatComponent = getNMSClass("IChatBaseComponent");
 
     private static Class<?> getNMSClass(String name) {
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -39,33 +39,33 @@ public class Title {
         try {
             Object chatTitle, chatSubtitle, titlePacket, subtitlePacket;
             Constructor<?> subtitleConstructor;
-            Method method = chatComponentDeclared.getMethod("a", new Class[]{String.class});
+            Method method = chatComponentDeclared.getMethod("a", String.class);
             if (title != null) {
                 // Times packet
                 Object times = packetPlayOutTitle.getField("TIMES").get(null);
-                chatTitle = method.invoke((Object) null, new Object[]{"{\"text\":\"" + title + "\"}"});
-                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{packetPlayOutTitle, chatComponent, Integer.TYPE, Integer.TYPE, Integer.TYPE});
-                titlePacket = subtitleConstructor.newInstance(new Object[]{times, chatTitle, fadeIn, stay, fadeOut});
+                chatTitle = method.invoke(null, "{\"text\":\"" + title + "\"}");
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(packetPlayOutTitle, chatComponent, Integer.TYPE, Integer.TYPE, Integer.TYPE);
+                titlePacket = subtitleConstructor.newInstance(times, chatTitle, fadeIn, stay, fadeOut);
                 sendPacket(player, titlePacket);
                 // Title packet
                 times = packetPlayOutTitle.getField("TITLE").get(null);
-                chatTitle = method.invoke((Object) null, new Object[]{"{\"text\":\"" + title + "\"}"});
-                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{packetPlayOutTitle, chatComponent});
-                titlePacket = subtitleConstructor.newInstance(new Object[]{times, chatTitle});
+                chatTitle = method.invoke(null, "{\"text\":\"" + title + "\"}");
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(packetPlayOutTitle, chatComponent);
+                titlePacket = subtitleConstructor.newInstance(times, chatTitle);
                 sendPacket(player, titlePacket);
             }
             if (subtitle != null) {
                 // Times packet
                 Object times = packetPlayOutTitle.getField("TIMES").get(null);
-                chatSubtitle = method.invoke((Object) null, new Object[]{"{\"text\":\"" + title + "\"}"});
-                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{packetPlayOutTitle, chatComponent, Integer.TYPE, Integer.TYPE, Integer.TYPE});
-                subtitlePacket = subtitleConstructor.newInstance(new Object[]{times, chatSubtitle, fadeIn, stay, fadeOut});
+                chatSubtitle = method.invoke(null, "{\"text\":\"" + title + "\"}");
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(packetPlayOutTitle, chatComponent, Integer.TYPE, Integer.TYPE, Integer.TYPE);
+                subtitlePacket = subtitleConstructor.newInstance(times, chatSubtitle, fadeIn, stay, fadeOut);
                 sendPacket(player, subtitlePacket);
                 // Subtitle packet
                 times = packetPlayOutTitle.getField("SUBTITLE").get(null);
-                chatSubtitle = method.invoke((Object) null, new Object[]{"{\"text\":\"" + subtitle + "\"}"});
-                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(new Class[]{packetPlayOutTitle, chatComponent, Integer.TYPE, Integer.TYPE, Integer.TYPE});
-                subtitlePacket = subtitleConstructor.newInstance(new Object[]{times, chatSubtitle, fadeIn, stay, fadeOut});
+                chatSubtitle = method.invoke(null, "{\"text\":\"" + subtitle + "\"}");
+                subtitleConstructor = getNMSClass("PacketPlayOutTitle").getConstructor(packetPlayOutTitle, chatComponent, Integer.TYPE, Integer.TYPE, Integer.TYPE);
+                subtitlePacket = subtitleConstructor.newInstance(times, chatSubtitle, fadeIn, stay, fadeOut);
                 sendPacket(player, subtitlePacket);
             }
         } catch (Exception e) {

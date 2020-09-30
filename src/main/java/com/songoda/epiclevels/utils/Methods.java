@@ -3,19 +3,18 @@ package com.songoda.epiclevels.utils;
 import com.songoda.epiclevels.settings.Settings;
 
 import java.text.DecimalFormat;
-import java.util.concurrent.TimeUnit;
 
 public class Methods {
 
     public static boolean isInt(String number) {
         if (number == null || number.equals(""))
-            return false;
+            return true;
         try {
             Integer.parseInt(number);
         } catch (NumberFormatException e) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public static String formatDecimal(double decimal) {

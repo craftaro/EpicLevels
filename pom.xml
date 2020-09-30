@@ -2,7 +2,7 @@
     <groupId>com.songoda</groupId>
     <artifactId>EpicLevels</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>1.2.5</version>
+    <version>1.2.6</version>
     <build>
         <defaultGoal>clean install</defaultGoal>
         <finalName>EpicLevels-${project.version}</finalName>
@@ -63,10 +63,6 @@
     </build>
     <repositories>
         <repository>
-            <id>private</id>
-            <url>http://repo.songoda.com/repository/private/</url>
-        </repository>
-        <repository>
             <id>public</id>
             <url>http://repo.songoda.com/repository/public/</url>
         </repository>
@@ -74,8 +70,8 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.15</version>
+            <artifactId>spigot-api</artifactId>
+            <version>1.16.3-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.songoda</groupId>

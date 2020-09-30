@@ -13,14 +13,13 @@ public class BoostTask extends BukkitRunnable {
         plugin = plug;
     }
 
-    public static BoostTask startTask(EpicLevels plug) {
+    public static void startTask(EpicLevels plug) {
         plugin = plug;
         if (instance == null) {
             instance = new BoostTask(plugin);
             instance.runTaskTimer(plugin, 40, 20);
         }
 
-        return instance;
     }
 
     @Override

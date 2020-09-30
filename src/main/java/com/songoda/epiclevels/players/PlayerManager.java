@@ -1,7 +1,6 @@
 package com.songoda.epiclevels.players;
 
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.boost.Boost;
 import org.bukkit.OfflinePlayer;
 
 import java.util.*;
@@ -23,9 +22,8 @@ public class PlayerManager {
         return getPlayer(player.getUniqueId());
     }
 
-    public EPlayer addPlayer(EPlayer player) {
+    public void addPlayer(EPlayer player) {
         registeredPlayers.put(player.getUniqueId(), player);
-        return player;
     }
 
     public void addPlayers(Map<UUID, EPlayer> players) {

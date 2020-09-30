@@ -36,8 +36,7 @@ public class CommandGlobalBoost extends AbstractCommand {
         }
 
         long duration = 0;
-        for (int i = 0; i < args.length; i++) {
-            String line = args[i];
+        for (String line : args) {
             long time = TimeUtils.parseTime(line);
             duration += time;
         }

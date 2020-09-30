@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class KillstreakManager {
 
-    private Config killstreaksConfig = new Config(EpicLevels.getInstance(), "KillstreakRewards.yml");
+    private final Config killstreaksConfig = new Config(EpicLevels.getInstance(), "KillstreakRewards.yml");
 
     private static final Map<Integer, Killstreak> killstreaks = new HashMap<>();
 
@@ -25,7 +25,7 @@ public class KillstreakManager {
         FileConfiguration killstreaksConfig = this.killstreaksConfig.getFileConfig();
         for (String key : killstreaksConfig.getKeys(false)) {
             int killstreak = Integer.parseInt(key);
-            killstreaks.put(Integer.parseInt(key), new Killstreak(killstreak, killstreaksConfig.getStringList(String.valueOf(killstreak))));
+            killstreaks.put(killstreak, new Killstreak(killstreak, killstreaksConfig.getStringList(key)));
         }
     }
 

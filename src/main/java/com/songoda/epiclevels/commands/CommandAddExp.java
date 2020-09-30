@@ -23,7 +23,7 @@ public class CommandAddExp extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         if (args.length != 2) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
+        OfflinePlayer player = Bukkit.getServer().getOfflinePlayer(args[0]);
 
         if (!player.hasPlayedBefore() && !player.isOnline()) {
             instance.getLocale().getMessage("command.general.notonline")
@@ -32,7 +32,7 @@ public class CommandAddExp extends AbstractCommand {
             return ReturnType.FAILURE;
         }
 
-        if (!Methods.isInt(args[1]) && !player.isOnline()) {
+        if (Methods.isInt(args[1]) && !player.isOnline()) {
             instance.getLocale().getMessage("command.general.notint")
                     .processPlaceholder("number", args[1])
                     .sendPrefixedMessage(sender);
