@@ -121,7 +121,10 @@ public class EpicLevels extends SongodaPlugin {
         // Register Placeholders
         if (pluginManager.isPluginEnabled("PlaceholderAPI"))
             new PlaceholderManager(this).register();
+    }
 
+    @Override
+    public void onDataLoad() {
         // Database stuff, go!
         try {
             if (Settings.MYSQL_ENABLED.getBoolean()) {
@@ -148,11 +151,10 @@ public class EpicLevels extends SongodaPlugin {
                 new _1_InitialMigration());
         this.dataMigrationManager.runMigrations();
 
-        Bukkit.getScheduler().runTaskLater(this, () -> {
-            this.dataManager.getPlayers((player) -> this.playerManager.addPlayers(player));
-            this.dataManager.getBoosts((uuidBoostMap -> this.boostManager.addBoosts(uuidBoostMap)));
-        }, 20L);
+        this.dataManager.getPlayers((player) -> this.playerManager.addPlayers(player));
+        this.dataManager.getBoosts((uuidBoostMap -> this.boostManager.addBoosts(uuidBoostMap)));
     }
+
 
     @Override
     public void onConfigReload() {

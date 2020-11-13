@@ -2,7 +2,7 @@
     <groupId>com.songoda</groupId>
     <artifactId>EpicLevels</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>1.2.5</version>
+    <version>1.2.5b</version>
     <build>
         <defaultGoal>clean install</defaultGoal>
         <finalName>EpicLevels-${project.version}</finalName>
@@ -64,11 +64,11 @@
     <repositories>
         <repository>
             <id>private</id>
-            <url>http://repo.songoda.com/artifactory/private/</url>
+            <url>http://repo.songoda.com/repository/private/</url>
         </repository>
         <repository>
             <id>public</id>
-            <url>http://repo.songoda.com/artifactory/public/</url>
+            <url>http://repo.songoda.com/repository/public/</url>
         </repository>
     </repositories>
     <dependencies>
