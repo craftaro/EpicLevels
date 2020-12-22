@@ -145,7 +145,11 @@ public class GUILevels extends Gui {
 
         for (int i = 0; i < 7; i++) {
             int current = i + (position - 3 < 0 ? 0 : (position + 3 > (players.size() - 1) ? (players.size() - 7) : position - 3));
-
+            if (current >= 20) {
+                setItem(42, null);
+                setItem(43, null);
+                break;
+            } 
             if (current < 0 || current > players.size() - 1) continue;
             EPlayer selected = players.get(current);
             if (selected.getPlayer() == null || selected.getPlayer().getName() == null)
