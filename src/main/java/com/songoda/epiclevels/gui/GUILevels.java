@@ -58,13 +58,13 @@ public class GUILevels extends Gui {
         ItemStack glass3 = GuiUtils.getBorderItem(Settings.GLASS_TYPE_3.getMaterial());
 
         setDefaultItem(null);
-        GuiUtils.mirrorFill(this, 0, 0, true, true, glass2);
-        GuiUtils.mirrorFill(this, 1, 0, true, true, glass2);
-        GuiUtils.mirrorFill(this, 0, 1, true, true, glass2);
-        GuiUtils.mirrorFill(this, 2, 0, true, true, glass3);
-        GuiUtils.mirrorFill(this, 0, 2, true, true, glass3);
-        GuiUtils.mirrorFill(this, 0, 3, true, true, glass3);
-        GuiUtils.mirrorFill(this, 0, 4, true, true, glass3);
+        mirrorFill( 0, 0, true, true, glass2);
+        mirrorFill( 1, 0, true, true, glass2);
+        mirrorFill( 0, 1, true, true, glass2);
+        mirrorFill( 2, 0, true, true, glass3);
+        mirrorFill( 0, 2, true, true, glass3);
+        mirrorFill( 0, 3, true, true, glass3);
+        mirrorFill( 0, 4, true, true, glass3);
 
         setButton(2,
                 GuiUtils.createButtonItem(CompatibleMaterial.EXPERIENCE_BOTTLE,
