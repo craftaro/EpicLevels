@@ -14,9 +14,6 @@ public class Settings {
 
     static final Config config = EpicLevels.getInstance().getCoreConfig();
 
-    public static final ConfigSetting EXP_MOB= new ConfigSetting(config, "Main.Experience Gained Per Mob Kill", 2.5,
-            "The amount of experience gained per monster kill.");
-
     public static final ConfigSetting EXP_PLAYER= new ConfigSetting(config, "Main.Experience Gained Per Player Kill", 250,
             "The amount of experience gained per player kill.");
 

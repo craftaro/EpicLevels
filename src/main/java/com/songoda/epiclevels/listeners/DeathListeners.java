@@ -57,7 +57,6 @@ public class DeathListeners implements Listener {
             return;
 
         double expPlayer = Settings.EXP_PLAYER.getDouble();
-        double expMob = Settings.EXP_MOB.getDouble();
 
         Player killer = event.getEntity().getKiller();
         EPlayer eKiller = plugin.getPlayerManager().getPlayer(killer);
@@ -143,8 +142,10 @@ public class DeathListeners implements Listener {
 
         } else {
             eKiller.addMobKill();
+
+            double mobExperience = plugin.getEntityManager().getExperience(event.getEntityType());
             double playerExpBefore = eKiller.getExperience();
-            double playerExpAfter = eKiller.addExperience(expMob);
+            double playerExpAfter = eKiller.addExperience(mobExperience);
 
             plugin.getDataManager().updatePlayer(eKiller);
 
