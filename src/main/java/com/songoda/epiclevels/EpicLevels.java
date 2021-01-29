@@ -20,6 +20,7 @@ import com.songoda.epiclevels.killstreaks.KillstreakManager;
 import com.songoda.epiclevels.levels.LevelManager;
 import com.songoda.epiclevels.listeners.DeathListeners;
 import com.songoda.epiclevels.listeners.LoginListeners;
+import com.songoda.epiclevels.managers.EntityManager;
 import com.songoda.epiclevels.placeholder.PlaceholderManager;
 import com.songoda.epiclevels.players.PlayerManager;
 import com.songoda.epiclevels.settings.Settings;
@@ -40,6 +41,7 @@ public class EpicLevels extends SongodaPlugin {
     private CommandManager commandManager;
     private LevelManager levelManager;
     private KillstreakManager killstreakManager;
+    private EntityManager entityManager;
     private BoostManager boostManager;
 
     private DatabaseConnector databaseConnector;
@@ -106,6 +108,7 @@ public class EpicLevels extends SongodaPlugin {
         this.playerManager = new PlayerManager();
         this.levelManager = new LevelManager();
         this.killstreakManager = new KillstreakManager();
+        this.entityManager = new EntityManager();
         this.boostManager = new BoostManager();
 
         // Loading levels
@@ -165,6 +168,8 @@ public class EpicLevels extends SongodaPlugin {
         levelManager.load(this);
         // Loading killstreaks
         killstreakManager.load(this);
+        // Loading entities.
+        entityManager.reload();
 
         levelManager.load(this);
     }
@@ -204,5 +209,9 @@ public class EpicLevels extends SongodaPlugin {
 
     public GuiManager getGuiManager() {
         return guiManager;
+    }
+
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 }
