@@ -2,6 +2,7 @@ package com.songoda.epiclevels.gui;
 
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.gui.CustomizableGui;
 import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.input.ChatPrompt;
@@ -18,7 +19,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GUILevels extends Gui {
+public class GUILevels extends CustomizableGui {
 
     private final EpicLevels plugin;
     private int position;
@@ -32,7 +33,8 @@ public class GUILevels extends Gui {
     private Sorting sortingBy = Sorting.LEVELS;
 
     public GUILevels(Player player, EPlayer target) {
-        super(6);
+        super(EpicLevels.getInstance(), "levels");
+        setRows(6);
         this.player = player;
         plugin = EpicLevels.getInstance();
         plugin.getPlayerManager().getPlayer(player);
@@ -58,15 +60,15 @@ public class GUILevels extends Gui {
         ItemStack glass3 = GuiUtils.getBorderItem(Settings.GLASS_TYPE_3.getMaterial());
 
         setDefaultItem(null);
-        mirrorFill( 0, 0, true, true, glass2);
-        mirrorFill( 1, 0, true, true, glass2);
-        mirrorFill( 0, 1, true, true, glass2);
-        mirrorFill( 2, 0, true, true, glass3);
-        mirrorFill( 0, 2, true, true, glass3);
-        mirrorFill( 0, 3, true, true, glass3);
-        mirrorFill( 0, 4, true, true, glass3);
+        mirrorFill("mirrorfill_1", 0, 0, true, true, glass2);
+        mirrorFill("mirrorfill_2", 1, 0, true, true, glass2);
+        mirrorFill("mirrorfill_3", 0, 1, true, true, glass2);
+        mirrorFill("mirrorfill_4", 2, 0, true, true, glass3);
+        mirrorFill("mirrorfill_5", 0, 2, true, true, glass3);
+        mirrorFill("mirrorfill_6", 0, 3, true, true, glass3);
+        mirrorFill("mirrorfill_7", 0, 4, true, true, glass3);
 
-        setButton(2,
+        setButton("levels", 2,
                 GuiUtils.createButtonItem(CompatibleMaterial.EXPERIENCE_BOTTLE,
                         plugin.getLocale().getMessage("gui.levels.toplevels").getMessage()),
                 (event) -> {
@@ -77,7 +79,7 @@ public class GUILevels extends Gui {
                     updateTitle();
                 });
 
-        setButton(3,
+        setButton("mobs", 3,
                 GuiUtils.createButtonItem(CompatibleMaterial.SKELETON_SKULL,
                         plugin.getLocale().getMessage("gui.levels.topmobs").getMessage()),
                 (event) -> {
@@ -89,7 +91,7 @@ public class GUILevels extends Gui {
                     updateTitle();
                 });
 
-        setButton(5,
+        setButton("players",5,
                 GuiUtils.createButtonItem(CompatibleMaterial.PLAYER_HEAD,
                         plugin.getLocale().getMessage("gui.levels.topplayers").getMessage()),
                 (event) -> {
@@ -101,7 +103,7 @@ public class GUILevels extends Gui {
                     updateTitle();
                 });
 
-        setButton(6,
+        setButton("killstreaks",6,
                 GuiUtils.createButtonItem(CompatibleMaterial.DIAMOND_SWORD,
                         plugin.getLocale().getMessage("gui.levels.topkillstreaks").getMessage()),
                 (event) -> {
@@ -113,7 +115,7 @@ public class GUILevels extends Gui {
                     updateTitle();
                 });
 
-        setButton(16, GuiUtils.createButtonItem(CompatibleMaterial.COMPASS,
+        setButton("search", 16, GuiUtils.createButtonItem(CompatibleMaterial.COMPASS,
                 plugin.getLocale().getMessage("gui.levels.search").getMessage()),
                 (event) -> {
                     ChatPrompt.showPrompt(plugin, player,
@@ -135,7 +137,7 @@ public class GUILevels extends Gui {
                             });
                 });
 
-        setButton(13, GuiUtils.createButtonItem(CompatibleMaterial.REDSTONE,
+        setButton("sorting",13, GuiUtils.createButtonItem(CompatibleMaterial.REDSTONE,
                 plugin.getLocale().getMessage("gui.levels.sortingby").processPlaceholder("type", sortingBy.getName()).getMessage(),
                 plugin.getLocale().getMessage("gui.levels.you").getMessage()),
                 (event) -> {
