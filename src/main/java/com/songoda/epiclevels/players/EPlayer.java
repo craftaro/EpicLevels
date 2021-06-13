@@ -1,5 +1,6 @@
 package com.songoda.epiclevels.players;
 
+import com.songoda.core.math.MathUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.levels.Level;
@@ -10,9 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -32,8 +30,6 @@ public class EPlayer {
 
     private Map<Long, UUID> kills = new HashMap<>();
 
-    private static ScriptEngine engine = null;
-
     public EPlayer(UUID uuid, double experience, int mobKills, int playerKills, int deaths, int killstreak, int bestKillstreak) {
         this.uuid = uuid;
         this.experience = experience;
@@ -42,11 +38,6 @@ public class EPlayer {
         this.deaths = deaths;
         this.killstreak = killstreak;
         this.bestKillstreak = bestKillstreak;
-
-        if (engine == null) {
-            ScriptEngineManager mgr = new ScriptEngineManager();
-            engine = mgr.getEngineByName("JavaScript");
-        }
     }
 
     public EPlayer(UUID uuid) {
@@ -200,14 +191,9 @@ public class EPlayer {
                 return a;
             }
             case CUSTOM: {
-                try {
-                    return Integer.parseInt(engine.eval(Settings.CUSTOM_FORMULA.getString()
-                            .replace("level", String.valueOf(level))).toString());
-                } catch (ScriptException e) {
-                    e.printStackTrace();
-                }
+                return (int) Math.round(MathUtils.eval(Settings.CUSTOM_FORMULA.getString()
+                        .replace("level", String.valueOf(level))));
             }
-            break;
         }
         return 0;
     }
