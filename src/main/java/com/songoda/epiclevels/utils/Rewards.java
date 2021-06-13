@@ -70,10 +70,17 @@ public class Rewards {
                             player.playSound(player.getLocation(), Sound.valueOf(line.trim()), 1L, 1L);
                         break;
                     case "TITLE":
-                        Title.sendTitle(player, TextUtils.formatText(line.trim()), null, 20, 100, 20);
-                        break;
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+                            player.sendTitle(TextUtils.formatText(line.trim()), null, 20, 100, 20);
+                        } else {
+                            player.sendTitle(TextUtils.formatText(line.trim()), null);
+                        }
                     case "SUBTITLE":
-                        Title.sendTitle(player, null, TextUtils.formatText(line.trim()), 20, 100, 20);
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
+                            player.sendTitle(null, TextUtils.formatText(line.trim()), 20, 100, 20);
+                        } else {
+                            player.sendTitle(null, TextUtils.formatText(line.trim()));
+                        }
                         break;
                 }
             } catch (Exception e) {
