@@ -23,7 +23,7 @@ public class CommandShow extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         if (args.length != 1) return ReturnType.SYNTAX_ERROR;
 
-        List<EPlayer> players = instance.getPlayerManager().getPlayers();
+        List<EPlayer> players = instance.getPlayerManager().getPlayersUnsorted();
 
         Optional<EPlayer> targetOptional = players.stream()
                 .filter(ePlayer -> ePlayer.getPlayer().getName() != null
