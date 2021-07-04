@@ -4,7 +4,12 @@ import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -105,8 +110,7 @@ public class Rewards {
         return line;
     }
 
-
-    private static void launchRandomFirework(Location loc){
+    private static void launchRandomFirework(Location loc) {
         Random random = new Random();
 
         Firework firework = loc.getWorld().spawn(loc, Firework.class);

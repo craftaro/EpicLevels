@@ -27,12 +27,10 @@ public class DeathListeners implements Listener {
 
     @EventHandler
     public void onAttack(EntityDamageByEntityEvent event) {
-
         if (!(event.getDamager() instanceof Player) || !(event.getEntity() instanceof Player)) return;
 
         EPlayer damaged = plugin.getPlayerManager().getPlayer(event.getEntity().getUniqueId()); // A very sensitive person with a troubling past.
         EPlayer damager = plugin.getPlayerManager().getPlayer(event.getDamager().getUniqueId()); // The douche who ruined the guys life.
-
 
         if (Settings.BLACKLISTED_WORLDS.getStringList().stream()
                 .anyMatch(worldStr -> worldStr.equalsIgnoreCase(event.getEntity().getWorld().getName())))
@@ -49,7 +47,6 @@ public class DeathListeners implements Listener {
 
     @EventHandler
     public void onDeath(EntityDeathEvent event) {
-
         if (event.getEntity().getKiller() == null) return;
 
         if (Settings.BLACKLISTED_WORLDS.getStringList().stream()
@@ -83,7 +80,7 @@ public class DeathListeners implements Listener {
             if (Settings.SEND_DEATH_MESSAGE.getBoolean())
                 plugin.getLocale().getMessage("event.player.death")
                         .processPlaceholder("name", ChatColor.stripColor(killer.getName()))
-                        .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
+                        .processPlaceholder("hearts", (int) Math.floor(killer.getHealth()))
                         .processPlaceholder("exp", Methods.formatDecimal(-(killedExpAfter - killedExpBefore))).sendPrefixedMessage(killed);
 
             if (Settings.SEND_BROADCAST_DEATH_MESSAGE.getBoolean())
@@ -91,7 +88,7 @@ public class DeathListeners implements Listener {
                     plugin.getLocale().getMessage("event.player.death.broadcast")
                             .processPlaceholder("killer", killer.getName())
                             .processPlaceholder("killed", killed.getName())
-                            .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
+                            .processPlaceholder("hearts", (int) Math.floor(killer.getHealth()))
                             .processPlaceholder("exp", killer.getName())
                             .sendPrefixedMessage(pl);
 
@@ -127,7 +124,7 @@ public class DeathListeners implements Listener {
             if (Settings.SEND_PLAYER_KILL_MESSAGE.getBoolean())
                 plugin.getLocale().getMessage("event.player.killed")
                         .processPlaceholder("name", ChatColor.stripColor(killed.getDisplayName()))
-                        .processPlaceholder("hearts", (int)Math.floor(killer.getHealth()))
+                        .processPlaceholder("hearts", (int) Math.floor(killer.getHealth()))
                         .processPlaceholder("exp", Methods.formatDecimal(playerExpAfter - playerExpBefore))
                         .sendPrefixedMessage(killer);
 
@@ -139,7 +136,6 @@ public class DeathListeners implements Listener {
                 if (plugin.getKillstreakManager().getKillstreak(eKiller.getKillstreak()) == null) return;
                 Rewards.run(plugin.getKillstreakManager().getKillstreak(eKiller.getKillstreak()).getRewards(), killer, eKiller.getKillstreak(), true);
             }
-
         } else {
             eKiller.addMobKill();
 
@@ -156,6 +152,5 @@ public class DeathListeners implements Listener {
                         .sendPrefixedMessage(killer);
             }
         }
-
     }
 }

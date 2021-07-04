@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CommandBoost extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandBoost(EpicLevels instance) {
         super(CommandType.CONSOLE_OK, "Boost");
@@ -65,7 +65,6 @@ public class CommandBoost extends AbstractCommand {
                     .processPlaceholder("multiplier", multiplier)
                     .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                     .sendPrefixedMessage(player);
-
 
         return ReturnType.SUCCESS;
     }

@@ -4,10 +4,10 @@ version: maven-version-number
 main: com.songoda.epiclevels.EpicLevels
 author: songoda
 api-version: 1.13
-softdepend: [Vault, PlaceholderAPI]
+softdepend: [ Vault, PlaceholderAPI ]
 commands:
   EpicLevels:
     description: View information on this plugin.
     default: true
-    aliases: [el, levels, level]
+    aliases: [ el, levels, level ]
     usage: /levels

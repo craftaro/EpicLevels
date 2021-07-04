@@ -2,14 +2,14 @@ package com.songoda.epiclevels.database;
 
 import com.songoda.core.database.DataManagerAbstract;
 import com.songoda.core.database.DatabaseConnector;
-import com.songoda.core.database.SQLiteConnector;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.players.EPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -170,7 +170,6 @@ public class DataManager extends DataManagerAbstract {
 
                     long expiration = result.getLong("expiration");
                     double multiplier = result.getInt("multiplier");
-
 
                     boosts.put(uuid, new Boost(id, expiration, multiplier));
                 }

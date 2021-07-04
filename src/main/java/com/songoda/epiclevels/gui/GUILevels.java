@@ -3,7 +3,6 @@ package com.songoda.epiclevels.gui;
 import com.songoda.core.compatibility.CompatibleMaterial;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.gui.CustomizableGui;
-import com.songoda.core.gui.Gui;
 import com.songoda.core.gui.GuiUtils;
 import com.songoda.core.input.ChatPrompt;
 import com.songoda.core.utils.TextUtils;
@@ -35,13 +34,15 @@ public class GUILevels extends CustomizableGui {
     public GUILevels(Player player, EPlayer target) {
         super(EpicLevels.getInstance(), "levels");
         setRows(6);
+
         this.player = player;
         plugin = EpicLevels.getInstance();
         plugin.getPlayerManager().getPlayer(player);
+
         this.players = plugin.getPlayerManager().getPlayers();
         this.target = target;
-        sort();
 
+        sort();
         updateTitle();
     }
 
@@ -137,21 +138,24 @@ public class GUILevels extends CustomizableGui {
                             });
                 });
 
-        setButton("sorting",13, GuiUtils.createButtonItem(CompatibleMaterial.REDSTONE,
-                plugin.getLocale().getMessage("gui.levels.sortingby").processPlaceholder("type", sortingBy.getName()).getMessage(),
-                plugin.getLocale().getMessage("gui.levels.you").getMessage()),
+        setButton("sorting", 13, GuiUtils.createButtonItem(CompatibleMaterial.REDSTONE,
+                        plugin.getLocale().getMessage("gui.levels.sortingby").processPlaceholder("type", sortingBy.getName()).getMessage(),
+                        plugin.getLocale().getMessage("gui.levels.you").getMessage()),
                 (event) -> {
                     this.position = players.indexOf(plugin.getPlayerManager().getPlayer(player));
                     updateTitle();
                 });
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; ++i) {
             int current = i + (position - 3 < 0 ? 0 : (position + 3 > (players.size() - 1) ? (players.size() - 7) : position - 3));
 
-            if (current < 0 || current > players.size() - 1) continue;
-            EPlayer selected = players.get(current);
-            if (selected.getPlayer() == null || selected.getPlayer().getName() == null)
+            if (current < 0 || current > players.size() - 1) {
                 continue;
+            }
+            EPlayer selected = players.get(current);
+            if (selected.getPlayer() == null || selected.getPlayer().getName() == null) {
+                continue;
+            }
 
             OfflinePlayer targetPlayer = selected.getPlayer();
 
@@ -162,11 +166,14 @@ public class GUILevels extends CustomizableGui {
             String prog = TextUtils.formatText(Methods.generateProgressBar(exp, nextLevel, false));
 
             ItemStack head = CompatibleMaterial.PLAYER_HEAD.getItem();
-            SkullMeta meta = ((SkullMeta) head.getItemMeta());
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13))
+            SkullMeta meta = (SkullMeta) head.getItemMeta();
+            assert meta != null;
+            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
                 meta.setOwningPlayer(targetPlayer);
-            else
+            } else {
+                //noinspection deprecation
                 meta.setOwner(targetPlayer.getName());
+            }
             meta.setDisplayName(plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).getMessage());
             meta.setLore(Arrays.asList(plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
                     plugin.getLocale().getMessage("gui.levels.exp").processPlaceholder("exp", Methods.formatDecimal(selected.getExperience())).processPlaceholder("expnext", Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))).getMessage(), prog));
@@ -174,9 +181,10 @@ public class GUILevels extends CustomizableGui {
 
             int slot = 37 + i;
 
-            if (current == position)
+            if (current == position) {
                 setItem(slot + 9, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
                         plugin.getLocale().getMessage("gui.levels.selected").getMessage()));
+            }
 
             setButton(slot, head, (event) -> {
                 position = current;
@@ -198,7 +206,6 @@ public class GUILevels extends CustomizableGui {
     }
 
     public enum Sorting {
-
         LEVELS,
         MOBKILLS,
         PLAYERKILLS,
@@ -208,5 +215,4 @@ public class GUILevels extends CustomizableGui {
             return EpicLevels.getInstance().getLocale().getMessage("gui.levels." + name().toLowerCase() + "type").getMessage();
         }
     }
-
 }

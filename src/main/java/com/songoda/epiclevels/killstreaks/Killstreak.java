@@ -4,9 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Killstreak {
-
     private final int killstreak;
-    private List<String> rewards;
+    private final List<String> rewards;
 
     public Killstreak(int killstreak, List<String> rewards) {
         this.killstreak = killstreak;

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CommandReset extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandReset(EpicLevels instance) {
         super(false, "Reset");

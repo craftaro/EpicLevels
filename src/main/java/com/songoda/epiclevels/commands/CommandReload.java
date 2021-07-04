@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CommandReload extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandReload(EpicLevels instance) {
         super(CommandType.CONSOLE_OK, "reload");

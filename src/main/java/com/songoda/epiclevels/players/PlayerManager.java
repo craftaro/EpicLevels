@@ -1,7 +1,6 @@
 package com.songoda.epiclevels.players;
 
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.boost.Boost;
 import org.bukkit.OfflinePlayer;
 
 import java.util.*;

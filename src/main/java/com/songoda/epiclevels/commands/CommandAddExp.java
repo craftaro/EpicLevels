@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CommandAddExp extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandAddExp(EpicLevels instance) {
         super(CommandType.CONSOLE_OK, "AddExp");
