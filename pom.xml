@@ -8,6 +8,10 @@
     <artifactId>EpicLevels</artifactId>
     <version>1.2.7</version>
 
+    <name>EpicLevels</name>
+    <description>Allow your players to gain experience and level up by fighting players and monsters.</description>
+    <url>https://songoda.com/marketplace/product/44</url>
+
     <properties>
         <java.version>1.8</java.version>
         <java.release>8</java.release>
@@ -93,6 +97,13 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
     <pluginRepositories>

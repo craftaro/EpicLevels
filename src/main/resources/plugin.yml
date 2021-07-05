@@ -1,10 +1,14 @@
-name: EpicLevels
-description: EpicLevels
-version: maven-version-number
-main: com.songoda.epiclevels.EpicLevels
-author: songoda
+name: ${project.name}
+description: ${project.description}
+version: ${project.version}
 api-version: 1.13
+
+main: com.songoda.epiclevels.EpicLevels
 softdepend: [ Vault, PlaceholderAPI ]
+
+author: songoda
+website: ${project.url}
+
 commands:
   EpicLevels:
     description: View information on this plugin.
