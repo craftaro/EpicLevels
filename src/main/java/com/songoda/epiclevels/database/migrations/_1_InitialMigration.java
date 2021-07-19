@@ -41,5 +41,4 @@ public class _1_InitialMigration extends DataMigration {
                     ")");
         }
     }
-
 }

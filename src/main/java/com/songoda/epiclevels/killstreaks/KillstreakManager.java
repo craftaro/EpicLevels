@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class KillstreakManager {
-
-    private Config killstreaksConfig = new Config(EpicLevels.getInstance(), "KillstreakRewards.yml");
+    private final Config killstreaksConfig = new Config(EpicLevels.getInstance(), "KillstreakRewards.yml");
 
     private static final Map<Integer, Killstreak> killstreaks = new HashMap<>();
 

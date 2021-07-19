@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CommandRemoveBoost extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandRemoveBoost(EpicLevels instance) {
         super(CommandType.CONSOLE_OK, "RemoveBoost");

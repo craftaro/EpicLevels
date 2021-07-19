@@ -28,7 +28,7 @@ public class EPlayer {
     private int killstreak;
     private int bestKillstreak;
 
-    private Map<Long, UUID> kills = new HashMap<>();
+    private final Map<Long, UUID> kills = new HashMap<>();
 
     public EPlayer(UUID uuid, double experience, int mobKills, int playerKills, int deaths, int killstreak, int bestKillstreak) {
         this.uuid = uuid;

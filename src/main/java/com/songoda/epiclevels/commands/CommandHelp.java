@@ -3,14 +3,13 @@ package com.songoda.epiclevels.commands;
 import com.songoda.core.commands.AbstractCommand;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
-import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
 public class CommandHelp extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandHelp(EpicLevels instance) {
         super(CommandType.CONSOLE_OK, "help");

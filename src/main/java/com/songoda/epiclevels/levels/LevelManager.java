@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LevelManager {
-
-    private Config levelsConfig = new Config(EpicLevels.getInstance(), "LevelUpRewards.yml");
+    private final Config levelsConfig = new Config(EpicLevels.getInstance(), "LevelUpRewards.yml");
 
     private static final Map<Integer, Level> levels = new HashMap<>();
 

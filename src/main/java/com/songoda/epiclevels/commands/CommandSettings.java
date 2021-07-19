@@ -11,8 +11,8 @@ import java.util.List;
 
 public class CommandSettings extends AbstractCommand {
 
-    EpicLevels instance;
-    GuiManager guiManager;
+    private final EpicLevels instance;
+    private final GuiManager guiManager;
 
     public CommandSettings(GuiManager guiManager) {
         super(CommandType.PLAYER_ONLY, "settings");

@@ -2,7 +2,6 @@ package com.songoda.epiclevels.commands;
 
 import com.songoda.core.commands.AbstractCommand;
 import com.songoda.core.gui.GuiManager;
-import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.gui.GUILevels;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,7 +10,7 @@ import java.util.List;
 
 public class CommandEpicLevels extends AbstractCommand {
 
-    GuiManager guiManager;
+    private final GuiManager guiManager;
 
     public CommandEpicLevels(GuiManager guiManager) {
         super(CommandType.PLAYER_ONLY, "EpicLevels");
@@ -20,7 +19,7 @@ public class CommandEpicLevels extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        guiManager.showGUI((Player)sender, new GUILevels((Player) sender, null));
+        guiManager.showGUI((Player) sender, new GUILevels((Player) sender, null));
         return ReturnType.SUCCESS;
     }
 

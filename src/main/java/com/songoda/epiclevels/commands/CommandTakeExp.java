@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CommandTakeExp extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandTakeExp(EpicLevels instance) {
         super(CommandType.CONSOLE_OK, "TakeExp");
@@ -40,7 +40,7 @@ public class CommandTakeExp extends AbstractCommand {
         long amount = Long.parseLong(args[1]);
 
         EPlayer ePlayer = instance.getPlayerManager().getPlayer(player);
-        ePlayer.addExperience(0L - amount);
+        ePlayer.addExperience(-amount);
         instance.getDataManager().updatePlayer(ePlayer);
 
         instance.getLocale().getMessage("command.removeexp.success")

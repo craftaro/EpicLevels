@@ -13,7 +13,18 @@ import com.songoda.core.database.SQLiteConnector;
 import com.songoda.core.gui.GuiManager;
 import com.songoda.core.hooks.EconomyManager;
 import com.songoda.epiclevels.boost.BoostManager;
-import com.songoda.epiclevels.commands.*;
+import com.songoda.epiclevels.commands.CommandAddExp;
+import com.songoda.epiclevels.commands.CommandBoost;
+import com.songoda.epiclevels.commands.CommandEpicLevels;
+import com.songoda.epiclevels.commands.CommandGlobalBoost;
+import com.songoda.epiclevels.commands.CommandHelp;
+import com.songoda.epiclevels.commands.CommandReload;
+import com.songoda.epiclevels.commands.CommandRemoveBoost;
+import com.songoda.epiclevels.commands.CommandRemoveGlobalBoost;
+import com.songoda.epiclevels.commands.CommandReset;
+import com.songoda.epiclevels.commands.CommandSettings;
+import com.songoda.epiclevels.commands.CommandShow;
+import com.songoda.epiclevels.commands.CommandTakeExp;
 import com.songoda.epiclevels.database.DataManager;
 import com.songoda.epiclevels.database.migrations._1_InitialMigration;
 import com.songoda.epiclevels.killstreaks.KillstreakManager;
@@ -61,8 +72,10 @@ public class EpicLevels extends SongodaPlugin {
     public void onPluginDisable() {
         this.dataManager.bulkUpdatePlayers(this.playerManager.getPlayers());
         this.dataManager.bulkUpdateBoosts(this.boostManager.getBoosts().values());
-        if (this.boostManager.getGlobalBoost() != null)
+
+        if (this.boostManager.getGlobalBoost() != null) {
             this.dataManager.updateBoost(this.boostManager.getGlobalBoost());
+        }
     }
 
     @Override
@@ -157,7 +170,6 @@ public class EpicLevels extends SongodaPlugin {
         this.dataManager.getPlayers((player) -> this.playerManager.addPlayers(player));
         this.dataManager.getBoosts((uuidBoostMap -> this.boostManager.addBoosts(uuidBoostMap)));
     }
-
 
     @Override
     public void onConfigReload() {

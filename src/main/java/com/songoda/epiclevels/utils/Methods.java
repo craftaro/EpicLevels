@@ -3,7 +3,6 @@ package com.songoda.epiclevels.utils;
 import com.songoda.epiclevels.settings.Settings;
 
 import java.text.DecimalFormat;
-import java.util.concurrent.TimeUnit;
 
 public class Methods {
 

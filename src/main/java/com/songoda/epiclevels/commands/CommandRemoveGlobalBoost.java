@@ -8,7 +8,7 @@ import java.util.List;
 
 public class CommandRemoveGlobalBoost extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandRemoveGlobalBoost(EpicLevels instance) {
         super(CommandType.CONSOLE_OK, "RemoveGlobalBoost");

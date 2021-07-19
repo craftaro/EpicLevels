@@ -6,8 +6,6 @@ import com.songoda.epiclevels.utils.Methods;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 
-import java.text.DecimalFormat;
-
 public class PlaceholderManager extends PlaceholderExpansion {
 
     private final EpicLevels plugin;
@@ -19,7 +17,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, String identifier) {
         EPlayer ePlayer = plugin.getPlayerManager().getPlayer(player);
-        
+
         switch (identifier) {
             case "level":
                 return Methods.formatDecimal(ePlayer.getLevel());
@@ -38,7 +36,7 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "bestkillstreak":
                 return Methods.formatDecimal(ePlayer.getBestKillstreak());
             case "kdr":
-                return Methods.formatDecimal(ePlayer.getDeaths() == 0 ? ePlayer.getPlayerKills() : (double)ePlayer.getPlayerKills() / (double)ePlayer.getDeaths());
+                return Methods.formatDecimal(ePlayer.getDeaths() == 0 ? ePlayer.getPlayerKills() : (double) ePlayer.getPlayerKills() / (double) ePlayer.getDeaths());
             case "nextlevel":
                 return Methods.formatDecimal(ePlayer.getLevel() + 1);
             case "neededfornextlevel":
@@ -85,5 +83,4 @@ public class PlaceholderManager extends PlaceholderExpansion {
     public boolean persist() {
         return true;
     }
-
 }

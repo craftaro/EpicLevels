@@ -4,7 +4,6 @@ import com.songoda.core.commands.AbstractCommand;
 import com.songoda.core.utils.TimeUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
-import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class CommandGlobalBoost extends AbstractCommand {
 
-    EpicLevels instance;
+    private final EpicLevels instance;
 
     public CommandGlobalBoost(EpicLevels instance) {
         super(CommandType.CONSOLE_OK, "GlobalBoost");
@@ -36,8 +35,7 @@ public class CommandGlobalBoost extends AbstractCommand {
         }
 
         long duration = 0;
-        for (int i = 0; i < args.length; i++) {
-            String line = args[i];
+        for (String line : args) {
             long time = TimeUtils.parseTime(line);
             duration += time;
         }

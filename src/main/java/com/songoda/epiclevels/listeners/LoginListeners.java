@@ -18,10 +18,9 @@ public class LoginListeners implements Listener {
 
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            plugin.getDataManager().getPlayer(event.getPlayer(), (ePlayer ->
-                    plugin.getPlayerManager().addPlayer(ePlayer)));
-        }, 30L);
+        Bukkit.getScheduler().runTaskLater(plugin,
+                () -> plugin.getDataManager().getPlayer(event.getPlayer(), (ePlayer -> plugin.getPlayerManager().addPlayer(ePlayer))),
+                30L);
     }
 
     @EventHandler
