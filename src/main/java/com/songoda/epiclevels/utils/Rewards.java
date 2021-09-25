@@ -2,6 +2,7 @@ package com.songoda.epiclevels.utils;
 
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.hooks.EconomyManager;
+import com.songoda.core.math.Eval;
 import com.songoda.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.Bukkit;
@@ -16,22 +17,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 public class Rewards {
-
-    private static ScriptEngine engine = null;
-
     public static void run(List<String> rewards, Player player, int level, boolean last) {
-        if (engine == null) {
-            ScriptEngineManager mgr = new ScriptEngineManager();
-            engine = mgr.getEngineByName("JavaScript");
-        }
-
         if (level == -1 && EpicLevels.getInstance().getLevelManager().getLevel(level).getRewards().stream()
                 .anyMatch(line -> line.contains("OVERRIDE")))
             return;
@@ -51,7 +42,7 @@ public class Rewards {
                         break;
                     case "ITEM":
                         String[] args = line.split(" ");
-                        int amount = Integer.parseInt(engine.eval(line.replace(args[0], "").trim()).toString());
+                        int amount = (int) new Eval(line.replace(args[0], "").trim(), "").parse();
                         ItemStack item = new ItemStack(Material.valueOf(args[0].toUpperCase()), amount);
                         Collection<ItemStack> items = player.getInventory().addItem(item).values();
                         items.forEach(itemStack ->
