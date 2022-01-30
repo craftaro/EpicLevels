@@ -83,7 +83,7 @@ public class EpicLevels extends SongodaPlugin {
         // Run Songoda Updater
         SongodaCore.registerPlugin(this, 44, CompatibleMaterial.NETHER_STAR);
 
-        // Load Economy & Hologram hooks
+        // Load Economy
         EconomyManager.load();
 
         // Setup Config
