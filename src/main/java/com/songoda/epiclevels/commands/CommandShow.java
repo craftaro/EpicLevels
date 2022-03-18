@@ -27,7 +27,7 @@ public class CommandShow extends AbstractCommand {
 
         Optional<EPlayer> targetOptional = players.stream()
                 .filter(ePlayer -> ePlayer.getPlayer().getName() != null
-                        && ePlayer.getPlayer().getName().toLowerCase().contains(args[0]))
+                        && ePlayer.getPlayer().getName().toLowerCase().contains(args[0].toLowerCase()))
                 .findAny();
 
         if (!targetOptional.isPresent()) {
