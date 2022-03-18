@@ -21,7 +21,7 @@ public class CommandRemoveBoost extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         if (args.length != 1) return ReturnType.SYNTAX_ERROR;
 
-        OfflinePlayer player = Bukkit.getPlayer(args[0].toLowerCase());
+        OfflinePlayer player = Bukkit.getPlayer(args[0]);
 
         if (player == null) {
             instance.getLocale().getMessage("command.general.notonline")
@@ -31,6 +31,9 @@ public class CommandRemoveBoost extends AbstractCommand {
         }
 
         instance.getBoostManager().removeBoost(player.getUniqueId());
+        instance.getLocale().getMessage("command.removeboost.success")
+                .processPlaceholder("player", player.getName())
+                .sendPrefixedMessage(sender);
 
         return ReturnType.SUCCESS;
     }

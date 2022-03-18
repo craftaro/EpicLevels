@@ -37,6 +37,10 @@ event:
 command:
   removeexp:
     success: '&7Removed &6%amount% &7experience from &6%player% &7successfully.'
+  removeboost:
+    success: '&7Removed boost from &6%player% &7successfully.'
+  removeglobalboost:
+    success: '&7Removed global boost successfully.'
   addexp:
     success: '&7Added &6%amount% &7experience to &6%player% &7successfully.'
   general:
