@@ -51,7 +51,7 @@ public class CommandShow extends AbstractCommand {
 
     @Override
     public String getSyntax() {
-        return "/levels show";
+        return "/levels show <player>";
     }
 
     @Override
