@@ -24,9 +24,9 @@ public class CommandReset extends AbstractCommand {
 
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
 
-        if (!player.hasPlayedBefore()) {
+        if (!player.hasPlayedBefore() && !player.isOnline()) {
             instance.getLocale().getMessage("command.general.notonline")
-                    .processPlaceholder("name", args[0])
+                    .processPlaceholder("name", player.getName())
                     .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
