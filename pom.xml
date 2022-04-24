@@ -14,7 +14,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <java.release>8</java.release>
+        <java.release>1.8</java.release>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -50,7 +50,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0-SNAPSHOT</version>
+                <version>3.3.0</version>
 
                 <executions>
                     <execution>
@@ -111,6 +111,10 @@
     </pluginRepositories>
 
     <repositories>
+        <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
         <repository>
             <id>songoda-public</id>
             <url>https://repo.songoda.com/repository/public/</url>
