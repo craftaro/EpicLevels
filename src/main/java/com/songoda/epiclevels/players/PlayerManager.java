@@ -18,12 +18,8 @@ public class PlayerManager {
 
     public EPlayer getPlayer(UUID uuid) {
         return registeredPlayers.computeIfAbsent(uuid, u -> {
-            EPlayer ePlayer = new EPlayer(uuid);
-            EpicLevels.getInstance().getDataManager().createPlayer(ePlayer);
-
-            this.lastUpdate = System.currentTimeMillis();
-
-            return ePlayer;
+            EpicLevels.getInstance().getDataManager().getPlayerOrCreate(uuid, this::addPlayer);
+            return new EPlayer(uuid);
         });
     }
 

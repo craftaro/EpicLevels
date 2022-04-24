@@ -98,6 +98,31 @@ public class DataManager extends DataManagerAbstract {
         }));
     }
 
+    public void selectPlayer(UUID uuid, Consumer<EPlayer> callback) {
+        this.databaseConnector.connect(connection -> {
+            String selectPlayers = "SELECT * FROM " + this.getTablePrefix() + "players where uuid = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(selectPlayers)) {
+                statement.setString(1, uuid.toString());
+                ResultSet result = statement.executeQuery();
+                if (result.next()) {
+                    UUID id = UUID.fromString(result.getString("uuid"));
+
+                    double experience = result.getDouble("experience");
+
+                    int mobKills = result.getInt("mob_kills");
+                    int playerKills = result.getInt("player_kills");
+                    int deaths = result.getInt("deaths");
+                    int killstreak = result.getInt("killstreak");
+                    int bestKillstreak = result.getInt("best_killstreak");
+
+                    EPlayer ePlayer = new EPlayer(id, experience, mobKills, playerKills, deaths, killstreak, bestKillstreak);
+                    callback.accept(ePlayer);
+                }
+            }
+        });
+    }
+
     public void getPlayers(Consumer<Map<UUID, EPlayer>> callback) {
         this.async(() -> this.databaseConnector.connect(connection -> {
             String selectPlayers = "SELECT * FROM " + this.getTablePrefix() + "players";
@@ -128,30 +153,27 @@ public class DataManager extends DataManagerAbstract {
     }
 
     public void getPlayer(Player player, Consumer<EPlayer> callback) {
-        this.async(() -> this.databaseConnector.connect(connection -> {
-            String selectPlayers = "SELECT * FROM " + this.getTablePrefix() + "players where uuid = ?";
+        this.async(() -> selectPlayer(player.getUniqueId(), callback));
+    }
 
-            try (PreparedStatement statement = connection.prepareStatement(selectPlayers)) {
-                statement.setString(1, player.getUniqueId().toString());
-                ResultSet result = statement.executeQuery();
-                if (result.next()) {
-                    UUID uuid = UUID.fromString(result.getString("uuid"));
+    public void getPlayerOrCreate(Player player, Consumer<EPlayer> callback) {
+        getPlayerOrCreate(player.getUniqueId(), callback);
+    }
 
-                    double experience = result.getDouble("experience");
+    public void getPlayerOrCreate(UUID uuid, Consumer<EPlayer> callback) {
+        this.async(() -> {
+            EPlayer[] array = new EPlayer[1];
+            selectPlayer(uuid, data -> array[0] = data);
 
-                    int mobKills = result.getInt("mob_kills");
-                    int playerKills = result.getInt("player_kills");
-                    int deaths = result.getInt("deaths");
-                    int killstreak = result.getInt("killstreak");
-                    int bestKillstreak = result.getInt("best_killstreak");
+            EPlayer ePlayer = array[0];
 
-                    EPlayer ePlayer = new EPlayer(uuid, experience, mobKills,
-                            playerKills, deaths, killstreak, bestKillstreak);
-
-                    this.sync(() -> callback.accept(ePlayer));
-                }
+            if (ePlayer == null) {
+                ePlayer = new EPlayer(uuid);
+                createPlayer(ePlayer);
             }
-        }));
+
+            callback.accept(ePlayer);
+        });
     }
 
     public void getBoosts(Consumer<Map<UUID, Boost>> callback) {
