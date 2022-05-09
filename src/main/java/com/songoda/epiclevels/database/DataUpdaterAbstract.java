@@ -44,6 +44,7 @@ public abstract class DataUpdaterAbstract {
     }
 
     public void onDisable() {
+        enabled = false;
     }
 
     public abstract DatabaseConnector getConnector();

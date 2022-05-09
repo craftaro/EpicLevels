@@ -34,7 +34,7 @@ public class DataUpdater extends DataUpdaterAbstract {
 
     @Override
     public void onDisable() {
-        setEnabled(false);
+        super.onDisable();
         toUpdate.clear();
     }
 
@@ -107,7 +107,7 @@ public class DataUpdater extends DataUpdaterAbstract {
         switch (id.toUpperCase()) {
             case "PLAYERUPDATE":
                 processPlayerUpdate(UUID.fromString(args[0]));
-                return;
+                break;
             case "BOOSTCREATE":
                 processBoostCreate(
                         args[0].equalsIgnoreCase("null") ? null : UUID.fromString(args[0]),
@@ -115,9 +115,12 @@ public class DataUpdater extends DataUpdaterAbstract {
                         Double.parseDouble(args[2]),
                         args[3]
                         );
-                return;
+                break;
             case "BOOSTREMOVE":
                 processBoostRemove(args[0].equalsIgnoreCase("null") ? null : UUID.fromString(args[0]));
+                break;
+            default:
+                throw new IllegalArgumentException("Cannot process update with the ID: " + id);
         }
     }
 
