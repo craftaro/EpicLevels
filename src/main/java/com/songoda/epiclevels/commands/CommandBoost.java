@@ -5,8 +5,8 @@ import com.songoda.core.utils.TimeUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -23,9 +23,9 @@ public class CommandBoost extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         if (args.length < 3) return ReturnType.SYNTAX_ERROR;
 
-        Player player = Bukkit.getPlayer(args[0].toLowerCase());
+        OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
 
-        if (player == null) {
+        if (!instance.getPlayerManager().containsPlayer(player.getUniqueId())) {
             instance.getLocale().getMessage("command.general.notonline")
                     .processPlaceholder("name", args[0])
                     .sendPrefixedMessage(sender);
@@ -52,6 +52,7 @@ public class CommandBoost extends AbstractCommand {
         Boost boost = new Boost(duration + System.currentTimeMillis(), multiplier);
         instance.getBoostManager().addBoost(player.getUniqueId(), boost);
         instance.getDataManager().createBoost(player.getUniqueId(), boost);
+        instance.getDataManager().getUpdater().sendBoostCreate(player.getUniqueId(), duration, multiplier, sender.getName());
 
         instance.getLocale().getMessage("event.boost.success")
                 .processPlaceholder("player", player.getName())
@@ -64,7 +65,7 @@ public class CommandBoost extends AbstractCommand {
                     .processPlaceholder("player", sender.getName())
                     .processPlaceholder("multiplier", multiplier)
                     .processPlaceholder("duration", TimeUtils.makeReadable(duration))
-                    .sendPrefixedMessage(player);
+                    .sendPrefixedMessage(player.getPlayer());
 
         return ReturnType.SUCCESS;
     }

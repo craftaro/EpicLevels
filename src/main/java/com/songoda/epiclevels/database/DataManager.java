@@ -2,6 +2,7 @@ package com.songoda.epiclevels.database;
 
 import com.songoda.core.database.DataManagerAbstract;
 import com.songoda.core.database.DatabaseConnector;
+import com.songoda.core.database.MySQLConnector;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.players.EPlayer;
 import org.bukkit.entity.Player;
@@ -18,8 +19,31 @@ import java.util.function.Consumer;
 
 public class DataManager extends DataManagerAbstract {
 
+    private final DataUpdater updater;
+
     public DataManager(DatabaseConnector databaseConnector, Plugin plugin) {
         super(databaseConnector, plugin);
+        this.updater = new DataUpdater(this);
+
+        if (databaseConnector instanceof MySQLConnector) {
+            this.updater.onEnable();
+        }
+    }
+
+    public DatabaseConnector getDatabaseConnector() {
+        return this.databaseConnector;
+    }
+
+    public Plugin getPlugin() {
+        return this.plugin;
+    }
+
+    public void close() {
+        updater.onDisable();
+    }
+
+    public DataUpdater getUpdater() {
+        return updater;
     }
 
     /**
@@ -65,6 +89,8 @@ public class DataManager extends DataManagerAbstract {
 
                 statement.setString(7, ePlayer.getUniqueId().toString());
                 statement.executeUpdate();
+
+                updater.sendPlayerUpdate(ePlayer.getUniqueId());
             }
         }));
     }
@@ -84,6 +110,8 @@ public class DataManager extends DataManagerAbstract {
                 statement.setInt(6, ePlayer.getKillstreak());
                 statement.setInt(7, ePlayer.getBestKillstreak());
                 statement.executeUpdate();
+
+                updater.sendPlayerUpdate(ePlayer.getUniqueId());
             }
         }), "create");
     }
@@ -153,7 +181,11 @@ public class DataManager extends DataManagerAbstract {
     }
 
     public void getPlayer(Player player, Consumer<EPlayer> callback) {
-        this.async(() -> selectPlayer(player.getUniqueId(), callback));
+        getPlayer(player.getUniqueId(), callback);
+    }
+
+    public void getPlayer(UUID uuid, Consumer<EPlayer> callback) {
+        this.async(() -> selectPlayer(uuid, callback));
     }
 
     public void getPlayerOrCreate(Player player, Consumer<EPlayer> callback) {

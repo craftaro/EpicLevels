@@ -73,8 +73,10 @@ public class BoostManager {
         return boost;
     }
 
-    public void clearGlobalBoost() {
-        if (globalBoost == null) return;
+    public Boost clearGlobalBoost() {
+        if (globalBoost == null) return null;
+
         globalBoost.expire();
+        return globalBoost;
     }
 }

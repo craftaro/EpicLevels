@@ -60,4 +60,8 @@ public class PlayerManager {
     public long getLastUpdate() {
         return this.lastUpdate;
     }
+
+    public boolean containsPlayer(UUID uuid) {
+        return registeredPlayers.containsKey(uuid);
+    }
 }
