@@ -52,27 +52,32 @@ public class DataUpdater extends DataUpdaterAbstract {
         return manager.getTablePrefix();
     }
 
-    public void sendUpdate(String id, Object... args) {
+    public String buildMessage(String id, Object... args) {
         String[] strings = new String[args.length];
         for (int i = 0; i < args.length; i++) {
             strings[i] = String.valueOf(args[i]);
         }
-        String msg = id + (args.length > 1 ? ":" + args.length : "") + "=" + String.join("_|||_", strings);
-        if (isEnabled()) {
-            Bukkit.getScheduler().runTaskAsynchronously(manager.getPlugin(), () -> sendMessage(msg));
-        }
+        return id + (args.length > 1 ? ":" + args.length : "") + "=" + String.join("_|||_", strings);
+    }
+
+    public void sendMessageAsync(String message) {
+        Bukkit.getScheduler().runTaskAsynchronously(manager.getPlugin(), () -> sendMessage(message));
+    }
+
+    public void sendMessageAsync(String message, long delay) {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getPlugin(), () -> sendMessage(message), delay);
     }
 
     public void sendPlayerUpdate(UUID uuid) {
-        sendUpdate("PLAYERUPDATE", uuid);
+        sendMessageAsync(buildMessage("PLAYERUPDATE", uuid), 80);
     }
 
     public void sendBoostCreate(UUID uuid, long duration, double multiplier, String sender) {
-        sendUpdate("BOOSTCREATE", uuid, duration, multiplier, sender);
+        sendMessageAsync(buildMessage("BOOSTCREATE", uuid, duration, multiplier, sender));
     }
 
     public void sendBoostRemove(UUID uuid) {
-        sendUpdate("BOOSTREMOVE", uuid);
+        sendMessageAsync(buildMessage("BOOSTREMOVE", uuid));
     }
 
     public void processMessage(String msg) {
@@ -127,14 +132,18 @@ public class DataUpdater extends DataUpdaterAbstract {
     public void processPlayerUpdate(UUID uuid) {
         if (toUpdate.contains(uuid)) {
             return;
-        } else {
-            toUpdate.add(uuid);
         }
+
+        toUpdate.add(uuid);
         Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getPlugin(), () -> {
             try {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player == null || !player.isOnline()) {
-                    manager.selectPlayer(uuid, (data) -> EpicLevels.getInstance().getPlayerManager().addPlayer(data));
+                    manager.selectPlayer(uuid, (data) -> {
+                        if (data != null) {
+                            EpicLevels.getInstance().getPlayerManager().addPlayer(data);
+                        }
+                    });
                 }
             } catch (Throwable t) {
                 t.printStackTrace();

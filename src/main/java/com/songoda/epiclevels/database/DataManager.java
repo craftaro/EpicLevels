@@ -38,10 +38,6 @@ public class DataManager extends DataManagerAbstract {
         return this.plugin;
     }
 
-    public void close() {
-        updater.onDisable();
-    }
-
     public DataUpdater getUpdater() {
         return updater;
     }
@@ -146,8 +142,10 @@ public class DataManager extends DataManagerAbstract {
 
                     EPlayer ePlayer = new EPlayer(id, experience, mobKills, playerKills, deaths, killstreak, bestKillstreak);
                     callback.accept(ePlayer);
+                    return;
                 }
             }
+            callback.accept(null);
         });
     }
 
@@ -185,7 +183,11 @@ public class DataManager extends DataManagerAbstract {
     }
 
     public void getPlayer(UUID uuid, Consumer<EPlayer> callback) {
-        this.async(() -> selectPlayer(uuid, callback));
+        this.async(() -> selectPlayer(uuid, (player) -> {
+            if (player != null) {
+                callback.accept(player);
+            }
+        }));
     }
 
     public void getPlayerOrCreate(Player player, Consumer<EPlayer> callback) {

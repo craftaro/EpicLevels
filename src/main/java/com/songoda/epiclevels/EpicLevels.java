@@ -70,7 +70,7 @@ public class EpicLevels extends SongodaPlugin {
 
     @Override
     public void onPluginDisable() {
-        this.dataManager.close();
+        this.dataManager.getUpdater().onDisable();
         this.dataManager.bulkUpdatePlayers(this.playerManager.getPlayers());
         this.dataManager.bulkUpdateBoosts(this.boostManager.getBoosts().values());
 

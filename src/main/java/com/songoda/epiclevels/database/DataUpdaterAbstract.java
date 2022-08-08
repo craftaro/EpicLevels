@@ -60,11 +60,10 @@ public abstract class DataUpdaterAbstract {
     }
 
     public void sendMessage(String msg) {
-        lock.readLock().lock();
         if (!isEnabled()) {
-            lock.readLock().unlock();
             return;
         }
+        lock.readLock().lock();
 
         try {
             getConnector().connect(connection -> {
@@ -80,11 +79,10 @@ public abstract class DataUpdaterAbstract {
     }
 
     public void getMessages(Consumer<String> callback) {
-        lock.readLock().lock();
         if (!isEnabled()) {
-            lock.readLock().unlock();
             return;
         }
+        lock.readLock().lock();
 
         try {
             getConnector().connect(connection -> {
@@ -108,11 +106,10 @@ public abstract class DataUpdaterAbstract {
     }
 
     public void cleanMessages() {
-        lock.readLock().lock();
         if (!isEnabled()) {
-            lock.readLock().unlock();
             return;
         }
+        lock.readLock().lock();
 
         try {
             getConnector().connect(connection -> {
