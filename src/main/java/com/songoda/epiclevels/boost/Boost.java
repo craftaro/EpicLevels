@@ -1,5 +1,7 @@
 package com.songoda.epiclevels.boost;
 
+import java.util.Objects;
+
 public class Boost {
 
     private int id;
@@ -35,5 +37,18 @@ public class Boost {
 
     public double getMultiplier() {
         return multiplier;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Boost boost = (Boost) o;
+        return id == boost.id && expiration == boost.expiration && Double.compare(boost.multiplier, multiplier) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, expiration, multiplier);
     }
 }

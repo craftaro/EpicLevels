@@ -13,6 +13,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -200,5 +201,18 @@ public class EPlayer {
 
     public enum Formula {
         LINEAR, EXPONENTIAL, CUSTOM
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EPlayer ePlayer = (EPlayer) o;
+        return Double.compare(ePlayer.experience, experience) == 0 && mobKills == ePlayer.mobKills && playerKills == ePlayer.playerKills && deaths == ePlayer.deaths && killstreak == ePlayer.killstreak && bestKillstreak == ePlayer.bestKillstreak && uuid.equals(ePlayer.uuid) && kills.equals(ePlayer.kills);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, experience, mobKills, playerKills, deaths, killstreak, bestKillstreak, kills);
     }
 }
