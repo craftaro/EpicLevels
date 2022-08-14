@@ -2,6 +2,7 @@ package com.songoda.epiclevels.database;
 
 import com.songoda.core.database.DataManagerAbstract;
 import com.songoda.core.database.DatabaseConnector;
+import com.songoda.core.database.MySQLConnector;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.players.EPlayer;
 import org.bukkit.entity.Player;
@@ -19,8 +20,27 @@ import java.util.function.Consumer;
 
 public class DataManager extends DataManagerAbstract {
 
+    private final DataUpdater updater;
+
     public DataManager(DatabaseConnector databaseConnector, Plugin plugin) {
         super(databaseConnector, plugin);
+        this.updater = new DataUpdater(this);
+
+        if (databaseConnector instanceof MySQLConnector) {
+            this.updater.onEnable();
+        }
+    }
+
+    public DatabaseConnector getDatabaseConnector() {
+        return this.databaseConnector;
+    }
+
+    public Plugin getPlugin() {
+        return this.plugin;
+    }
+
+    public DataUpdater getUpdater() {
+        return updater;
     }
 
     /**
@@ -69,6 +89,8 @@ public class DataManager extends DataManagerAbstract {
 
                 statement.setString(7, ePlayer.getUniqueId().toString());
                 statement.executeUpdate();
+
+                updater.sendPlayerUpdate(ePlayer.getUniqueId());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -90,6 +112,8 @@ public class DataManager extends DataManagerAbstract {
                 statement.setInt(6, ePlayer.getKillstreak());
                 statement.setInt(7, ePlayer.getBestKillstreak());
                 statement.executeUpdate();
+
+                updater.sendPlayerUpdate(ePlayer.getUniqueId());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -106,6 +130,33 @@ public class DataManager extends DataManagerAbstract {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+        });
+    }
+
+    public void selectPlayer(UUID uuid, Consumer<EPlayer> callback) {
+        this.databaseConnector.connect(connection -> {
+            String selectPlayers = "SELECT * FROM " + this.getTablePrefix() + "players where uuid = ?";
+
+            try (PreparedStatement statement = connection.prepareStatement(selectPlayers)) {
+                statement.setString(1, uuid.toString());
+                ResultSet result = statement.executeQuery();
+                if (result.next()) {
+                    UUID id = UUID.fromString(result.getString("uuid"));
+
+                    double experience = result.getDouble("experience");
+
+                    int mobKills = result.getInt("mob_kills");
+                    int playerKills = result.getInt("player_kills");
+                    int deaths = result.getInt("deaths");
+                    int killstreak = result.getInt("killstreak");
+                    int bestKillstreak = result.getInt("best_killstreak");
+
+                    EPlayer ePlayer = new EPlayer(id, experience, mobKills, playerKills, deaths, killstreak, bestKillstreak);
+                    callback.accept(ePlayer);
+                    return;
+                }
+            }
+            callback.accept(null);
         });
     }
 
@@ -142,32 +193,34 @@ public class DataManager extends DataManagerAbstract {
     }
 
     public void getPlayer(Player player, Consumer<EPlayer> callback) {
-        this.runAsync(() -> {
-            try (Connection connection = this.databaseConnector.getConnection()) {
-                String selectPlayers = "SELECT * FROM " + this.getTablePrefix() + "players where uuid = ?";
+        getPlayer(player.getUniqueId(), callback);
+    }
 
-                PreparedStatement statement = connection.prepareStatement(selectPlayers);
-                statement.setString(1, player.getUniqueId().toString());
-                ResultSet result = statement.executeQuery();
-                if (result.next()) {
-                    UUID uuid = UUID.fromString(result.getString("uuid"));
-
-                    double experience = result.getDouble("experience");
-
-                    int mobKills = result.getInt("mob_kills");
-                    int playerKills = result.getInt("player_kills");
-                    int deaths = result.getInt("deaths");
-                    int killstreak = result.getInt("killstreak");
-                    int bestKillstreak = result.getInt("best_killstreak");
-
-                    EPlayer ePlayer = new EPlayer(uuid, experience, mobKills,
-                            playerKills, deaths, killstreak, bestKillstreak);
-
-                    this.sync(() -> callback.accept(ePlayer));
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
+    public void getPlayer(UUID uuid, Consumer<EPlayer> callback) {
+        this.async(() -> selectPlayer(uuid, (player) -> {
+            if (player != null) {
+                callback.accept(player);
             }
+        }));
+    }
+
+    public void getPlayerOrCreate(Player player, Consumer<EPlayer> callback) {
+        getPlayerOrCreate(player.getUniqueId(), callback);
+    }
+
+    public void getPlayerOrCreate(UUID uuid, Consumer<EPlayer> callback) {
+        this.async(() -> {
+            EPlayer[] array = new EPlayer[1];
+            selectPlayer(uuid, data -> array[0] = data);
+
+            EPlayer ePlayer = array[0];
+
+            if (ePlayer == null) {
+                ePlayer = new EPlayer(uuid);
+                createPlayer(ePlayer);
+            }
+
+            callback.accept(ePlayer);
         });
     }
 

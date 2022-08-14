@@ -175,7 +175,7 @@ public class EPlayer {
         return lastLevel;
     }
 
-    public static int experience(int level) {
+    public static double experience(int level) {
         Formula formula = Formula.valueOf(Settings.LEVELING_FORMULA.getString());
         switch (formula) {
             case EXPONENTIAL: {
@@ -183,16 +183,16 @@ public class EPlayer {
                 for (int i = 1; i < level; i++)
                     a += Math.floor(i + Settings.EXPONENTIAL_BASE.getDouble()
                             * Math.pow(2, (i / Settings.EXPONENTIAL_DIVISOR.getDouble())));
-                return (int) Math.floor(a);
+                return Math.floor(a);
             }
             case LINEAR: {
-                int a = 0;
+                double a = 0;
                 for (int i = 1; i < level; i++)
-                    a += Settings.LINEAR_INCREMENT.getInt();
+                    a += Settings.LINEAR_INCREMENT.getDouble();
                 return a;
             }
             case CUSTOM: {
-                return (int) Math.round(MathUtils.eval(Settings.CUSTOM_FORMULA.getString()
+                return Math.round(MathUtils.eval(Settings.CUSTOM_FORMULA.getString()
                         .replace("level", String.valueOf(level))));
             }
         }
