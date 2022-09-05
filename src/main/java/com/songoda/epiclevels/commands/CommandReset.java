@@ -14,7 +14,7 @@ public class CommandReset extends AbstractCommand {
     private final EpicLevels instance;
 
     public CommandReset(EpicLevels instance) {
-        super(false, "Reset");
+        super(CommandType.CONSOLE_OK, "Reset");
         this.instance = instance;
     }
 

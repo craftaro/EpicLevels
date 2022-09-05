@@ -13,6 +13,7 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -174,7 +175,7 @@ public class EPlayer {
         return lastLevel;
     }
 
-    public static int experience(int level) {
+    public static double experience(int level) {
         Formula formula = Formula.valueOf(Settings.LEVELING_FORMULA.getString());
         switch (formula) {
             case EXPONENTIAL: {
@@ -182,16 +183,16 @@ public class EPlayer {
                 for (int i = 1; i < level; i++)
                     a += Math.floor(i + Settings.EXPONENTIAL_BASE.getDouble()
                             * Math.pow(2, (i / Settings.EXPONENTIAL_DIVISOR.getDouble())));
-                return (int) Math.floor(a);
+                return Math.floor(a);
             }
             case LINEAR: {
-                int a = 0;
+                double a = 0;
                 for (int i = 1; i < level; i++)
-                    a += Settings.LINEAR_INCREMENT.getInt();
+                    a += Settings.LINEAR_INCREMENT.getDouble();
                 return a;
             }
             case CUSTOM: {
-                return (int) Math.round(MathUtils.eval(Settings.CUSTOM_FORMULA.getString()
+                return Math.round(MathUtils.eval(Settings.CUSTOM_FORMULA.getString()
                         .replace("level", String.valueOf(level))));
             }
         }
@@ -200,5 +201,18 @@ public class EPlayer {
 
     public enum Formula {
         LINEAR, EXPONENTIAL, CUSTOM
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EPlayer ePlayer = (EPlayer) o;
+        return Double.compare(ePlayer.experience, experience) == 0 && mobKills == ePlayer.mobKills && playerKills == ePlayer.playerKills && deaths == ePlayer.deaths && killstreak == ePlayer.killstreak && bestKillstreak == ePlayer.bestKillstreak && uuid.equals(ePlayer.uuid) && kills.equals(ePlayer.kills);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, experience, mobKills, playerKills, deaths, killstreak, bestKillstreak, kills);
     }
 }

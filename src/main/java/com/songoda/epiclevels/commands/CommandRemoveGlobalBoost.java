@@ -2,6 +2,7 @@ package com.songoda.epiclevels.commands;
 
 import com.songoda.core.commands.AbstractCommand;
 import com.songoda.epiclevels.EpicLevels;
+import com.songoda.epiclevels.boost.Boost;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -17,7 +18,11 @@ public class CommandRemoveGlobalBoost extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        instance.getBoostManager().clearGlobalBoost();
+        Boost boost = instance.getBoostManager().clearGlobalBoost();
+        if (boost != null) {
+            instance.getDataManager().deleteBoost(boost);
+        }
+        instance.getDataManager().getUpdater().sendBoostRemove(null);
 
         instance.getLocale().getMessage("command.removeglobalboost.success")
                 .sendPrefixedMessage(sender);
