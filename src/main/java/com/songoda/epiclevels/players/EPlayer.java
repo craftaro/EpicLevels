@@ -30,6 +30,8 @@ public class EPlayer {
     private int bestKillstreak;
 
     private final Map<Long, UUID> kills = new HashMap<>();
+    // No serialized variable
+    private transient boolean saved = true;
 
     public EPlayer(UUID uuid, double experience, int mobKills, int playerKills, int deaths, int killstreak, int bestKillstreak) {
         this.uuid = uuid;
@@ -55,6 +57,7 @@ public class EPlayer {
 
     public double addExperience(double experience) {
         if (experience == 0) return experience;
+        saved = false;
         EpicLevels plugin = EpicLevels.getInstance();
         if (experience < 0L) {
             if (this.experience + experience < 0L && !Settings.ALLOW_NEGATIVE.getBoolean())
@@ -131,10 +134,12 @@ public class EPlayer {
     }
 
     public int addMobKill() {
+        saved = false;
         return mobKills++;
     }
 
     public int addPlayerKill(UUID uuid) {
+        saved = false;
         this.kills.put(System.currentTimeMillis(), uuid);
         return playerKills++;
     }
@@ -144,6 +149,7 @@ public class EPlayer {
     }
 
     public int addDeath() {
+        saved = false;
         return deaths++;
     }
 
@@ -156,6 +162,7 @@ public class EPlayer {
     }
 
     public int increaseKillstreak() {
+        saved = false;
         killstreak++;
         if (killstreak > bestKillstreak)
             bestKillstreak = killstreak;
@@ -163,6 +170,7 @@ public class EPlayer {
     }
 
     public void resetKillstreak() {
+        saved = false;
         killstreak = 0;
     }
 
@@ -173,6 +181,14 @@ public class EPlayer {
             lastLevel++;
         }
         return lastLevel;
+    }
+
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
     }
 
     public static double experience(int level) {
@@ -214,5 +230,20 @@ public class EPlayer {
     @Override
     public int hashCode() {
         return Objects.hash(uuid, experience, mobKills, playerKills, deaths, killstreak, bestKillstreak, kills);
+    }
+
+    @Override
+    public String toString() {
+        return "EPlayer{" +
+                "uuid=" + uuid +
+                ", experience=" + experience +
+                ", mobKills=" + mobKills +
+                ", playerKills=" + playerKills +
+                ", deaths=" + deaths +
+                ", killstreak=" + killstreak +
+                ", bestKillstreak=" + bestKillstreak +
+                ", kills=" + kills +
+                ", saved=" + saved +
+                '}';
     }
 }

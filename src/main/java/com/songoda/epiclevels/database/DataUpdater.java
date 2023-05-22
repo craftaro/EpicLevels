@@ -61,7 +61,11 @@ public class DataUpdater extends DataUpdaterAbstract {
     }
 
     public void sendMessageAsync(String message) {
-        Bukkit.getScheduler().runTaskAsynchronously(manager.getPlugin(), () -> sendMessage(message));
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(manager.getPlugin(), () -> sendMessage(message));
+        } else {
+            sendMessage(message);
+        }
     }
 
     public void sendMessageAsync(String message, long delay) {
@@ -69,7 +73,7 @@ public class DataUpdater extends DataUpdaterAbstract {
     }
 
     public void sendPlayerUpdate(UUID uuid) {
-        sendMessageAsync(buildMessage("PLAYERUPDATE", uuid), 80);
+        sendMessageAsync(buildMessage("PLAYERUPDATE", uuid));
     }
 
     public void sendBoostCreate(UUID uuid, long duration, double multiplier, String sender) {

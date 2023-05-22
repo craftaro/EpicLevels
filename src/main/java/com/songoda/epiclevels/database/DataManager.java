@@ -55,6 +55,10 @@ public class DataManager extends DataManagerAbstract {
             String updatePlayer = "UPDATE " + this.getTablePrefix() + "players SET experience = ?, mob_kills = ?, player_kills = ?, deaths = ?, killstreak = ?, best_killstreak = ? WHERE uuid = ?";
             try (PreparedStatement statement = connection.prepareStatement(updatePlayer)) {
                 for (EPlayer ePlayer : ePlayers) {
+                    // Avoid saved players
+                    if (ePlayer.isSaved()) {
+                        continue;
+                    }
                     statement.setDouble(1, ePlayer.getExperience());
 
                     statement.setInt(2, ePlayer.getMobKills());
@@ -127,6 +131,7 @@ public class DataManager extends DataManagerAbstract {
                 PreparedStatement statement = connection.prepareStatement(deletePlayer);
                 statement.setString(1, ePlayer.getUniqueId().toString());
                 statement.executeUpdate();
+                ePlayer.setSaved(true);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

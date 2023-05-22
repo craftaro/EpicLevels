@@ -17,10 +17,16 @@ public class PlayerManager {
     private long lastUpdate = -1;
 
     public EPlayer getPlayer(UUID uuid) {
-        return registeredPlayers.computeIfAbsent(uuid, u -> {
-            EpicLevels.getInstance().getDataManager().getPlayerOrCreate(uuid, this::addPlayer);
-            return new EPlayer(uuid);
-        });
+        EPlayer ePlayer = registeredPlayers.get(uuid);
+        if (ePlayer == null) {
+            EpicLevels.getInstance().getDataManager().getPlayerOrCreate(uuid, player -> {
+                player.setSaved(false);
+                addPlayer(player);
+            });
+            ePlayer = new EPlayer(uuid);
+            addPlayer(ePlayer);
+        }
+        return ePlayer;
     }
 
     public EPlayer getPlayer(OfflinePlayer player) {

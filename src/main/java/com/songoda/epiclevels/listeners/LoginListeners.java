@@ -18,15 +18,16 @@ public class LoginListeners implements Listener {
 
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
-        Bukkit.getScheduler().runTaskLater(plugin,
-                () -> EpicLevels.getInstance().getDataManager().getPlayerOrCreate(event.getPlayer(),
-                        player -> plugin.getPlayerManager().addPlayer(player)),
-                30L);
+        Bukkit.getScheduler().runTaskLater(plugin, () -> EpicLevels.getInstance().getDataManager().getPlayerOrCreate(event.getPlayer(), player -> {
+            player.setSaved(false);
+            plugin.getPlayerManager().addPlayer(player);
+        }), 40L);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         EPlayer ePlayer = plugin.getPlayerManager().getPlayer(event.getPlayer());
         plugin.getDataManager().updatePlayer(ePlayer);
+        ePlayer.setSaved(true);
     }
 }
