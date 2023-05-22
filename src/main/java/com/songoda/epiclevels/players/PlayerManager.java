@@ -28,6 +28,9 @@ public class PlayerManager {
     }
 
     public void addPlayer(EPlayer player) {
+        if (registeredPlayers.containsKey(player.getUniqueId()) && registeredPlayers.get(player.getUniqueId()).getExperience() > player.getExperience()) {
+            return;
+        }
         registeredPlayers.put(player.getUniqueId(), player);
 
         this.lastUpdate = System.currentTimeMillis();
