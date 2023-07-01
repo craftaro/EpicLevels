@@ -13,13 +13,14 @@ import java.util.List;
 import java.util.UUID;
 
 public class DataUpdater extends DataUpdaterAbstract {
-
     private final DataManager manager;
+    private final EpicLevels plugin;
 
     private final List<UUID> toUpdate = new ArrayList<>();
 
-    public DataUpdater(DataManager manager) {
+    public DataUpdater(DataManager manager, EpicLevels plugin) {
         this.manager = manager;
+        this.plugin = plugin;
     }
 
     @Override
@@ -27,29 +28,29 @@ public class DataUpdater extends DataUpdaterAbstract {
         super.onEnable();
 
         if (isEnabled()) {
-            Bukkit.getScheduler().runTaskTimerAsynchronously(manager.getPlugin(), () -> getMessages(this::processMessage), 20, 20);
-            Bukkit.getScheduler().runTaskTimerAsynchronously(manager.getPlugin(), this::cleanMessages, 20, 600);
+            Bukkit.getScheduler().runTaskTimerAsynchronously(this.manager.getPlugin(), () -> getMessages(this::processMessage), 20, 20);
+            Bukkit.getScheduler().runTaskTimerAsynchronously(this.manager.getPlugin(), this::cleanMessages, 20, 600);
         }
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
-        toUpdate.clear();
+        this.toUpdate.clear();
     }
 
     public DataManager getManager() {
-        return manager;
+        return this.manager;
     }
 
     @Override
     public DatabaseConnector getConnector() {
-        return manager.getDatabaseConnector();
+        return this.manager.getDatabaseConnector();
     }
 
     @Override
     public String getTablePrefix() {
-        return manager.getTablePrefix();
+        return this.manager.getTablePrefix();
     }
 
     public String buildMessage(String id, Object... args) {
@@ -61,11 +62,11 @@ public class DataUpdater extends DataUpdaterAbstract {
     }
 
     public void sendMessageAsync(String message) {
-        Bukkit.getScheduler().runTaskAsynchronously(manager.getPlugin(), () -> sendMessage(message));
+        Bukkit.getScheduler().runTaskAsynchronously(this.manager.getPlugin(), () -> sendMessage(message));
     }
 
     public void sendMessageAsync(String message, long delay) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getPlugin(), () -> sendMessage(message), delay);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this.manager.getPlugin(), () -> sendMessage(message), delay);
     }
 
     public void sendPlayerUpdate(UUID uuid) {
@@ -94,7 +95,7 @@ public class DataUpdater extends DataUpdaterAbstract {
 
         String[] args;
         if (length <= 1) {
-            args = new String[] {split[1]};
+            args = new String[]{split[1]};
         } else {
             args = split[1].split("_\\|\\|\\|_", length);
             if (args.length != length) {
@@ -119,7 +120,7 @@ public class DataUpdater extends DataUpdaterAbstract {
                         Long.parseLong(args[1]),
                         Double.parseDouble(args[2]),
                         args[3]
-                        );
+                );
                 break;
             case "BOOSTREMOVE":
                 processBoostRemove(args[0].equalsIgnoreCase("null") ? null : UUID.fromString(args[0]));
@@ -130,25 +131,25 @@ public class DataUpdater extends DataUpdaterAbstract {
     }
 
     public void processPlayerUpdate(UUID uuid) {
-        if (toUpdate.contains(uuid)) {
+        if (this.toUpdate.contains(uuid)) {
             return;
         }
 
-        toUpdate.add(uuid);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(manager.getPlugin(), () -> {
+        this.toUpdate.add(uuid);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this.manager.getPlugin(), () -> {
             try {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player == null || !player.isOnline()) {
-                    manager.selectPlayer(uuid, (data) -> {
+                    this.manager.selectPlayer(uuid, (data) -> {
                         if (data != null) {
-                            EpicLevels.getInstance().getPlayerManager().addPlayer(data);
+                            this.plugin.getPlayerManager().addPlayer(data);
                         }
                     });
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
             }
-            toUpdate.remove(uuid);
+            this.toUpdate.remove(uuid);
         }, 80);
     }
 
@@ -157,8 +158,8 @@ public class DataUpdater extends DataUpdaterAbstract {
 
         if (uuid == null) {
             // Global boost
-            EpicLevels.getInstance().getBoostManager().setGlobalBoost(boost);
-            Message message = EpicLevels.getInstance().getLocale().getMessage("event.boost.globalannounce")
+            this.plugin.getBoostManager().setGlobalBoost(boost);
+            Message message = this.plugin.getLocale().getMessage("event.boost.globalannounce")
                     .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                     .processPlaceholder("multiplier", multiplier)
                     .processPlaceholder("player", sender);
@@ -166,10 +167,10 @@ public class DataUpdater extends DataUpdaterAbstract {
             Bukkit.getOnlinePlayers().forEach(message::sendPrefixedMessage);
         } else {
             // Player boost
-            EpicLevels.getInstance().getBoostManager().addBoost(uuid, boost);
+            this.plugin.getBoostManager().addBoost(uuid, boost);
             Player player = Bukkit.getPlayer(uuid);
             if (player != null && player.isOnline()) {
-                EpicLevels.getInstance().getLocale().getMessage("event.boost.announce")
+                this.plugin.getLocale().getMessage("event.boost.announce")
                         .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                         .processPlaceholder("multiplier", multiplier)
                         .processPlaceholder("player", sender)
@@ -180,9 +181,9 @@ public class DataUpdater extends DataUpdaterAbstract {
 
     public void processBoostRemove(UUID uuid) {
         if (uuid == null) {
-            EpicLevels.getInstance().getBoostManager().clearGlobalBoost();
+            this.plugin.getBoostManager().clearGlobalBoost();
         } else {
-            EpicLevels.getInstance().getBoostManager().removeBoost(uuid);
+            this.plugin.getBoostManager().removeBoost(uuid);
         }
     }
 }

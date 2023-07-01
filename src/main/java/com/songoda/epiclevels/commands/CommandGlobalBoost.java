@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommandGlobalBoost extends AbstractCommand {
-
     private final EpicLevels instance;
 
     public CommandGlobalBoost(EpicLevels instance) {
@@ -22,13 +21,15 @@ public class CommandGlobalBoost extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        if (args.length < 2) return ReturnType.SYNTAX_ERROR;
+        if (args.length < 2) {
+            return ReturnType.SYNTAX_ERROR;
+        }
 
         double multiplier;
         try {
             multiplier = Double.parseDouble(args[0]);
         } catch (Exception e) {
-            instance.getLocale().getMessage("command.general.notint")
+            this.instance.getLocale().getMessage("command.general.notint")
                     .processPlaceholder("number", args[1])
                     .sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
@@ -41,21 +42,22 @@ public class CommandGlobalBoost extends AbstractCommand {
         }
 
         Boost boost = new Boost(duration + System.currentTimeMillis(), multiplier);
-        instance.getBoostManager().setGlobalBoost(boost);
-        instance.getDataManager().createBoost(null, boost);
-        instance.getDataManager().getUpdater().sendBoostCreate(null, duration, multiplier, sender.getName());
+        this.instance.getBoostManager().setGlobalBoost(boost);
+        this.instance.getDataManager().createBoost(null, boost);
+        this.instance.getDataManager().getUpdater().sendBoostCreate(null, duration, multiplier, sender.getName());
 
-        instance.getLocale().getMessage("event.boost.globalsuccess")
+        this.instance.getLocale().getMessage("event.boost.globalsuccess")
                 .processPlaceholder("multiplier", multiplier)
                 .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                 .sendPrefixedMessage(sender);
 
-        for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != sender).collect(Collectors.toList()))
-            instance.getLocale().getMessage("event.boost.globalannounce")
+        for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != sender).collect(Collectors.toList())) {
+            this.instance.getLocale().getMessage("event.boost.globalannounce")
                     .processPlaceholder("player", sender.getName())
                     .processPlaceholder("multiplier", multiplier)
                     .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                     .sendPrefixedMessage(pl);
+        }
 
         return ReturnType.SUCCESS;
     }

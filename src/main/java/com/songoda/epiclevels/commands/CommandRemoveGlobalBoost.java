@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class CommandRemoveGlobalBoost extends AbstractCommand {
-
     private final EpicLevels instance;
 
     public CommandRemoveGlobalBoost(EpicLevels instance) {
@@ -18,13 +17,13 @@ public class CommandRemoveGlobalBoost extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        Boost boost = instance.getBoostManager().clearGlobalBoost();
+        Boost boost = this.instance.getBoostManager().clearGlobalBoost();
         if (boost != null) {
-            instance.getDataManager().deleteBoost(boost);
+            this.instance.getDataManager().deleteBoost(boost);
         }
-        instance.getDataManager().getUpdater().sendBoostRemove(null);
+        this.instance.getDataManager().getUpdater().sendBoostRemove(null);
 
-        instance.getLocale().getMessage("command.removeglobalboost.success")
+        this.instance.getLocale().getMessage("command.removeglobalboost.success")
                 .sendPrefixedMessage(sender);
 
         return ReturnType.SUCCESS;

@@ -9,16 +9,19 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class _1_InitialMigration extends DataMigration {
+    private final EpicLevels plugin;
 
-    public _1_InitialMigration() {
+    public _1_InitialMigration(EpicLevels plugin) {
         super(1);
+
+        this.plugin = plugin;
     }
 
     @Override
     public void migrate(Connection connection, String tablePrefix) throws SQLException {
-        String autoIncrement = EpicLevels.getInstance().getDatabaseConnector() instanceof MySQLConnector ? " AUTO_INCREMENT" : "";
+        String autoIncrement = this.plugin.getDatabaseConnector() instanceof MySQLConnector ? " AUTO_INCREMENT" : "";
 
-        // Create players table
+        // Create 'players' table
         try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE " + tablePrefix + "players (" +
                     "uuid VARCHAR(36) PRIMARY KEY, " +
@@ -31,7 +34,7 @@ public class _1_InitialMigration extends DataMigration {
                     ")");
         }
 
-        // Create boosts table
+        // Create 'boosts' table
         try (Statement statement = connection.createStatement()) {
             statement.execute("CREATE TABLE " + tablePrefix + "boosts (" +
                     "id INTEGER PRIMARY KEY" + autoIncrement + ", " +

@@ -3,6 +3,7 @@ package com.songoda.epiclevels.database;
 import com.songoda.core.database.DataManagerAbstract;
 import com.songoda.core.database.DatabaseConnector;
 import com.songoda.core.database.MySQLConnector;
+import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.players.EPlayer;
 import org.bukkit.entity.Player;
@@ -19,12 +20,11 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 public class DataManager extends DataManagerAbstract {
-
     private final DataUpdater updater;
 
-    public DataManager(DatabaseConnector databaseConnector, Plugin plugin) {
+    public DataManager(DatabaseConnector databaseConnector, EpicLevels plugin) {
         super(databaseConnector, plugin);
-        this.updater = new DataUpdater(this);
+        this.updater = new DataUpdater(this, plugin);
 
         if (databaseConnector instanceof MySQLConnector) {
             this.updater.onEnable();
@@ -40,7 +40,7 @@ public class DataManager extends DataManagerAbstract {
     }
 
     public DataUpdater getUpdater() {
-        return updater;
+        return this.updater;
     }
 
     /**
@@ -60,8 +60,8 @@ public class DataManager extends DataManagerAbstract {
                     statement.setInt(2, ePlayer.getMobKills());
                     statement.setInt(3, ePlayer.getPlayerKills());
                     statement.setInt(4, ePlayer.getDeaths());
-                    statement.setInt(5, ePlayer.getKillstreak());
-                    statement.setInt(6, ePlayer.getBestKillstreak());
+                    statement.setInt(5, ePlayer.getKillStreak());
+                    statement.setInt(6, ePlayer.getBestKillStreak());
 
                     statement.setString(7, ePlayer.getUniqueId().toString());
                     statement.addBatch();
@@ -84,13 +84,13 @@ public class DataManager extends DataManagerAbstract {
                 statement.setInt(2, ePlayer.getMobKills());
                 statement.setInt(3, ePlayer.getPlayerKills());
                 statement.setInt(4, ePlayer.getDeaths());
-                statement.setInt(5, ePlayer.getKillstreak());
-                statement.setInt(6, ePlayer.getBestKillstreak());
+                statement.setInt(5, ePlayer.getKillStreak());
+                statement.setInt(6, ePlayer.getBestKillStreak());
 
                 statement.setString(7, ePlayer.getUniqueId().toString());
                 statement.executeUpdate();
 
-                updater.sendPlayerUpdate(ePlayer.getUniqueId());
+                this.updater.sendPlayerUpdate(ePlayer.getUniqueId());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -109,11 +109,11 @@ public class DataManager extends DataManagerAbstract {
                 statement.setInt(3, ePlayer.getMobKills());
                 statement.setInt(4, ePlayer.getPlayerKills());
                 statement.setInt(5, ePlayer.getDeaths());
-                statement.setInt(6, ePlayer.getKillstreak());
-                statement.setInt(7, ePlayer.getBestKillstreak());
+                statement.setInt(6, ePlayer.getKillStreak());
+                statement.setInt(7, ePlayer.getBestKillStreak());
                 statement.executeUpdate();
 
-                updater.sendPlayerUpdate(ePlayer.getUniqueId());
+                this.updater.sendPlayerUpdate(ePlayer.getUniqueId());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

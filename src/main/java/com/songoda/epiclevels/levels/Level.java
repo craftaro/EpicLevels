@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Level {
-
     private final int level;
     private final List<String> rewards;
 
@@ -15,24 +14,29 @@ public class Level {
     }
 
     public int getLevel() {
-        return level;
+        return this.level;
     }
 
     public List<String> getRewards() {
-        return Collections.unmodifiableList(rewards);
+        return Collections.unmodifiableList(this.rewards);
     }
 
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Level level1 = (Level) o;
-        return level == level1.level && rewards.equals(level1.rewards);
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Level level1 = (Level) obj;
+        return this.level == level1.level && this.rewards.equals(level1.rewards);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(level, rewards);
+        return Objects.hash(this.level, this.rewards);
     }
 }

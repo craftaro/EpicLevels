@@ -11,14 +11,18 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PlayerManager {
-
     private final Map<UUID, EPlayer> registeredPlayers = new HashMap<>();
 
+    private final EpicLevels plugin;
     private long lastUpdate = -1;
 
+    public PlayerManager(EpicLevels plugin) {
+        this.plugin = plugin;
+    }
+
     public EPlayer getPlayer(UUID uuid) {
-        return registeredPlayers.computeIfAbsent(uuid, u -> {
-            EpicLevels.getInstance().getDataManager().getPlayerOrCreate(uuid, this::addPlayer);
+        return this.registeredPlayers.computeIfAbsent(uuid, u -> {
+            this.plugin.getDataManager().getPlayerOrCreate(uuid, this::addPlayer);
             return new EPlayer(uuid);
         });
     }
@@ -28,32 +32,32 @@ public class PlayerManager {
     }
 
     public void addPlayer(EPlayer player) {
-        registeredPlayers.put(player.getUniqueId(), player);
+        this.registeredPlayers.put(player.getUniqueId(), player);
 
         this.lastUpdate = System.currentTimeMillis();
     }
 
     public void addPlayers(Map<UUID, EPlayer> players) {
-        registeredPlayers.putAll(players);
+        this.registeredPlayers.putAll(players);
 
         this.lastUpdate = System.currentTimeMillis();
     }
 
     public List<EPlayer> getPlayers() {
-        List<EPlayer> result = new ArrayList<>(registeredPlayers.values());
+        List<EPlayer> result = new ArrayList<>(this.registeredPlayers.values());
         result.sort(Comparator.comparingDouble(EPlayer::getExperience).reversed());
 
         return result;
     }
 
     public List<EPlayer> getPlayersUnsorted() {
-        return new ArrayList<>(registeredPlayers.values());
+        return new ArrayList<>(this.registeredPlayers.values());
     }
 
     public EPlayer resetPlayer(UUID uuid) {
         this.lastUpdate = System.currentTimeMillis();
 
-        return registeredPlayers.remove(uuid);
+        return this.registeredPlayers.remove(uuid);
     }
 
     // TODO: Probably cache sorted versions of the list instead, for better result
@@ -62,6 +66,6 @@ public class PlayerManager {
     }
 
     public boolean containsPlayer(UUID uuid) {
-        return registeredPlayers.containsKey(uuid);
+        return this.registeredPlayers.containsKey(uuid);
     }
 }

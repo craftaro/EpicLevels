@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class CommandRemoveBoost extends AbstractCommand {
-
     private final EpicLevels instance;
 
     public CommandRemoveBoost(EpicLevels instance) {
@@ -20,23 +19,25 @@ public class CommandRemoveBoost extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        if (args.length != 1) return ReturnType.SYNTAX_ERROR;
+        if (args.length != 1) {
+            return ReturnType.SYNTAX_ERROR;
+        }
 
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
 
-        if (!instance.getPlayerManager().containsPlayer(player.getUniqueId())) {
-            instance.getLocale().getMessage("command.general.notonline")
+        if (!this.instance.getPlayerManager().containsPlayer(player.getUniqueId())) {
+            this.instance.getLocale().getMessage("command.general.notonline")
                     .processPlaceholder("name", args[0])
                     .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
 
-        Boost boost = instance.getBoostManager().removeBoost(player.getUniqueId());
+        Boost boost = this.instance.getBoostManager().removeBoost(player.getUniqueId());
         if (boost != null) {
-            instance.getDataManager().deleteBoost(boost);
+            this.instance.getDataManager().deleteBoost(boost);
         }
-        instance.getDataManager().getUpdater().sendBoostRemove(player.getUniqueId());
-        instance.getLocale().getMessage("command.removeboost.success")
+        this.instance.getDataManager().getUpdater().sendBoostRemove(player.getUniqueId());
+        this.instance.getLocale().getMessage("command.removeboost.success")
                 .processPlaceholder("player", player.getName())
                 .sendPrefixedMessage(sender);
 

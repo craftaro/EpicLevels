@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class CommandEpicLevels extends AbstractCommand {
-
     private final GuiManager guiManager;
 
     public CommandEpicLevels(GuiManager guiManager) {
@@ -19,7 +18,7 @@ public class CommandEpicLevels extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        guiManager.showGUI((Player) sender, new GUILevels((Player) sender, null));
+        this.guiManager.showGUI((Player) sender, new GUILevels((Player) sender, null));
         return ReturnType.SUCCESS;
     }
 

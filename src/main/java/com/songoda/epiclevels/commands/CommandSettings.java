@@ -1,28 +1,27 @@
 package com.songoda.epiclevels.commands;
 
+import com.songoda.core.SongodaPlugin;
 import com.songoda.core.commands.AbstractCommand;
 import com.songoda.core.configuration.editor.PluginConfigGui;
 import com.songoda.core.gui.GuiManager;
-import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
 public class CommandSettings extends AbstractCommand {
-
-    private final EpicLevels instance;
+    private final SongodaPlugin plugin;
     private final GuiManager guiManager;
 
-    public CommandSettings(GuiManager guiManager) {
+    public CommandSettings(GuiManager guiManager, SongodaPlugin plugin) {
         super(CommandType.PLAYER_ONLY, "settings");
         this.guiManager = guiManager;
-        instance = EpicLevels.getInstance();
+        this.plugin = plugin;
     }
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        guiManager.showGUI((Player) sender, new PluginConfigGui(instance));
+        this.guiManager.showGUI((Player) sender, new PluginConfigGui(this.plugin));
         return ReturnType.SUCCESS;
     }
 
