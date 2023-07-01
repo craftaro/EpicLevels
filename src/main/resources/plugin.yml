@@ -4,14 +4,15 @@ version: ${project.version}
 api-version: 1.13
 
 main: com.songoda.epiclevels.EpicLevels
-softdepend: [ Vault, PlaceholderAPI ]
+softdepend:
+  - Vault
+  - PlaceholderAPI
 
-author: songoda
+author: Craftaro
 website: ${project.url}
 
 commands:
   EpicLevels:
-    description: View information on this plugin.
     default: true
     aliases: [ el, levels, level ]
     usage: /levels
