@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class CommandBoost extends AbstractCommand {
-
     private final EpicLevels instance;
 
     public CommandBoost(EpicLevels instance) {
@@ -21,12 +20,14 @@ public class CommandBoost extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        if (args.length < 3) return ReturnType.SYNTAX_ERROR;
+        if (args.length < 3) {
+            return ReturnType.SYNTAX_ERROR;
+        }
 
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
 
-        if (!instance.getPlayerManager().containsPlayer(player.getUniqueId())) {
-            instance.getLocale().getMessage("command.general.notonline")
+        if (!this.instance.getPlayerManager().containsPlayer(player.getUniqueId())) {
+            this.instance.getLocale().getMessage("command.general.notonline")
                     .processPlaceholder("name", args[0])
                     .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
@@ -36,7 +37,7 @@ public class CommandBoost extends AbstractCommand {
         try {
             multiplier = Double.parseDouble(args[1]);
         } catch (Exception e) {
-            instance.getLocale().getMessage("command.general.notint")
+            this.instance.getLocale().getMessage("command.general.notint")
                     .processPlaceholder("number", args[1])
                     .sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
@@ -50,22 +51,23 @@ public class CommandBoost extends AbstractCommand {
         }
 
         Boost boost = new Boost(duration + System.currentTimeMillis(), multiplier);
-        instance.getBoostManager().addBoost(player.getUniqueId(), boost);
-        instance.getDataManager().createBoost(player.getUniqueId(), boost);
-        instance.getDataManager().getUpdater().sendBoostCreate(player.getUniqueId(), duration, multiplier, sender.getName());
+        this.instance.getBoostManager().addBoost(player.getUniqueId(), boost);
+        this.instance.getDataManager().createBoost(player.getUniqueId(), boost);
+        this.instance.getDataManager().getUpdater().sendBoostCreate(player.getUniqueId(), duration, multiplier, sender.getName());
 
-        instance.getLocale().getMessage("event.boost.success")
+        this.instance.getLocale().getMessage("event.boost.success")
                 .processPlaceholder("player", player.getName())
                 .processPlaceholder("multiplier", multiplier)
                 .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                 .sendPrefixedMessage(sender);
 
-        if (player.isOnline())
-            instance.getLocale().getMessage("event.boost.announce")
+        if (player.isOnline()) {
+            this.instance.getLocale().getMessage("event.boost.announce")
                     .processPlaceholder("player", sender.getName())
                     .processPlaceholder("multiplier", multiplier)
                     .processPlaceholder("duration", TimeUtils.makeReadable(duration))
                     .sendPrefixedMessage(player.getPlayer());
+        }
 
         return ReturnType.SUCCESS;
     }

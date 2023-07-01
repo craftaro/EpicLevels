@@ -5,9 +5,9 @@ import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.utils.Methods;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 
 public class PlaceholderManager extends PlaceholderExpansion {
-
     private final EpicLevels plugin;
 
     public PlaceholderManager(EpicLevels plugin) {
@@ -15,10 +15,10 @@ public class PlaceholderManager extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer player, String identifier) {
-        EPlayer ePlayer = plugin.getPlayerManager().getPlayer(player);
+    public String onRequest(OfflinePlayer player, String params) {
+        EPlayer ePlayer = this.plugin.getPlayerManager().getPlayer(player);
 
-        switch (identifier) {
+        switch (params) {
             case "level":
                 return Methods.formatDecimal(ePlayer.getLevel());
             case "experience":
@@ -32,9 +32,9 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "deaths":
                 return Methods.formatDecimal(ePlayer.getDeaths());
             case "killstreak":
-                return Methods.formatDecimal(ePlayer.getKillstreak());
+                return Methods.formatDecimal(ePlayer.getKillStreak());
             case "bestkillstreak":
-                return Methods.formatDecimal(ePlayer.getBestKillstreak());
+                return Methods.formatDecimal(ePlayer.getBestKillStreak());
             case "kdr":
                 return Methods.formatDecimal(ePlayer.getDeaths() == 0 ? ePlayer.getPlayerKills() : (double) ePlayer.getPlayerKills() / (double) ePlayer.getDeaths());
             case "nextlevel":
@@ -42,19 +42,19 @@ public class PlaceholderManager extends PlaceholderExpansion {
             case "neededfornextlevel":
                 return Methods.formatDecimal(EPlayer.experience(ePlayer.getLevel() + 1) - ePlayer.getExperience());
             case "boosterenabled":
-                return plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null
-                        ? plugin.getLocale().getMessage("general.word.enabled").getMessage()
-                        : plugin.getLocale().getMessage("general.word.disabled").getMessage();
+                return this.plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null
+                        ? this.plugin.getLocale().getMessage("general.word.enabled").getMessage()
+                        : this.plugin.getLocale().getMessage("general.word.disabled").getMessage();
             case "booster":
-                if (plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null) return "1";
-                return Methods.formatDecimal(plugin.getBoostManager().getBoost(ePlayer.getUniqueId()).getMultiplier());
+                if (this.plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null) return "1";
+                return Methods.formatDecimal(this.plugin.getBoostManager().getBoost(ePlayer.getUniqueId()).getMultiplier());
             case "globalboosterenabled":
-                return plugin.getBoostManager().getGlobalBoost() == null
-                        ? plugin.getLocale().getMessage("general.word.enabled").getMessage()
-                        : plugin.getLocale().getMessage("general.word.disabled").getMessage();
+                return this.plugin.getBoostManager().getGlobalBoost() == null
+                        ? this.plugin.getLocale().getMessage("general.word.enabled").getMessage()
+                        : this.plugin.getLocale().getMessage("general.word.disabled").getMessage();
             case "globalbooster":
-                if (plugin.getBoostManager().getGlobalBoost() == null) return "1";
-                return Methods.formatDecimal(plugin.getBoostManager().getGlobalBoost().getMultiplier());
+                if (this.plugin.getBoostManager().getGlobalBoost() == null) return "1";
+                return Methods.formatDecimal(this.plugin.getBoostManager().getGlobalBoost().getMultiplier());
             case "progressbar":
                 double exp = ePlayer.getExperience() - EPlayer.experience(ePlayer.getLevel());
                 double nextLevel = EPlayer.experience(ePlayer.getLevel() + 1) - EPlayer.experience(ePlayer.getLevel());
@@ -65,18 +65,18 @@ public class PlaceholderManager extends PlaceholderExpansion {
     }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "epiclevels";
     }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "Songoda";
     }
 
     @Override
-    public String getVersion() {
-        return plugin.getDescription().getVersion();
+    public @NotNull String getVersion() {
+        return this.plugin.getDescription().getVersion();
     }
 
     @Override

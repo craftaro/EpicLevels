@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class GUILevels extends CustomizableGui {
-
     private final EpicLevels plugin;
     private int position;
 
@@ -36,15 +35,15 @@ public class GUILevels extends CustomizableGui {
     private Sorting sortingBy = Sorting.LEVELS;
 
     public GUILevels(Player player, EPlayer target) {
-        super(EpicLevels.getInstance(), "levels");
+        super(EpicLevels.getPlugin(EpicLevels.class), "levels");
         setRows(6);
 
         this.player = player;
-        plugin = EpicLevels.getInstance();
-        plugin.getPlayerManager().getPlayer(player);
+        this.plugin = EpicLevels.getPlugin(EpicLevels.class);
+        this.plugin.getPlayerManager().getPlayer(player);
 
-        this.playersListLastUpdate = plugin.getPlayerManager().getLastUpdate();
-        this.players = plugin.getPlayerManager().getPlayers();
+        this.playersListLastUpdate = this.plugin.getPlayerManager().getLastUpdate();
+        this.players = this.plugin.getPlayerManager().getPlayers();
         this.target = target;
 
         sort();
@@ -52,13 +51,13 @@ public class GUILevels extends CustomizableGui {
     }
 
     private void updateTitle() {
-        this.setTitle(plugin.getLocale().getMessage("gui.levels.title")
-                .processPlaceholder("type", sortingBy.getName()).getMessage());
+        this.setTitle(this.plugin.getLocale().getMessage("gui.levels.title")
+                .processPlaceholder("type", this.sortingBy.getName()).getMessage());
         constructGUI();
     }
 
     private void sort() {
-        this.position = target == null ? 0 : players.indexOf(target);
+        this.position = this.target == null ? 0 : this.players.indexOf(this.target);
     }
 
     private void constructGUI() {
@@ -76,13 +75,13 @@ public class GUILevels extends CustomizableGui {
 
         setButton("levels", 2,
                 GuiUtils.createButtonItem(CompatibleMaterial.EXPERIENCE_BOTTLE,
-                        plugin.getLocale().getMessage("gui.levels.toplevels").getMessage()),
+                        this.plugin.getLocale().getMessage("gui.levels.toplevels").getMessage()),
                 (event) -> {
                     Sorting targetSorting = Sorting.LEVELS;
 
                     if (shouldUpdatePlayerList(targetSorting)) {
                         this.playersListLastUpdate = System.currentTimeMillis();
-                        this.players = plugin.getPlayerManager().getPlayers();
+                        this.players = this.plugin.getPlayerManager().getPlayers();
                     }
 
                     sort();
@@ -92,14 +91,14 @@ public class GUILevels extends CustomizableGui {
 
         setButton("mobs", 3,
                 GuiUtils.createButtonItem(CompatibleMaterial.SKELETON_SKULL,
-                        plugin.getLocale().getMessage("gui.levels.topmobs").getMessage()),
+                        this.plugin.getLocale().getMessage("gui.levels.topmobs").getMessage()),
                 (event) -> {
                     Sorting targetSorting = Sorting.MOBKILLS;
 
                     if (shouldUpdatePlayerList(targetSorting)) {
                         this.playersListLastUpdate = System.currentTimeMillis();
 
-                        List<EPlayer> tmpPlayers = new ArrayList<>(plugin.getPlayerManager().getPlayersUnsorted());
+                        List<EPlayer> tmpPlayers = new ArrayList<>(this.plugin.getPlayerManager().getPlayersUnsorted());
                         tmpPlayers.sort(Comparator.comparingInt(EPlayer::getMobKills).reversed());
                         this.players = tmpPlayers;
                     }
@@ -111,14 +110,14 @@ public class GUILevels extends CustomizableGui {
 
         setButton("players", 5,
                 GuiUtils.createButtonItem(CompatibleMaterial.PLAYER_HEAD,
-                        plugin.getLocale().getMessage("gui.levels.topplayers").getMessage()),
+                        this.plugin.getLocale().getMessage("gui.levels.topplayers").getMessage()),
                 (event) -> {
                     Sorting targetSorting = Sorting.PLAYERKILLS;
 
                     if (shouldUpdatePlayerList(targetSorting)) {
                         this.playersListLastUpdate = System.currentTimeMillis();
 
-                        List<EPlayer> tmpPlayers = new ArrayList<>(plugin.getPlayerManager().getPlayersUnsorted());
+                        List<EPlayer> tmpPlayers = new ArrayList<>(this.plugin.getPlayerManager().getPlayersUnsorted());
                         tmpPlayers.sort(Comparator.comparingInt(EPlayer::getPlayerKills).reversed());
                         this.players = tmpPlayers;
                     }
@@ -130,15 +129,15 @@ public class GUILevels extends CustomizableGui {
 
         setButton("killstreaks", 6,
                 GuiUtils.createButtonItem(CompatibleMaterial.DIAMOND_SWORD,
-                        plugin.getLocale().getMessage("gui.levels.topkillstreaks").getMessage()),
+                        this.plugin.getLocale().getMessage("gui.levels.topkillstreaks").getMessage()),
                 (event) -> {
                     Sorting targetSort = Sorting.KILLSTREAKS;
 
                     if (shouldUpdatePlayerList(targetSort)) {
                         this.playersListLastUpdate = System.currentTimeMillis();
 
-                        List<EPlayer> tmpPlayers = new ArrayList<>(plugin.getPlayerManager().getPlayersUnsorted());
-                        tmpPlayers.sort(Comparator.comparingInt(EPlayer::getKillstreak).reversed());
+                        List<EPlayer> tmpPlayers = new ArrayList<>(this.plugin.getPlayerManager().getPlayersUnsorted());
+                        tmpPlayers.sort(Comparator.comparingInt(EPlayer::getKillStreak).reversed());
                         this.players = tmpPlayers;
                     }
 
@@ -148,13 +147,13 @@ public class GUILevels extends CustomizableGui {
                 });
 
         setButton("search", 16, GuiUtils.createButtonItem(CompatibleMaterial.COMPASS,
-                        plugin.getLocale().getMessage("gui.levels.search").getMessage()),
+                        this.plugin.getLocale().getMessage("gui.levels.search").getMessage()),
                 (event) ->
-                        ChatPrompt.showPrompt(plugin, player,
-                                plugin.getLocale().getMessage("gui.levels.nametosearch").getMessage(),
+                        ChatPrompt.showPrompt(this.plugin, this.player,
+                                this.plugin.getLocale().getMessage("gui.levels.nametosearch").getMessage(),
                                 response -> {
                                     Optional<EPlayer> targetOptional = Optional.empty();
-                                    for (EPlayer ePlayer : players) {
+                                    for (EPlayer ePlayer : this.players) {
                                         if (ePlayer.getPlayer().getName() != null
                                                 && ePlayer.getPlayer().getName().toLowerCase().contains(response.getMessage().toLowerCase())) {
                                             targetOptional = Optional.of(ePlayer);
@@ -163,31 +162,31 @@ public class GUILevels extends CustomizableGui {
                                     }
 
                                     if (!targetOptional.isPresent()) {
-                                        plugin.getLocale().getMessage("gui.levels.noresults").sendPrefixedMessage(player);
+                                        this.plugin.getLocale().getMessage("gui.levels.noresults").sendPrefixedMessage(this.player);
                                         return;
                                     }
 
-                                    plugin.getGuiManager().showGUI(player, this);
-                                    target = targetOptional.get();
+                                    this.plugin.getGuiManager().showGUI(this.player, this);
+                                    this.target = targetOptional.get();
                                     sort();
                                     updateTitle();
                                 }));
 
         setButton("sorting", 13, GuiUtils.createButtonItem(CompatibleMaterial.REDSTONE,
-                        plugin.getLocale().getMessage("gui.levels.sortingby").processPlaceholder("type", sortingBy.getName()).getMessage(),
-                        plugin.getLocale().getMessage("gui.levels.you").getMessage()),
+                        this.plugin.getLocale().getMessage("gui.levels.sortingby").processPlaceholder("type", this.sortingBy.getName()).getMessage(),
+                        this.plugin.getLocale().getMessage("gui.levels.you").getMessage()),
                 (event) -> {
-                    this.position = players.indexOf(plugin.getPlayerManager().getPlayer(player));
+                    this.position = this.players.indexOf(this.plugin.getPlayerManager().getPlayer(this.player));
                     updateTitle();
                 });
 
         for (int i = 0; i < 7; ++i) {
-            int current = i + (position - 3 < 0 ? 0 : (position + 3 > (players.size() - 1) ? (players.size() - 7) : position - 3));
+            int current = i + (this.position - 3 < 0 ? 0 : (this.position + 3 > (this.players.size() - 1) ? (this.players.size() - 7) : this.position - 3));
 
-            if (current < 0 || current > players.size() - 1) {
+            if (current < 0 || current > this.players.size() - 1) {
                 continue;
             }
-            EPlayer selected = players.get(current);
+            EPlayer selected = this.players.get(current);
             if (selected.getPlayer() == null || selected.getPlayer().getName() == null) {
                 continue;
             }
@@ -209,32 +208,32 @@ public class GUILevels extends CustomizableGui {
                 //noinspection deprecation
                 meta.setOwner(targetPlayer.getName());
             }
-            meta.setDisplayName(plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).getMessage());
-            meta.setLore(Arrays.asList(plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
-                    plugin.getLocale().getMessage("gui.levels.exp").processPlaceholder("exp", Methods.formatDecimal(selected.getExperience())).processPlaceholder("expnext", Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))).getMessage(), prog));
+            meta.setDisplayName(this.plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).getMessage());
+            meta.setLore(Arrays.asList(this.plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
+                    this.plugin.getLocale().getMessage("gui.levels.exp").processPlaceholder("exp", Methods.formatDecimal(selected.getExperience())).processPlaceholder("expnext", Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))).getMessage(), prog));
             head.setItemMeta(meta);
 
             int slot = 37 + i;
 
-            if (current == position) {
+            if (current == this.position) {
                 setItem(slot + 9, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
-                        plugin.getLocale().getMessage("gui.levels.selected").getMessage()));
+                        this.plugin.getLocale().getMessage("gui.levels.selected").getMessage()));
             }
 
             setButton(slot, head, (event) -> {
-                position = current;
+                this.position = current;
                 updateTitle();
             });
 
-            if (current == position) {
-                setItem(slot - 9, GuiUtils.createButtonItem(CompatibleMaterial.DIAMOND_SWORD, plugin.getLocale().getMessage("gui.levels.stats").getMessage(),
-                        plugin.getLocale().getMessage("gui.levels.totalkills").processPlaceholder("kills", Methods.formatDecimal(selected.getKills())).getMessage(),
-                        plugin.getLocale().getMessage("gui.levels.playerkills").processPlaceholder("kills", Methods.formatDecimal(selected.getPlayerKills())).getMessage(),
-                        plugin.getLocale().getMessage("gui.levels.mobkills").processPlaceholder("kills", Methods.formatDecimal(selected.getMobKills())).getMessage(),
-                        plugin.getLocale().getMessage("gui.levels.deaths").processPlaceholder("deaths", Methods.formatDecimal(selected.getDeaths())).getMessage(),
-                        plugin.getLocale().getMessage("gui.levels.kdr").processPlaceholder("kdr", Methods.formatDecimal(selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double) selected.getPlayerKills()) / (double) selected.getDeaths())).getMessage(),
-                        plugin.getLocale().getMessage("gui.levels.killstreak").processPlaceholder("killstreak", Methods.formatDecimal(selected.getKillstreak())).getMessage(),
-                        plugin.getLocale().getMessage("gui.levels.bestkillstreak").processPlaceholder("killstreak", Methods.formatDecimal(selected.getBestKillstreak())).getMessage()));
+            if (current == this.position) {
+                setItem(slot - 9, GuiUtils.createButtonItem(CompatibleMaterial.DIAMOND_SWORD, this.plugin.getLocale().getMessage("gui.levels.stats").getMessage(),
+                        this.plugin.getLocale().getMessage("gui.levels.totalkills").processPlaceholder("kills", Methods.formatDecimal(selected.getKills())).getMessage(),
+                        this.plugin.getLocale().getMessage("gui.levels.playerkills").processPlaceholder("kills", Methods.formatDecimal(selected.getPlayerKills())).getMessage(),
+                        this.plugin.getLocale().getMessage("gui.levels.mobkills").processPlaceholder("kills", Methods.formatDecimal(selected.getMobKills())).getMessage(),
+                        this.plugin.getLocale().getMessage("gui.levels.deaths").processPlaceholder("deaths", Methods.formatDecimal(selected.getDeaths())).getMessage(),
+                        this.plugin.getLocale().getMessage("gui.levels.kdr").processPlaceholder("kdr", Methods.formatDecimal(selected.getDeaths() == 0 ? selected.getPlayerKills() : ((double) selected.getPlayerKills()) / (double) selected.getDeaths())).getMessage(),
+                        this.plugin.getLocale().getMessage("gui.levels.killstreak").processPlaceholder("killstreak", Methods.formatDecimal(selected.getKillStreak())).getMessage(),
+                        this.plugin.getLocale().getMessage("gui.levels.bestkillstreak").processPlaceholder("killstreak", Methods.formatDecimal(selected.getBestKillStreak())).getMessage()));
             } else {
                 setItem(slot - 9, null);
             }
@@ -242,21 +241,19 @@ public class GUILevels extends CustomizableGui {
     }
 
     private boolean shouldUpdatePlayerList(Sorting sorting) {
-        boolean result = sorting != this.sortingBy ||
+        return sorting != this.sortingBy ||
                 this.playersListLastUpdate < this.plugin.getPlayerManager().getLastUpdate() ||
-                this.playersListLastUpdate < System.currentTimeMillis() - 10_000 /* Wait at least 10 seconds otherwise */;
-
-        return result;
+                this.playersListLastUpdate < System.currentTimeMillis() - 10_000;
     }
 
     public enum Sorting {
-        LEVELS,
-        MOBKILLS,
-        PLAYERKILLS,
-        KILLSTREAKS;
+        LEVELS, MOBKILLS, PLAYERKILLS, KILLSTREAKS;
 
         public String getName() {
-            return EpicLevels.getInstance().getLocale().getMessage("gui.levels." + name().toLowerCase() + "type").getMessage();
+            return EpicLevels.getPlugin(EpicLevels.class)
+                    .getLocale()
+                    .getMessage("gui.levels." + name().toLowerCase() + "type")
+                    .getMessage();
         }
     }
 }

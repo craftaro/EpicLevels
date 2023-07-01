@@ -11,7 +11,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Consumer;
 
 public abstract class DataUpdaterAbstract {
-
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private long currentID = -1;
     private boolean enabled = false;
@@ -35,16 +34,16 @@ public abstract class DataUpdaterAbstract {
             try (PreparedStatement statement = connection.prepareStatement("SELECT MAX(`id`) as `latest` FROM `" + getTablePrefix() + "messenger`")) {
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
-                        currentID = resultSet.getLong("latest");
+                        this.currentID = resultSet.getLong("latest");
                     }
                 }
             }
-            enabled = true;
+            this.enabled = true;
         });
     }
 
     public void onDisable() {
-        enabled = false;
+        this.enabled = false;
     }
 
     public abstract DatabaseConnector getConnector();
@@ -52,7 +51,7 @@ public abstract class DataUpdaterAbstract {
     public abstract String getTablePrefix();
 
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 
     public void setEnabled(boolean enabled) {
@@ -63,7 +62,7 @@ public abstract class DataUpdaterAbstract {
         if (!isEnabled()) {
             return;
         }
-        lock.readLock().lock();
+        this.lock.readLock().lock();
 
         try {
             getConnector().connect(connection -> {
@@ -75,23 +74,23 @@ public abstract class DataUpdaterAbstract {
         } catch (Throwable t) {
             t.printStackTrace();
         }
-        lock.readLock().unlock();
+        this.lock.readLock().unlock();
     }
 
     public void getMessages(Consumer<String> callback) {
         if (!isEnabled()) {
             return;
         }
-        lock.readLock().lock();
+        this.lock.readLock().lock();
 
         try {
             getConnector().connect(connection -> {
                 try (PreparedStatement statement = connection.prepareStatement("SELECT `id`, `msg` FROM `" + getTablePrefix() + "messenger` WHERE `id` > ? AND (NOW() - `time` < 30)")) {
-                    statement.setLong(1, currentID);
+                    statement.setLong(1, this.currentID);
                     try (ResultSet rs = statement.executeQuery()) {
                         while (rs.next()) {
                             long id = rs.getLong("id");
-                            currentID = Math.max(currentID, id);
+                            this.currentID = Math.max(this.currentID, id);
 
                             String message = rs.getString("msg");
                             callback.accept(message);
@@ -102,14 +101,14 @@ public abstract class DataUpdaterAbstract {
         } catch (Throwable t) {
             t.printStackTrace();
         }
-        lock.readLock().unlock();
+        this.lock.readLock().unlock();
     }
 
     public void cleanMessages() {
         if (!isEnabled()) {
             return;
         }
-        lock.readLock().lock();
+        this.lock.readLock().lock();
 
         try {
             getConnector().connect(connection -> {
@@ -120,6 +119,6 @@ public abstract class DataUpdaterAbstract {
         } catch (Throwable t) {
             t.printStackTrace();
         }
-        lock.readLock().unlock();
+        this.lock.readLock().unlock();
     }
 }
