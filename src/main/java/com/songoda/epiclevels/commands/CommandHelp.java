@@ -1,7 +1,7 @@
 package com.songoda.epiclevels.commands;
 
-import com.songoda.core.commands.AbstractCommand;
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.commands.AbstractCommand;
+import com.craftaro.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.command.CommandSender;
 

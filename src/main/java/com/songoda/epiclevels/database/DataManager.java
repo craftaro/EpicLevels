@@ -1,8 +1,8 @@
 package com.songoda.epiclevels.database;
 
-import com.songoda.core.database.DataManagerAbstract;
-import com.songoda.core.database.DatabaseConnector;
-import com.songoda.core.database.MySQLConnector;
+import com.craftaro.core.database.DataManagerAbstract;
+import com.craftaro.core.database.DatabaseConnector;
+import com.craftaro.core.database.MySQLConnector;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.boost.Boost;
 import com.songoda.epiclevels.players.EPlayer;

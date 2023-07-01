@@ -1,6 +1,6 @@
 package com.songoda.epiclevels.killstreaks;
 
-import com.songoda.core.configuration.Config;
+import com.craftaro.core.configuration.Config;
 import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;

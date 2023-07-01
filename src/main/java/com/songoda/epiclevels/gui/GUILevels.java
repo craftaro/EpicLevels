@@ -1,11 +1,11 @@
 package com.songoda.epiclevels.gui;
 
-import com.songoda.core.compatibility.CompatibleMaterial;
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.gui.CustomizableGui;
-import com.songoda.core.gui.GuiUtils;
-import com.songoda.core.input.ChatPrompt;
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.gui.CustomizableGui;
+import com.craftaro.core.gui.GuiUtils;
+import com.craftaro.core.input.ChatPrompt;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.SkullUtils;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.players.EPlayer;
 import com.songoda.epiclevels.settings.Settings;
@@ -13,7 +13,7 @@ import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,7 +74,7 @@ public class GUILevels extends CustomizableGui {
         mirrorFill("mirrorfill_7", 0, 4, true, true, glass3);
 
         setButton("levels", 2,
-                GuiUtils.createButtonItem(CompatibleMaterial.EXPERIENCE_BOTTLE,
+                GuiUtils.createButtonItem(XMaterial.EXPERIENCE_BOTTLE,
                         this.plugin.getLocale().getMessage("gui.levels.toplevels").getMessage()),
                 (event) -> {
                     Sorting targetSorting = Sorting.LEVELS;
@@ -90,7 +90,7 @@ public class GUILevels extends CustomizableGui {
                 });
 
         setButton("mobs", 3,
-                GuiUtils.createButtonItem(CompatibleMaterial.SKELETON_SKULL,
+                GuiUtils.createButtonItem(XMaterial.SKELETON_SKULL,
                         this.plugin.getLocale().getMessage("gui.levels.topmobs").getMessage()),
                 (event) -> {
                     Sorting targetSorting = Sorting.MOBKILLS;
@@ -109,7 +109,7 @@ public class GUILevels extends CustomizableGui {
                 });
 
         setButton("players", 5,
-                GuiUtils.createButtonItem(CompatibleMaterial.PLAYER_HEAD,
+                GuiUtils.createButtonItem(XMaterial.PLAYER_HEAD,
                         this.plugin.getLocale().getMessage("gui.levels.topplayers").getMessage()),
                 (event) -> {
                     Sorting targetSorting = Sorting.PLAYERKILLS;
@@ -128,7 +128,7 @@ public class GUILevels extends CustomizableGui {
                 });
 
         setButton("killstreaks", 6,
-                GuiUtils.createButtonItem(CompatibleMaterial.DIAMOND_SWORD,
+                GuiUtils.createButtonItem(XMaterial.DIAMOND_SWORD,
                         this.plugin.getLocale().getMessage("gui.levels.topkillstreaks").getMessage()),
                 (event) -> {
                     Sorting targetSort = Sorting.KILLSTREAKS;
@@ -146,7 +146,7 @@ public class GUILevels extends CustomizableGui {
                     updateTitle();
                 });
 
-        setButton("search", 16, GuiUtils.createButtonItem(CompatibleMaterial.COMPASS,
+        setButton("search", 16, GuiUtils.createButtonItem(XMaterial.COMPASS,
                         this.plugin.getLocale().getMessage("gui.levels.search").getMessage()),
                 (event) ->
                         ChatPrompt.showPrompt(this.plugin, this.player,
@@ -172,7 +172,7 @@ public class GUILevels extends CustomizableGui {
                                     updateTitle();
                                 }));
 
-        setButton("sorting", 13, GuiUtils.createButtonItem(CompatibleMaterial.REDSTONE,
+        setButton("sorting", 13, GuiUtils.createButtonItem(XMaterial.REDSTONE,
                         this.plugin.getLocale().getMessage("gui.levels.sortingby").processPlaceholder("type", this.sortingBy.getName()).getMessage(),
                         this.plugin.getLocale().getMessage("gui.levels.you").getMessage()),
                 (event) -> {
@@ -199,24 +199,17 @@ public class GUILevels extends CustomizableGui {
 
             String prog = TextUtils.formatText(Methods.generateProgressBar(exp, nextLevel, false));
 
-            ItemStack head = CompatibleMaterial.PLAYER_HEAD.getItem();
-            SkullMeta meta = (SkullMeta) head.getItemMeta();
-            assert meta != null;
-            if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13)) {
-                meta.setOwningPlayer(targetPlayer);
-            } else {
-                //noinspection deprecation
-                meta.setOwner(targetPlayer.getName());
-            }
-            meta.setDisplayName(this.plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).getMessage());
-            meta.setLore(Arrays.asList(this.plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
+            ItemStack head = SkullUtils.getSkull(targetPlayer.getUniqueId());
+            ItemMeta headMeta = head.getItemMeta();
+            headMeta.setDisplayName(this.plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).getMessage());
+            headMeta.setLore(Arrays.asList(this.plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
                     this.plugin.getLocale().getMessage("gui.levels.exp").processPlaceholder("exp", Methods.formatDecimal(selected.getExperience())).processPlaceholder("expnext", Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))).getMessage(), prog));
-            head.setItemMeta(meta);
+            head.setItemMeta(headMeta);
 
             int slot = 37 + i;
 
             if (current == this.position) {
-                setItem(slot + 9, GuiUtils.createButtonItem(CompatibleMaterial.ARROW,
+                setItem(slot + 9, GuiUtils.createButtonItem(XMaterial.ARROW,
                         this.plugin.getLocale().getMessage("gui.levels.selected").getMessage()));
             }
 
@@ -226,7 +219,7 @@ public class GUILevels extends CustomizableGui {
             });
 
             if (current == this.position) {
-                setItem(slot - 9, GuiUtils.createButtonItem(CompatibleMaterial.DIAMOND_SWORD, this.plugin.getLocale().getMessage("gui.levels.stats").getMessage(),
+                setItem(slot - 9, GuiUtils.createButtonItem(XMaterial.DIAMOND_SWORD, this.plugin.getLocale().getMessage("gui.levels.stats").getMessage(),
                         this.plugin.getLocale().getMessage("gui.levels.totalkills").processPlaceholder("kills", Methods.formatDecimal(selected.getKills())).getMessage(),
                         this.plugin.getLocale().getMessage("gui.levels.playerkills").processPlaceholder("kills", Methods.formatDecimal(selected.getPlayerKills())).getMessage(),
                         this.plugin.getLocale().getMessage("gui.levels.mobkills").processPlaceholder("kills", Methods.formatDecimal(selected.getMobKills())).getMessage(),

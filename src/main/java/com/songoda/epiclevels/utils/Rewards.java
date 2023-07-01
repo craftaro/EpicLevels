@@ -1,16 +1,16 @@
 package com.songoda.epiclevels.utils;
 
-import com.songoda.core.compatibility.ServerVersion;
-import com.songoda.core.hooks.EconomyManager;
-import com.songoda.core.math.Eval;
-import com.songoda.core.utils.TextUtils;
+import com.craftaro.core.compatibility.ServerVersion;
+import com.craftaro.core.hooks.EconomyManager;
+import com.craftaro.core.math.Eval;
+import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.core.utils.TextUtils;
 import com.songoda.epiclevels.EpicLevels;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -67,7 +67,7 @@ public class Rewards {
                         break;
                     case "SOUND":
                         if (last) {
-                            player.playSound(player.getLocation(), Sound.valueOf(line.trim()), 1L, 1L);
+                            XSound.matchXSound(line.trim()).ifPresent(sound -> sound.play(player, 1, 1));
                         }
                         break;
                     case "TITLE":

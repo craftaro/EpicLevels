@@ -1,6 +1,6 @@
 package com.songoda.epiclevels.database;
 
-import com.songoda.core.database.DatabaseConnector;
+import com.craftaro.core.database.DatabaseConnector;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
