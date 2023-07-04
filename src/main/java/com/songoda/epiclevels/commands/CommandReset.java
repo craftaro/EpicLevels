@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class CommandReset extends AbstractCommand {
-
     private final EpicLevels instance;
 
     public CommandReset(EpicLevels instance) {
@@ -25,16 +24,16 @@ public class CommandReset extends AbstractCommand {
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
 
         if (!player.hasPlayedBefore() && !player.isOnline()) {
-            instance.getLocale().getMessage("command.general.notonline")
+            this.instance.getLocale().getMessage("command.general.notonline")
                     .processPlaceholder("name", player.getName())
                     .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
 
-        EPlayer ePlayer = instance.getPlayerManager().resetPlayer(player.getUniqueId());
-        instance.getDataManager().deletePlayer(ePlayer);
+        EPlayer ePlayer = this.instance.getPlayerManager().resetPlayer(player.getUniqueId());
+        this.instance.getDataManager().deletePlayer(ePlayer);
 
-        instance.getLocale().getMessage("command.reset.success")
+        this.instance.getLocale().getMessage("command.reset.success")
                 .processPlaceholder("player", player.getName())
                 .sendPrefixedMessage(sender);
 

@@ -44,9 +44,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EpicLevels extends SongodaPlugin {
-
-    private static EpicLevels INSTANCE;
-
     private final GuiManager guiManager = new GuiManager(this);
     private PlayerManager playerManager;
     private CommandManager commandManager;
@@ -56,16 +53,18 @@ public class EpicLevels extends SongodaPlugin {
     private BoostManager boostManager;
 
     private DatabaseConnector databaseConnector;
-    private DataMigrationManager dataMigrationManager;
     private DataManager dataManager;
 
+    /**
+     * @deprecated Use {@link #getPlugin(Class)} instead
+     */
+    @Deprecated
     public static EpicLevels getInstance() {
-        return INSTANCE;
+        return getPlugin(EpicLevels.class);
     }
 
     @Override
     public void onPluginLoad() {
-        INSTANCE = this;
     }
 
     @Override
@@ -97,13 +96,13 @@ public class EpicLevels extends SongodaPlugin {
         EconomyManager.getManager().setPreferredHook(Settings.ECONOMY.getString());
 
         // Listener Registration
-        guiManager.init();
+        this.guiManager.init();
         pluginManager.registerEvents(new DeathListeners(this), this);
         pluginManager.registerEvents(new LoginListeners(this), this);
 
         // Load Commands
         this.commandManager = new CommandManager(this);
-        this.commandManager.addCommand(new CommandEpicLevels(guiManager))
+        this.commandManager.addCommand(new CommandEpicLevels(this.guiManager))
                 .addSubCommands(
                         new CommandAddExp(this),
                         new CommandBoost(this),
@@ -113,31 +112,34 @@ public class EpicLevels extends SongodaPlugin {
                         new CommandRemoveBoost(this),
                         new CommandRemoveGlobalBoost(this),
                         new CommandReset(this),
-                        new CommandSettings(guiManager),
+                        new CommandSettings(this.guiManager, this),
                         new CommandShow(this),
                         new CommandTakeExp(this)
                 );
 
         // Load Managers
-        this.playerManager = new PlayerManager();
-        this.levelManager = new LevelManager();
-        this.killstreakManager = new KillstreakManager();
-        this.entityManager = new EntityManager();
-        this.boostManager = new BoostManager();
+        this.playerManager = new PlayerManager(this);
+        this.levelManager = new LevelManager(this);
+        this.killstreakManager = new KillstreakManager(this);
+        this.entityManager = new EntityManager(this);
+        this.boostManager = new BoostManager(this);
 
         // Loading levels
-        levelManager.load(this);
+        this.levelManager.load(this);
 
-        // Loading killstreaks
-        killstreakManager.load(this);
+        // Loading kill streaks
+        this.killstreakManager.load(this);
 
         // Start Tasks
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) ModifierTask.startTask(this);
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+            ModifierTask.startTask(this);
+        }
         BoostTask.startTask(this);
 
         // Register Placeholders
-        if (pluginManager.isPluginEnabled("PlaceholderAPI"))
+        if (pluginManager.isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderManager(this).register();
+        }
     }
 
     @Override
@@ -165,9 +167,8 @@ public class EpicLevels extends SongodaPlugin {
         }
 
         this.dataManager = new DataManager(this.databaseConnector, this);
-        this.dataMigrationManager = new DataMigrationManager(this.databaseConnector, this.dataManager,
-                new _1_InitialMigration());
-        this.dataMigrationManager.runMigrations();
+        DataMigrationManager dataMigrationManager = new DataMigrationManager(this.databaseConnector, this.dataManager, new _1_InitialMigration(this));
+        dataMigrationManager.runMigrations();
 
         this.dataManager.getPlayers((player) -> this.playerManager.addPlayers(player));
         this.dataManager.getBoosts((uuidBoostMap -> this.boostManager.addBoosts(uuidBoostMap)));
@@ -179,53 +180,53 @@ public class EpicLevels extends SongodaPlugin {
         this.locale.reloadMessages();
 
         // Loading levels
-        levelManager.load(this);
-        // Loading killstreaks
-        killstreakManager.load(this);
+        this.levelManager.load(this);
+        // Loading kill streaks
+        this.killstreakManager.load(this);
         // Loading entities.
-        entityManager.reload();
+        this.entityManager.reload();
 
-        levelManager.load(this);
+        this.levelManager.load(this);
     }
 
     @Override
     public List<Config> getExtraConfig() {
-        return Arrays.asList(levelManager.getLevelsConfig(), killstreakManager.getKillstreaksConfig());
+        return Arrays.asList(this.levelManager.getLevelsConfig(), this.killstreakManager.getKillstreaksConfig());
     }
 
     public PlayerManager getPlayerManager() {
-        return playerManager;
+        return this.playerManager;
     }
 
     public CommandManager getCommandManager() {
-        return commandManager;
+        return this.commandManager;
     }
 
     public LevelManager getLevelManager() {
-        return levelManager;
+        return this.levelManager;
     }
 
     public KillstreakManager getKillstreakManager() {
-        return killstreakManager;
+        return this.killstreakManager;
     }
 
     public BoostManager getBoostManager() {
-        return boostManager;
+        return this.boostManager;
     }
 
     public DatabaseConnector getDatabaseConnector() {
-        return databaseConnector;
+        return this.databaseConnector;
     }
 
     public DataManager getDataManager() {
-        return dataManager;
+        return this.dataManager;
     }
 
     public GuiManager getGuiManager() {
-        return guiManager;
+        return this.guiManager;
     }
 
     public EntityManager getEntityManager() {
-        return entityManager;
+        return this.entityManager;
     }
 }

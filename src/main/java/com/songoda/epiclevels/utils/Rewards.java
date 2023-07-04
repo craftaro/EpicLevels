@@ -23,19 +23,21 @@ import java.util.Random;
 
 public class Rewards {
     public static void run(List<String> rewards, Player player, int level, boolean last) {
-        if (level == -1 && EpicLevels.getInstance().getLevelManager().getLevel(level).getRewards().stream()
-                .anyMatch(line -> line.contains("OVERRIDE")))
+        if (level == -1 && EpicLevels.getPlugin(EpicLevels.class).getLevelManager().getLevel(level).getRewards().stream()
+                .anyMatch(line -> line.contains("OVERRIDE"))) {
             return;
+        }
         rewards.forEach(s -> {
             try {
                 String line = replace(player, level, s.trim());
                 switch (s.split(" ")[0]) {
                     case "MSG":
-                        if (last)
-                            EpicLevels.getInstance().getLocale().newMessage(line.trim()).sendPrefixedMessage(player);
+                        if (last) {
+                            EpicLevels.getPlugin(EpicLevels.class).getLocale().newMessage(line.trim()).sendPrefixedMessage(player);
+                        }
                         break;
                     case "BROADCAST":
-                        Bukkit.broadcastMessage(EpicLevels.getInstance().getLocale().newMessage(line.trim()).getMessage());
+                        Bukkit.broadcastMessage(EpicLevels.getPlugin(EpicLevels.class).getLocale().newMessage(line.trim()).getMessage());
                         break;
                     case "CMD":
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line.replace("/", "").trim());
@@ -52,18 +54,21 @@ public class Rewards {
                         EconomyManager.deposit(player, Double.parseDouble(line.replace("$", "")));
                         break;
                     case "HEAL":
-                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9))
+                        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
                             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-                        else
+                        } else {
                             player.setHealth(20);
+                        }
                         break;
                     case "FIREWORK":
-                        if (last)
+                        if (last) {
                             launchRandomFirework(player.getLocation().clone().add(0, 2, 0));
+                        }
                         break;
                     case "SOUND":
-                        if (last)
+                        if (last) {
                             player.playSound(player.getLocation(), Sound.valueOf(line.trim()), 1L, 1L);
+                        }
                         break;
                     case "TITLE":
                         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_11)) {
@@ -86,7 +91,7 @@ public class Rewards {
     }
 
     private static String replace(Player player, int value, String line) {
-        line = line.replace("MSG", "")
+        return line.replace("MSG", "")
                 .replace("BROADCAST", "")
                 .replace("SUBTITLE", "")
                 .replace("TITLE", "")
@@ -98,7 +103,6 @@ public class Rewards {
                 .replace("%level%", String.valueOf(value))
                 .replace("%player%", player.getName())
                 .trim();
-        return line;
     }
 
     private static void launchRandomFirework(Location loc) {

@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class LoginListeners implements Listener {
-
     private final EpicLevels plugin;
 
     public LoginListeners(EpicLevels plugin) {
@@ -18,16 +17,17 @@ public class LoginListeners implements Listener {
 
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> EpicLevels.getInstance().getDataManager().getPlayerOrCreate(event.getPlayer(), player -> {
+        Bukkit.getScheduler().runTaskLater(this.plugin,
+            () -> this.plugin.getDataManager().getPlayerOrCreate(event.getPlayer(), player -> {
             player.setSaved(false);
-            plugin.getPlayerManager().addPlayer(player);
+            this.plugin.getPlayerManager().addPlayer(player);
         }), 40L);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        EPlayer ePlayer = plugin.getPlayerManager().getPlayer(event.getPlayer());
-        plugin.getDataManager().updatePlayer(ePlayer);
+        EPlayer ePlayer = this.plugin.getPlayerManager().getPlayer(event.getPlayer());
+        this.plugin.getDataManager().updatePlayer(ePlayer);
         ePlayer.setSaved(true);
     }
 }

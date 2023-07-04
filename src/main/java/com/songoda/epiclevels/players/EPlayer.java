@@ -18,7 +18,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class EPlayer {
-
     private final UUID uuid;
 
     private double experience;
@@ -26,21 +25,21 @@ public class EPlayer {
     private int mobKills;
     private int playerKills;
     private int deaths;
-    private int killstreak;
-    private int bestKillstreak;
+    private int killStreak;
+    private int bestKillStreak;
 
     private final Map<Long, UUID> kills = new HashMap<>();
     // No serialized variable
     private transient boolean saved = true;
 
-    public EPlayer(UUID uuid, double experience, int mobKills, int playerKills, int deaths, int killstreak, int bestKillstreak) {
+    public EPlayer(UUID uuid, double experience, int mobKills, int playerKills, int deaths, int killStreak, int bestKillStreak) {
         this.uuid = uuid;
         this.experience = experience;
         this.mobKills = mobKills;
         this.playerKills = playerKills;
         this.deaths = deaths;
-        this.killstreak = killstreak;
-        this.bestKillstreak = bestKillstreak;
+        this.killStreak = killStreak;
+        this.bestKillStreak = bestKillStreak;
     }
 
     public EPlayer(UUID uuid) {
@@ -48,136 +47,190 @@ public class EPlayer {
     }
 
     public UUID getUniqueId() {
-        return uuid;
+        return this.uuid;
     }
 
     public OfflinePlayer getPlayer() {
-        return Bukkit.getOfflinePlayer(uuid);
+        return Bukkit.getOfflinePlayer(this.uuid);
     }
 
     public double addExperience(double experience) {
-        if (experience == 0) return experience;
-        saved = false;
-        EpicLevels plugin = EpicLevels.getInstance();
+        if (experience == 0) {
+            return this.experience;
+        }
+
+        this.saved = false;
+        EpicLevels plugin = EpicLevels.getPlugin(EpicLevels.class);
         if (experience < 0L) {
-            if (this.experience + experience < 0L && !Settings.ALLOW_NEGATIVE.getBoolean())
+            if (this.experience + experience < 0L && !Settings.ALLOW_NEGATIVE.getBoolean()) {
                 this.experience = 0L;
-            else
+            } else {
                 this.experience = this.experience + experience;
+            }
 
             return this.experience;
         }
         int currentLevel = getLevel();
 
-        Boost boost = plugin.getBoostManager().getBoost(uuid);
+        Boost boost = plugin.getBoostManager().getBoost(this.uuid);
         double boostMultiplier = boost == null ? 1 : boost.getMultiplier();
 
         this.experience += ((this.experience + experience < 0 ? 0 : experience) * multiplier()) * boostMultiplier;
 
         double bonus = Settings.KILLSTREAK_BONUS_EXP.getDouble();
-        this.experience += bonus * killstreak;
+        this.experience += bonus * this.killStreak;
 
         Player player = getPlayer().getPlayer();
         if ((currentLevel != getLevel() || currentLevel > getLevel()) && player != null) {
             for (int i = currentLevel + 1; i <= getLevel(); i++) {
                 Level def = plugin.getLevelManager().getLevel(-1);
-                if (def != null)
+                if (def != null) {
                     Rewards.run(def.getRewards(), player, i, i == getLevel());
-                if (plugin.getLevelManager().getLevel(i) == null) continue;
+                }
+                if (plugin.getLevelManager().getLevel(i) == null) {
+                    continue;
+                }
                 Rewards.run(plugin.getLevelManager().getLevel(i).getRewards(), player, i, i == getLevel());
             }
 
             if (Settings.SEND_BROADCAST_LEVELUP_MESSAGE.getBoolean()
-                    && getLevel() % Settings.BROADCAST_LEVELUP_EVERY.getInt() == 0)
-                for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).collect(Collectors.toList()))
+                    && getLevel() % Settings.BROADCAST_LEVELUP_EVERY.getInt() == 0) {
+                for (Player pl : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).collect(Collectors.toList())) {
                     plugin.getLocale().getMessage("event.levelup.announcement")
                             .processPlaceholder("player", player.getName())
                             .processPlaceholder("level", getLevel())
                             .sendPrefixedMessage(pl);
+                }
+            }
         }
-        if (this.experience > Settings.MAX_EXP.getDouble())
+        if (this.experience > Settings.MAX_EXP.getDouble()) {
             this.experience = Settings.MAX_EXP.getDouble();
+        }
         return this.experience;
     }
 
     public boolean canGainExperience(UUID uuid) {
         int triggerAmount = Settings.GRINDER_MAX.getInt();
         int maxInterval = Settings.GRINDER_INTERVAL.getInt() * 1000;
-        return kills.keySet().stream().filter(x -> kills.get(x).equals(uuid))
-                .filter(x -> System.currentTimeMillis() - x < maxInterval).count() < triggerAmount;
+
+        long killCount = this.kills.keySet()
+                .stream()
+                .filter(x -> this.kills.get(x).equals(uuid))
+                .filter(x -> System.currentTimeMillis() - x < maxInterval)
+                .count();
+        return killCount < triggerAmount;
     }
 
     private int multiplier() {
         int multiplier = 1;
-        if (!getPlayer().isOnline()) return multiplier;
+        if (!getPlayer().isOnline()) {
+            return multiplier;
+        }
         for (PermissionAttachmentInfo permissionAttachmentInfo : getPlayer().getPlayer().getEffectivePermissions()) {
-            if (!permissionAttachmentInfo.getPermission().toLowerCase().startsWith("epiclevels.multiplier")) continue;
+            if (!permissionAttachmentInfo.getPermission().toLowerCase().startsWith("epiclevels.multiplier")) {
+                continue;
+            }
             multiplier = Integer.parseInt(permissionAttachmentInfo.getPermission().split("\\.")[2]);
         }
         return multiplier;
     }
 
     public double getExperience() {
-        return experience;
+        return this.experience;
     }
 
     public int getKills() {
-        return mobKills + playerKills;
+        return this.mobKills + this.playerKills;
     }
 
     public int getMobKills() {
-        return mobKills;
+        return this.mobKills;
     }
 
     public int getPlayerKills() {
-        return playerKills;
+        return this.playerKills;
     }
 
     public int addMobKill() {
-        saved = false;
-        return mobKills++;
+        this.saved = false;
+        return this.mobKills++;
     }
 
     public int addPlayerKill(UUID uuid) {
         saved = false;
         this.kills.put(System.currentTimeMillis(), uuid);
-        return playerKills++;
+        return this.playerKills++;
     }
 
     public int getDeaths() {
-        return deaths;
+        return this.deaths;
     }
 
     public int addDeath() {
-        saved = false;
-        return deaths++;
+        this.saved = false;
+        return this.deaths++;
     }
 
+    public int getKillStreak() {
+        return this.killStreak;
+    }
+
+    /**
+     * @deprecated Use {@link #getKillStreak()} instead.
+     */
+    @Deprecated
     public int getKillstreak() {
-        return killstreak;
+        return getKillStreak();
     }
 
+    public int getBestKillStreak() {
+        return this.bestKillStreak;
+    }
+
+    /**
+     * @deprecated Use {@link #getBestKillStreak()} instead.
+     */
+    @Deprecated
     public int getBestKillstreak() {
-        return bestKillstreak;
+        return getBestKillStreak();
     }
 
+    public int increaseKillStreak() {
+        this.saved = false;
+        this.killStreak++;
+        if (this.killStreak > this.bestKillStreak) {
+            this.bestKillStreak = this.killStreak;
+        }
+        return this.killStreak;
+    }
+
+    /**
+     * @deprecated Use {@link #increaseKillStreak()} instead.
+     */
+    @Deprecated
     public int increaseKillstreak() {
-        saved = false;
-        killstreak++;
-        if (killstreak > bestKillstreak)
-            bestKillstreak = killstreak;
-        return killstreak;
+        return increaseKillStreak();
     }
 
+    public void resetKillStreak() {
+        this.saved = false;
+        this.killStreak = 0;
+    }
+
+    /**
+     * @deprecated Use {@link #resetKillStreak()} instead.
+     */
+    @Deprecated
     public void resetKillstreak() {
-        saved = false;
-        killstreak = 0;
+        resetKillStreak();
     }
 
     public int getLevel() {
         int lastLevel = 0;
         for (int i = 1; i <= Settings.MAX_LEVEL.getInt(); i++) {
-            if (experience(i) > experience) break;
+            if (experience(i) > this.experience) {
+                break;
+            }
             lastLevel++;
         }
         return lastLevel;
@@ -196,15 +249,17 @@ public class EPlayer {
         switch (formula) {
             case EXPONENTIAL: {
                 double a = 0;
-                for (int i = 1; i < level; i++)
+                for (int i = 1; i < level; i++) {
                     a += Math.floor(i + Settings.EXPONENTIAL_BASE.getDouble()
                             * Math.pow(2, (i / Settings.EXPONENTIAL_DIVISOR.getDouble())));
+                }
                 return Math.floor(a);
             }
             case LINEAR: {
                 double a = 0;
-                for (int i = 1; i < level; i++)
+                for (int i = 1; i < level; i++) {
                     a += Settings.LINEAR_INCREMENT.getDouble();
+                }
                 return a;
             }
             case CUSTOM: {
@@ -220,16 +275,27 @@ public class EPlayer {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EPlayer ePlayer = (EPlayer) o;
-        return Double.compare(ePlayer.experience, experience) == 0 && mobKills == ePlayer.mobKills && playerKills == ePlayer.playerKills && deaths == ePlayer.deaths && killstreak == ePlayer.killstreak && bestKillstreak == ePlayer.bestKillstreak && uuid.equals(ePlayer.uuid) && kills.equals(ePlayer.kills);
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        EPlayer ePlayer = (EPlayer) obj;
+        return Double.compare(ePlayer.experience, this.experience) == 0 &&
+                this.mobKills == ePlayer.mobKills &&
+                this.playerKills == ePlayer.playerKills &&
+                this.deaths == ePlayer.deaths &&
+                this.killStreak == ePlayer.killStreak &&
+                this.bestKillStreak == ePlayer.bestKillStreak &&
+                this.uuid.equals(ePlayer.uuid) &&
+                this.kills.equals(ePlayer.kills);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, experience, mobKills, playerKills, deaths, killstreak, bestKillstreak, kills);
+        return Objects.hash(this.uuid, this.experience, this.mobKills, this.playerKills, this.deaths, this.killStreak, this.bestKillStreak, this.kills);
     }
 
     @Override

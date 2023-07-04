@@ -3,7 +3,6 @@ package com.songoda.epiclevels.boost;
 import java.util.Objects;
 
 public class Boost {
-
     private int id;
 
     private long expiration;
@@ -20,11 +19,11 @@ public class Boost {
     }
 
     public void expire() {
-        expiration = -1;
+        this.expiration = -1;
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {
@@ -32,23 +31,30 @@ public class Boost {
     }
 
     public long getExpiration() {
-        return expiration;
+        return this.expiration;
     }
 
     public double getMultiplier() {
-        return multiplier;
+        return this.multiplier;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
         Boost boost = (Boost) o;
-        return id == boost.id && expiration == boost.expiration && Double.compare(boost.multiplier, multiplier) == 0;
+        return this.id == boost.id &&
+                this.expiration == boost.expiration &&
+                Double.compare(boost.multiplier, this.multiplier) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, expiration, multiplier);
+        return Objects.hash(this.id, this.expiration, this.multiplier);
     }
 }

@@ -1,9 +1,9 @@
 package com.songoda.epiclevels.commands;
 
 import com.songoda.core.commands.AbstractCommand;
+import com.songoda.core.utils.NumberUtils;
 import com.songoda.epiclevels.EpicLevels;
 import com.songoda.epiclevels.players.EPlayer;
-import com.songoda.epiclevels.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class CommandAddExp extends AbstractCommand {
-
     private final EpicLevels instance;
 
     public CommandAddExp(EpicLevels instance) {
@@ -21,30 +20,32 @@ public class CommandAddExp extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        if (args.length != 2) return ReturnType.SYNTAX_ERROR;
+        if (args.length != 2) {
+            return ReturnType.SYNTAX_ERROR;
+        }
 
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
 
         if (!player.hasPlayedBefore() && !player.isOnline()) {
-            instance.getLocale().getMessage("command.general.notonline")
+            this.instance.getLocale().getMessage("command.general.notonline")
                     .processPlaceholder("notonline", args[0])
                     .sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
 
-        if (!Methods.isInt(args[1]) && !player.isOnline()) {
-            instance.getLocale().getMessage("command.general.notint")
+        if (!NumberUtils.isInt(args[1]) && !player.isOnline()) {
+            this.instance.getLocale().getMessage("command.general.notint")
                     .processPlaceholder("number", args[1])
                     .sendPrefixedMessage(sender);
             return ReturnType.SYNTAX_ERROR;
         }
 
         long amount = Long.parseLong(args[1]);
-        EPlayer ePlayer = instance.getPlayerManager().getPlayer(player);
+        EPlayer ePlayer = this.instance.getPlayerManager().getPlayer(player);
         ePlayer.addExperience(amount);
-        instance.getDataManager().updatePlayer(ePlayer);
+        this.instance.getDataManager().updatePlayer(ePlayer);
 
-        instance.getLocale().getMessage("command.addexp.success")
+        this.instance.getLocale().getMessage("command.addexp.success")
                 .processPlaceholder("amount", amount)
                 .processPlaceholder("player", player.getName())
                 .sendPrefixedMessage(sender);

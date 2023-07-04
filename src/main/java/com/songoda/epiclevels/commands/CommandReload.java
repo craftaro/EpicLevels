@@ -7,7 +7,6 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 public class CommandReload extends AbstractCommand {
-
     private final EpicLevels instance;
 
     public CommandReload(EpicLevels instance) {
@@ -17,8 +16,8 @@ public class CommandReload extends AbstractCommand {
 
     @Override
     protected ReturnType runCommand(CommandSender sender, String... args) {
-        instance.reloadConfig();
-        instance.getLocale().getMessage("&7Configuration and Language files reloaded.").sendPrefixedMessage(sender);
+        this.instance.reloadConfig();
+        this.instance.getLocale().getMessage("&7Configuration and Language files reloaded.").sendPrefixedMessage(sender);
         return AbstractCommand.ReturnType.SUCCESS;
     }
 

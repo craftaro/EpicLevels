@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class CommandShow extends AbstractCommand {
-
     private final EpicLevels instance;
 
     public CommandShow(EpicLevels instance) {
@@ -23,7 +22,7 @@ public class CommandShow extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         if (args.length != 1) return ReturnType.SYNTAX_ERROR;
 
-        List<EPlayer> players = instance.getPlayerManager().getPlayersUnsorted();
+        List<EPlayer> players = this.instance.getPlayerManager().getPlayersUnsorted();
 
         Optional<EPlayer> targetOptional = players.stream()
                 .filter(ePlayer -> ePlayer.getPlayer().getName() != null
@@ -31,10 +30,10 @@ public class CommandShow extends AbstractCommand {
                 .findAny();
 
         if (!targetOptional.isPresent()) {
-            instance.getLocale().getMessage("gui.levels.noresults").sendPrefixedMessage(sender);
+            this.instance.getLocale().getMessage("gui.levels.noresults").sendPrefixedMessage(sender);
             return ReturnType.FAILURE;
         }
-        instance.getGuiManager().showGUI((Player) sender, new GUILevels((Player) sender, targetOptional.get()));
+        this.instance.getGuiManager().showGUI((Player) sender, new GUILevels((Player) sender, targetOptional.get()));
 
         return ReturnType.SUCCESS;
     }
