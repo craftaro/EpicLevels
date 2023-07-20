@@ -5,10 +5,7 @@ import com.craftaro.core.SongodaPlugin;
 import com.craftaro.core.commands.CommandManager;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.configuration.Config;
-import com.craftaro.core.database.DataMigrationManager;
 import com.craftaro.core.database.DatabaseConnector;
-import com.craftaro.core.database.MySQLConnector;
-import com.craftaro.core.database.SQLiteConnector;
 import com.craftaro.core.gui.GuiManager;
 import com.craftaro.core.hooks.EconomyManager;
 import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
@@ -25,7 +22,7 @@ import com.songoda.epiclevels.commands.CommandReset;
 import com.songoda.epiclevels.commands.CommandSettings;
 import com.songoda.epiclevels.commands.CommandShow;
 import com.songoda.epiclevels.commands.CommandTakeExp;
-import com.songoda.epiclevels.database.DataManager;
+import com.songoda.epiclevels.database.DataHelper;
 import com.songoda.epiclevels.database.migrations._1_InitialMigration;
 import com.songoda.epiclevels.killstreaks.KillstreakManager;
 import com.songoda.epiclevels.levels.LevelManager;
@@ -41,6 +38,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class EpicLevels extends SongodaPlugin {
@@ -52,8 +50,7 @@ public class EpicLevels extends SongodaPlugin {
     private EntityManager entityManager;
     private BoostManager boostManager;
 
-    private DatabaseConnector databaseConnector;
-    private DataManager dataManager;
+    private DataHelper dataHelper;
 
     /**
      * @deprecated Use {@link #getPlugin(Class)} instead
@@ -69,12 +66,12 @@ public class EpicLevels extends SongodaPlugin {
 
     @Override
     public void onPluginDisable() {
-        this.dataManager.getUpdater().onDisable();
-        this.dataManager.bulkUpdatePlayers(this.playerManager.getPlayers());
-        this.dataManager.bulkUpdateBoosts(this.boostManager.getBoosts().values());
+        this.dataHelper.getUpdater().onDisable();
+        this.dataHelper.bulkUpdatePlayers(this.playerManager.getPlayers());
+        this.dataHelper.bulkUpdateBoosts(this.boostManager.getBoosts().values());
 
         if (this.boostManager.getGlobalBoost() != null) {
-            this.dataManager.updateBoost(this.boostManager.getGlobalBoost());
+            this.dataHelper.updateBoost(this.boostManager.getGlobalBoost());
         }
     }
 
@@ -144,34 +141,11 @@ public class EpicLevels extends SongodaPlugin {
 
     @Override
     public void onDataLoad() {
-        // Database stuff, go!
-        try {
-            if (Settings.MYSQL_ENABLED.getBoolean()) {
-                String hostname = Settings.MYSQL_HOSTNAME.getString();
-                int port = Settings.MYSQL_PORT.getInt();
-                String database = Settings.MYSQL_DATABASE.getString();
-                String username = Settings.MYSQL_USERNAME.getString();
-                String password = Settings.MYSQL_PASSWORD.getString();
-                boolean useSSL = Settings.MYSQL_USE_SSL.getBoolean();
-                int poolSize = Settings.MYSQL_POOL_SIZE.getInt();
+        initDatabase(Collections.singletonList(new _1_InitialMigration()));
+        this.dataHelper = new DataHelper(this);
 
-                this.databaseConnector = new MySQLConnector(this, hostname, port, database, username, password, useSSL, poolSize);
-                this.getLogger().info("Data handler connected using MySQL.");
-            } else {
-                this.databaseConnector = new SQLiteConnector(this);
-                this.getLogger().info("Data handler connected using SQLite.");
-            }
-        } catch (Exception ex) {
-            this.getLogger().severe("Fatal error trying to connect to database. Please make sure all your connection settings are correct and try again. Plugin has been disabled.");
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
-
-        this.dataManager = new DataManager(this.databaseConnector, this);
-        DataMigrationManager dataMigrationManager = new DataMigrationManager(this.databaseConnector, this.dataManager, new _1_InitialMigration(this));
-        dataMigrationManager.runMigrations();
-
-        this.dataManager.getPlayers((player) -> this.playerManager.addPlayers(player));
-        this.dataManager.getBoosts((uuidBoostMap -> this.boostManager.addBoosts(uuidBoostMap)));
+        this.dataHelper.getPlayers((player) -> this.playerManager.addPlayers(player));
+        this.dataHelper.getBoosts((uuidBoostMap -> this.boostManager.addBoosts(uuidBoostMap)));
     }
 
     @Override
@@ -215,11 +189,11 @@ public class EpicLevels extends SongodaPlugin {
     }
 
     public DatabaseConnector getDatabaseConnector() {
-        return this.databaseConnector;
+        return super.getDataManager().getDatabaseConnector();
     }
 
-    public DataManager getDataManager() {
-        return this.dataManager;
+    public DataHelper getDataHelper() {
+        return this.dataHelper;
     }
 
     public GuiManager getGuiManager() {

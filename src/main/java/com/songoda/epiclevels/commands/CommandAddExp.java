@@ -43,7 +43,7 @@ public class CommandAddExp extends AbstractCommand {
         long amount = Long.parseLong(args[1]);
         EPlayer ePlayer = this.instance.getPlayerManager().getPlayer(player);
         ePlayer.addExperience(amount);
-        this.instance.getDataManager().updatePlayer(ePlayer);
+        this.instance.getDataHelper().updatePlayer(ePlayer);
 
         this.instance.getLocale().getMessage("command.addexp.success")
                 .processPlaceholder("amount", amount)

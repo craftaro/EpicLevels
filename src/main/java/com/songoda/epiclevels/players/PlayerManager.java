@@ -22,7 +22,7 @@ public class PlayerManager {
 
     public EPlayer getPlayer(UUID uuid) {
         return this.registeredPlayers.computeIfAbsent(uuid, u -> {
-            this.plugin.getDataManager().getPlayerOrCreate(uuid, this::addPlayer);
+            this.plugin.getDataHelper().getPlayerOrCreate(uuid, this::addPlayer);
             return new EPlayer(uuid);
         });
     }

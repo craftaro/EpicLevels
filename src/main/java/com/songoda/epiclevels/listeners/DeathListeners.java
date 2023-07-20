@@ -128,8 +128,8 @@ public class DeathListeners implements Listener {
             eKiller.increaseKillStreak();
             eKiller.addPlayerKill(killed.getUniqueId());
 
-            this.plugin.getDataManager().updatePlayer(eKiller);
-            this.plugin.getDataManager().updatePlayer(eKilled);
+            this.plugin.getDataHelper().updatePlayer(eKiller);
+            this.plugin.getDataHelper().updatePlayer(eKilled);
 
             double playerExpBefore = eKiller.getExperience();
             double playerExpAfter = eKiller.addExperience(expPlayer);
@@ -160,7 +160,7 @@ public class DeathListeners implements Listener {
             double playerExpBefore = eKiller.getExperience();
             double playerExpAfter = eKiller.addExperience(mobExperience);
 
-            this.plugin.getDataManager().updatePlayer(eKiller);
+            this.plugin.getDataHelper().updatePlayer(eKiller);
 
             if (Settings.SEND_MOB_KILL_MESSAGE.getBoolean()) {
                 this.plugin.getLocale().getMessage("event.mob.killed")

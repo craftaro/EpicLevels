@@ -13,24 +13,25 @@ import java.util.List;
 import java.util.UUID;
 
 public class DataUpdater extends DataUpdaterAbstract {
-    private final DataManager manager;
+    private final DataHelper dataHelper;
     private final EpicLevels plugin;
 
     private final List<UUID> toUpdate = new ArrayList<>();
 
-    public DataUpdater(DataManager manager, EpicLevels plugin) {
-        this.manager = manager;
+    public DataUpdater(DataHelper dataHelper, EpicLevels plugin) {
+        this.dataHelper = dataHelper;
         this.plugin = plugin;
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
-
-        if (isEnabled()) {
-            Bukkit.getScheduler().runTaskTimerAsynchronously(this.manager.getPlugin(), () -> getMessages(this::processMessage), 20, 20);
-            Bukkit.getScheduler().runTaskTimerAsynchronously(this.manager.getPlugin(), this::cleanMessages, 20, 600);
+        if (!isEnabled()) {
+            return;
         }
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, () -> getMessages(this::processMessage), 20, 20);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(this.plugin, this::cleanMessages, 20, 600);
     }
 
     @Override
@@ -39,18 +40,14 @@ public class DataUpdater extends DataUpdaterAbstract {
         this.toUpdate.clear();
     }
 
-    public DataManager getManager() {
-        return this.manager;
-    }
-
     @Override
     public DatabaseConnector getConnector() {
-        return this.manager.getDatabaseConnector();
+        return this.plugin.getDatabaseConnector();
     }
 
     @Override
     public String getTablePrefix() {
-        return this.manager.getTablePrefix();
+        return this.dataHelper.getTablePrefix();
     }
 
     public String buildMessage(String id, Object... args) {
@@ -62,11 +59,11 @@ public class DataUpdater extends DataUpdaterAbstract {
     }
 
     public void sendMessageAsync(String message) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.manager.getPlugin(), () -> sendMessage(message));
+        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> sendMessage(message));
     }
 
     public void sendMessageAsync(String message, long delay) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this.manager.getPlugin(), () -> sendMessage(message), delay);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this.plugin, () -> sendMessage(message), delay);
     }
 
     public void sendPlayerUpdate(UUID uuid) {
@@ -136,11 +133,11 @@ public class DataUpdater extends DataUpdaterAbstract {
         }
 
         this.toUpdate.add(uuid);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this.manager.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLaterAsynchronously(this.plugin, () -> {
             try {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player == null || !player.isOnline()) {
-                    this.manager.selectPlayer(uuid, (data) -> {
+                    this.dataHelper.selectPlayer(uuid, (data) -> {
                         if (data != null) {
                             this.plugin.getPlayerManager().addPlayer(data);
                         }

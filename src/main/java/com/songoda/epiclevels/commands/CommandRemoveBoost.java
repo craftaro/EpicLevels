@@ -34,9 +34,9 @@ public class CommandRemoveBoost extends AbstractCommand {
 
         Boost boost = this.instance.getBoostManager().removeBoost(player.getUniqueId());
         if (boost != null) {
-            this.instance.getDataManager().deleteBoost(boost);
+            this.instance.getDataHelper().deleteBoost(boost);
         }
-        this.instance.getDataManager().getUpdater().sendBoostRemove(player.getUniqueId());
+        this.instance.getDataHelper().getUpdater().sendBoostRemove(player.getUniqueId());
         this.instance.getLocale().getMessage("command.removeboost.success")
                 .processPlaceholder("player", player.getName())
                 .sendPrefixedMessage(sender);

@@ -31,7 +31,7 @@ public class CommandReset extends AbstractCommand {
         }
 
         EPlayer ePlayer = this.instance.getPlayerManager().resetPlayer(player.getUniqueId());
-        this.instance.getDataManager().deletePlayer(ePlayer);
+        this.instance.getDataHelper().deletePlayer(ePlayer);
 
         this.instance.getLocale().getMessage("command.reset.success")
                 .processPlaceholder("player", player.getName())

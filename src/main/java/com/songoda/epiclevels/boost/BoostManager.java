@@ -28,7 +28,7 @@ public class BoostManager {
             if (this.globalBoost.getExpiration() > System.currentTimeMillis()) {
                 return this.globalBoost;
             } else {
-                this.plugin.getDataManager().deleteBoost(this.globalBoost);
+                this.plugin.getDataHelper().deleteBoost(this.globalBoost);
                 this.globalBoost = null;
                 Bukkit.getOnlinePlayers().forEach(player -> this.plugin.getLocale().getMessage("event.boost.globalexpire").sendPrefixedMessage(player));
             }
@@ -40,7 +40,7 @@ public class BoostManager {
         if (boost.getExpiration() > System.currentTimeMillis()) {
             return boost;
         } else {
-            this.plugin.getDataManager().deleteBoost(boost);
+            this.plugin.getDataHelper().deleteBoost(boost);
             this.registeredBoosts.remove(uuid);
             this.plugin.getLocale().getMessage("event.boost.expire").sendPrefixedMessage(Bukkit.getPlayer(uuid));
         }

@@ -52,8 +52,8 @@ public class CommandBoost extends AbstractCommand {
 
         Boost boost = new Boost(duration + System.currentTimeMillis(), multiplier);
         this.instance.getBoostManager().addBoost(player.getUniqueId(), boost);
-        this.instance.getDataManager().createBoost(player.getUniqueId(), boost);
-        this.instance.getDataManager().getUpdater().sendBoostCreate(player.getUniqueId(), duration, multiplier, sender.getName());
+        this.instance.getDataHelper().createBoost(player.getUniqueId(), boost);
+        this.instance.getDataHelper().getUpdater().sendBoostCreate(player.getUniqueId(), duration, multiplier, sender.getName());
 
         this.instance.getLocale().getMessage("event.boost.success")
                 .processPlaceholder("player", player.getName())

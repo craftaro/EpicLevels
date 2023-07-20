@@ -19,9 +19,9 @@ public class CommandRemoveGlobalBoost extends AbstractCommand {
     protected ReturnType runCommand(CommandSender sender, String... args) {
         Boost boost = this.instance.getBoostManager().clearGlobalBoost();
         if (boost != null) {
-            this.instance.getDataManager().deleteBoost(boost);
+            this.instance.getDataHelper().deleteBoost(boost);
         }
-        this.instance.getDataManager().getUpdater().sendBoostRemove(null);
+        this.instance.getDataHelper().getUpdater().sendBoostRemove(null);
 
         this.instance.getLocale().getMessage("command.removeglobalboost.success")
                 .sendPrefixedMessage(sender);

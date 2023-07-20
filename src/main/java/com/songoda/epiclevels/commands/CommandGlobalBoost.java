@@ -43,8 +43,8 @@ public class CommandGlobalBoost extends AbstractCommand {
 
         Boost boost = new Boost(duration + System.currentTimeMillis(), multiplier);
         this.instance.getBoostManager().setGlobalBoost(boost);
-        this.instance.getDataManager().createBoost(null, boost);
-        this.instance.getDataManager().getUpdater().sendBoostCreate(null, duration, multiplier, sender.getName());
+        this.instance.getDataHelper().createBoost(null, boost);
+        this.instance.getDataHelper().getUpdater().sendBoostCreate(null, duration, multiplier, sender.getName());
 
         this.instance.getLocale().getMessage("event.boost.globalsuccess")
                 .processPlaceholder("multiplier", multiplier)

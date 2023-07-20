@@ -42,7 +42,7 @@ public class CommandTakeExp extends AbstractCommand {
 
         EPlayer ePlayer = this.instance.getPlayerManager().getPlayer(player);
         ePlayer.addExperience(-amount);
-        this.instance.getDataManager().updatePlayer(ePlayer);
+        this.instance.getDataHelper().updatePlayer(ePlayer);
 
         this.instance.getLocale().getMessage("command.removeexp.success")
                 .processPlaceholder("amount", amount)
