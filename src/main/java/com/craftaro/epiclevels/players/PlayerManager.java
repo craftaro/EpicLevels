@@ -32,6 +32,10 @@ public class PlayerManager {
     }
 
     public void addPlayer(EPlayer player) {
+        final EPlayer registered;
+        if ((registered = registeredPlayers.get(player.getUniqueId())) != null && registered.getExperience() > player.getExperience()) {
+            return;
+        }
         this.registeredPlayers.put(player.getUniqueId(), player);
 
         this.lastUpdate = System.currentTimeMillis();
