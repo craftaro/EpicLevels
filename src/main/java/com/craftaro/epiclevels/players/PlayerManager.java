@@ -21,10 +21,16 @@ public class PlayerManager {
     }
 
     public EPlayer getPlayer(UUID uuid) {
-        return this.registeredPlayers.computeIfAbsent(uuid, u -> {
-            this.plugin.getDataHelper().getPlayerOrCreate(uuid, this::addPlayer);
-            return new EPlayer(uuid);
-        });
+        EPlayer ePlayer = registeredPlayers.get(uuid);
+        if (ePlayer == null) {
+            this.plugin.getDataHelper().getPlayerOrCreate(uuid, player -> {
+                player.setSaved(false);
+                addPlayer(player);
+            });
+            ePlayer = new EPlayer(uuid);
+            addPlayer(ePlayer);
+        }
+        return ePlayer;
     }
 
     public EPlayer getPlayer(OfflinePlayer player) {

@@ -43,6 +43,9 @@ public class DataHelper {
             this.plugin.getDatabaseConnector().connectDSL(context -> {
                 List<Query> queries = new ArrayList<>();
                 for (EPlayer ePlayer : ePlayers) {
+                    if (ePlayer.isSaved()) {
+                        continue;
+                    }
                     queries.add(
                             DSL.update(DSL.table(DSL.name(this.getTablePrefix() + "players")))
 
@@ -111,6 +114,7 @@ public class DataHelper {
                         .where(DSL.field("uuid").eq(ePlayer.getUniqueId().toString()))
                         .execute();
             });
+            ePlayer.setSaved(true);
         });
     }
 

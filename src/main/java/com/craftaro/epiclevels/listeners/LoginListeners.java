@@ -18,13 +18,17 @@ public class LoginListeners implements Listener {
     @EventHandler
     public void onLogin(PlayerLoginEvent event) {
         Bukkit.getScheduler().runTaskLater(this.plugin,
-                () -> this.plugin.getDataHelper().getPlayerOrCreate(event.getPlayer(), player -> this.plugin.getPlayerManager().addPlayer(player)),
-                30);
+                () -> this.plugin.getDataHelper().getPlayerOrCreate(event.getPlayer(), player -> {
+                    player.setSaved(false);
+                    this.plugin.getPlayerManager().addPlayer(player);
+                }),
+                40);
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         EPlayer ePlayer = this.plugin.getPlayerManager().getPlayer(event.getPlayer());
         this.plugin.getDataHelper().updatePlayer(ePlayer);
+        ePlayer.setSaved(true);
     }
 }
