@@ -1,0 +1,62 @@
+package com.craftaro.epiclevels.commands;
+
+import com.craftaro.core.commands.AbstractCommand;
+import com.craftaro.epiclevels.EpicLevels;
+import com.craftaro.epiclevels.players.EPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+
+import java.util.List;
+
+public class CommandReset extends AbstractCommand {
+    private final EpicLevels instance;
+
+    public CommandReset(EpicLevels instance) {
+        super(CommandType.CONSOLE_OK, "Reset");
+        this.instance = instance;
+    }
+
+    @Override
+    protected ReturnType runCommand(CommandSender sender, String... args) {
+        if (args.length != 1) return ReturnType.SYNTAX_ERROR;
+
+        OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
+
+        if (!player.hasPlayedBefore() && !player.isOnline()) {
+            this.instance.getLocale().getMessage("command.general.notonline")
+                    .processPlaceholder("name", player.getName())
+                    .sendPrefixedMessage(sender);
+            return ReturnType.FAILURE;
+        }
+
+        EPlayer ePlayer = this.instance.getPlayerManager().resetPlayer(player.getUniqueId());
+        this.instance.getDataHelper().deletePlayer(ePlayer);
+
+        this.instance.getLocale().getMessage("command.reset.success")
+                .processPlaceholder("player", player.getName())
+                .sendPrefixedMessage(sender);
+
+        return ReturnType.SUCCESS;
+    }
+
+    @Override
+    protected List<String> onTab(CommandSender sender, String... args) {
+        return null;
+    }
+
+    @Override
+    public String getPermissionNode() {
+        return "epiclevels.reset";
+    }
+
+    @Override
+    public String getSyntax() {
+        return "/levels Reset <Player>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Resets all stats for a player.";
+    }
+}
