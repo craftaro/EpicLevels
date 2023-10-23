@@ -141,7 +141,7 @@ public class EpicLevels extends SongodaPlugin {
 
     @Override
     public void onDataLoad() {
-        initDatabase(Collections.singletonList(new _1_InitialMigration()));
+        initDatabase(Collections.singletonList(new _1_InitialMigration(this)));
         this.dataHelper = new DataHelper(this);
 
         this.dataHelper.getPlayers((player) -> this.playerManager.addPlayers(player));
