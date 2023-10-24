@@ -19,7 +19,7 @@ public class _1_InitialMigration extends DataMigration {
 
     @Override
     public void migrate(Connection connection, String tablePrefix) throws SQLException {
-        String autoIncrement = this.plugin.getDatabaseConnector() instanceof MySQLConnector ? " AUTO_INCREMENT" : "";
+        String autoIncrement = /*this.plugin.getDatabaseConnector() instanceof MySQLConnector ? " AUTO_INCREMENT" :*/ "";
 
         // Create 'players' table
         try (Statement statement = connection.createStatement()) {
