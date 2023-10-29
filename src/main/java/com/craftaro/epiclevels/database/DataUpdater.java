@@ -59,15 +59,15 @@ public class DataUpdater extends DataUpdaterAbstract {
     }
 
     public void sendMessageAsync(String message) {
-        Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> sendMessage(message));
-    }
-
-    public void sendMessageAsync(String message, long delay) {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this.plugin, () -> sendMessage(message), delay);
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> sendMessage(message));
+        } else {
+            sendMessage(message);
+        }
     }
 
     public void sendPlayerUpdate(UUID uuid) {
-        sendMessageAsync(buildMessage("PLAYERUPDATE", uuid), 80);
+        sendMessageAsync(buildMessage("PLAYERUPDATE", uuid));
     }
 
     public void sendBoostCreate(UUID uuid, long duration, double multiplier, String sender) {
