@@ -6,9 +6,10 @@ import com.craftaro.core.commands.CommandManager;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.configuration.Config;
 import com.craftaro.core.database.DatabaseConnector;
+import com.craftaro.core.dependency.Dependency;
 import com.craftaro.core.gui.GuiManager;
 import com.craftaro.core.hooks.EconomyManager;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.epiclevels.boost.BoostManager;
 import com.craftaro.epiclevels.commands.CommandAddExp;
 import com.craftaro.epiclevels.commands.CommandBoost;
@@ -39,7 +40,9 @@ import org.bukkit.plugin.PluginManager;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EpicLevels extends SongodaPlugin {
     private final GuiManager guiManager = new GuiManager(this);
@@ -58,6 +61,11 @@ public class EpicLevels extends SongodaPlugin {
     @Deprecated
     public static EpicLevels getInstance() {
         return getPlugin(EpicLevels.class);
+    }
+
+    @Override
+    protected Set<Dependency> getDependencies() {
+        return new HashSet<>();
     }
 
     @Override
