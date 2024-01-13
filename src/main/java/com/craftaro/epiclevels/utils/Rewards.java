@@ -3,7 +3,7 @@ package com.craftaro.epiclevels.utils;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.hooks.EconomyManager;
 import com.craftaro.core.math.Eval;
-import com.craftaro.core.third_party.com.cryptomorin.xseries.XSound;
+import com.craftaro.third_party.com.cryptomorin.xseries.XSound;
 import com.craftaro.core.utils.TextUtils;
 import com.craftaro.epiclevels.EpicLevels;
 import org.bukkit.Bukkit;

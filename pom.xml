@@ -6,7 +6,7 @@
 
     <groupId>com.craftaro</groupId>
     <artifactId>EpicLevels-Plugin</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0</version>
 
     <name>EpicLevels</name>
     <description>Allow your players to gain experience and level up by fighting players and monsters.</description>
@@ -74,9 +74,18 @@
                                     <excludeDefaults>false</excludeDefaults>
                                     <includes>
                                         <include>**/nms/v*/**</include>
-                                        <include>**/third_party/org/h2/**</include>
-                                        <include>**/third_party/org/mariadb/**</include>
                                     </includes>
+                                    <excludes>
+                                        <exclude>**/third_party/org/apache/**</exclude>
+                                        <exclude>**/third_party/net/kyori/**</exclude>
+                                        <exclude>**/third_party/com/zaxxer/**</exclude>
+                                        <exclude>**/third_party/org/jooq/**</exclude>
+                                        <exclude>**/third_party/org/mariadb/**</exclude>
+                                        <exclude>**/third_party/com/h2database/**</exclude>
+                                        <exclude>**/third_party/org/h2/**</exclude>
+                                        <exclude>**/third_party/com/cryptomorin/**</exclude>
+                                        <exclude>**/third_party/org/reactivestreams/**</exclude>
+                                    </excludes>
                                 </filter>
                             </filters>
                         </configuration>

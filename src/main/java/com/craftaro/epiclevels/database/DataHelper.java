@@ -1,12 +1,12 @@
 package com.craftaro.epiclevels.database;
 
 import com.craftaro.core.database.MySQLConnector;
-import com.craftaro.core.third_party.org.jooq.DeleteUsingStep;
-import com.craftaro.core.third_party.org.jooq.Query;
-import com.craftaro.core.third_party.org.jooq.Record;
-import com.craftaro.core.third_party.org.jooq.Result;
-import com.craftaro.core.third_party.org.jooq.SelectSelectStep;
-import com.craftaro.core.third_party.org.jooq.impl.DSL;
+import com.craftaro.third_party.org.jooq.DeleteUsingStep;
+import com.craftaro.third_party.org.jooq.Query;
+import com.craftaro.third_party.org.jooq.Record;
+import com.craftaro.third_party.org.jooq.Result;
+import com.craftaro.third_party.org.jooq.SelectSelectStep;
+import com.craftaro.third_party.org.jooq.impl.DSL;
 import com.craftaro.epiclevels.EpicLevels;
 import com.craftaro.epiclevels.boost.Boost;
 import com.craftaro.epiclevels.players.EPlayer;
@@ -43,6 +43,9 @@ public class DataHelper {
             this.plugin.getDatabaseConnector().connectDSL(context -> {
                 List<Query> queries = new ArrayList<>();
                 for (EPlayer ePlayer : ePlayers) {
+                    if (ePlayer.isSaved()) {
+                        continue;
+                    }
                     queries.add(
                             DSL.update(DSL.table(DSL.name(this.getTablePrefix() + "players")))
 
@@ -111,37 +114,36 @@ public class DataHelper {
                         .where(DSL.field("uuid").eq(ePlayer.getUniqueId().toString()))
                         .execute();
             });
+            ePlayer.setSaved(true);
         });
     }
 
     public void selectPlayer(UUID uuid, Consumer<EPlayer> callback) {
-        runAsync(() -> {
-            this.plugin.getDatabaseConnector().connectDSL(context -> {
-                try (SelectSelectStep<Record> selectQuery = context.select()) {
-                    Result<Record> result = selectQuery
-                            .from(DSL.table(this.getTablePrefix() + "players"))
-                            .where(DSL.field("uuid").eq(uuid.toString()))
-                            .fetch();
+        this.plugin.getDatabaseConnector().connectDSL(context -> {
+            try (SelectSelectStep<Record> selectQuery = context.select()) {
+                Result<Record> result = selectQuery
+                        .from(DSL.table(this.getTablePrefix() + "players"))
+                        .where(DSL.field("uuid").eq(uuid.toString()))
+                        .fetch();
 
-                    if (result.isEmpty()) {
-                        callback.accept(null);
-                    } else {
-                        Record record = result.get(0);
+                if (result.isEmpty()) {
+                    callback.accept(null);
+                } else {
+                    Record record = result.get(0);
 
-                        UUID id = UUID.fromString(record.get("uuid", String.class));
+                    UUID id = UUID.fromString(record.get("uuid", String.class));
 
-                        double experience = record.get("experience", double.class);
+                    double experience = record.get("experience", double.class);
 
-                        int mobKills = record.get("mob_kills", int.class);
-                        int playerKills = record.get("player_kills", int.class);
-                        int deaths = record.get("deaths", int.class);
-                        int killStreak = record.get("killstreak", int.class);
-                        int bestKillStreak = record.get("best_killstreak", int.class);
+                    int mobKills = record.get("mob_kills", int.class);
+                    int playerKills = record.get("player_kills", int.class);
+                    int deaths = record.get("deaths", int.class);
+                    int killStreak = record.get("killstreak", int.class);
+                    int bestKillStreak = record.get("best_killstreak", int.class);
 
-                        callback.accept(new EPlayer(id, experience, mobKills, playerKills, deaths, killStreak, bestKillStreak));
-                    }
+                    callback.accept(new EPlayer(id, experience, mobKills, playerKills, deaths, killStreak, bestKillStreak));
                 }
-            });
+            }
         });
     }
 
