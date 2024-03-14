@@ -1,23 +1,15 @@
 package com.craftaro.epiclevels.database;
 
 import com.craftaro.core.database.MySQLConnector;
-import com.craftaro.third_party.org.jooq.DeleteUsingStep;
-import com.craftaro.third_party.org.jooq.Query;
-import com.craftaro.third_party.org.jooq.Record;
-import com.craftaro.third_party.org.jooq.Result;
-import com.craftaro.third_party.org.jooq.SelectSelectStep;
-import com.craftaro.third_party.org.jooq.impl.DSL;
 import com.craftaro.epiclevels.EpicLevels;
 import com.craftaro.epiclevels.boost.Boost;
 import com.craftaro.epiclevels.players.EPlayer;
+import com.craftaro.third_party.org.jooq.Record;
+import com.craftaro.third_party.org.jooq.*;
+import com.craftaro.third_party.org.jooq.impl.DSL;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class DataHelper {
@@ -39,28 +31,26 @@ public class DataHelper {
     }
 
     public void bulkUpdatePlayers(Collection<EPlayer> ePlayers) {
-        runAsync(() -> {
-            this.plugin.getDatabaseConnector().connectDSL(context -> {
-                List<Query> queries = new ArrayList<>();
-                for (EPlayer ePlayer : ePlayers) {
-                    if (ePlayer.isSaved()) {
-                        continue;
-                    }
-                    queries.add(
-                            DSL.update(DSL.table(DSL.name(this.getTablePrefix() + "players")))
-
-                                    .set(DSL.field("experience"), ePlayer.getExperience())
-                                    .set(DSL.field("mob_kills"), ePlayer.getMobKills())
-                                    .set(DSL.field("player_kills"), ePlayer.getPlayerKills())
-                                    .set(DSL.field("deaths"), ePlayer.getDeaths())
-                                    .set(DSL.field("killstreak"), ePlayer.getKillStreak())
-                                    .set(DSL.field("best_killstreak"), ePlayer.getBestKillStreak())
-
-                                    .where(DSL.field("uuid").eq(ePlayer.getUniqueId().toString()))
-                    );
+        this.plugin.getDatabaseConnector().connectDSL(context -> {
+            List<Query> queries = new ArrayList<>();
+            for (EPlayer ePlayer : ePlayers) {
+                if (ePlayer.isSaved()) {
+                    continue;
                 }
-                context.batch(queries).execute();
-            });
+                queries.add(
+                        DSL.update(DSL.table(DSL.name(this.getTablePrefix() + "players")))
+
+                                .set(DSL.field("experience"), ePlayer.getExperience())
+                                .set(DSL.field("mob_kills"), ePlayer.getMobKills())
+                                .set(DSL.field("player_kills"), ePlayer.getPlayerKills())
+                                .set(DSL.field("deaths"), ePlayer.getDeaths())
+                                .set(DSL.field("killstreak"), ePlayer.getKillStreak())
+                                .set(DSL.field("best_killstreak"), ePlayer.getBestKillStreak())
+
+                                .where(DSL.field("uuid").eq(ePlayer.getUniqueId().toString()))
+                );
+            }
+            context.batch(queries).execute();
         });
     }
 
