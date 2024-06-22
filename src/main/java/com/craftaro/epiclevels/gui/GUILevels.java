@@ -3,13 +3,14 @@ package com.craftaro.epiclevels.gui;
 import com.craftaro.core.gui.CustomizableGui;
 import com.craftaro.core.gui.GuiUtils;
 import com.craftaro.core.input.ChatPrompt;
-import com.craftaro.third_party.com.cryptomorin.xseries.SkullUtils;
-import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
 import com.craftaro.core.utils.TextUtils;
 import com.craftaro.epiclevels.EpicLevels;
 import com.craftaro.epiclevels.players.EPlayer;
 import com.craftaro.epiclevels.settings.Settings;
 import com.craftaro.epiclevels.utils.Methods;
+import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
+import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
+import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -199,7 +200,8 @@ public class GUILevels extends CustomizableGui {
 
             String prog = TextUtils.formatText(Methods.generateProgressBar(exp, nextLevel, false));
 
-            ItemStack head = SkullUtils.getSkull(targetPlayer.getUniqueId());
+
+            ItemStack head = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
             ItemMeta headMeta = head.getItemMeta();
             headMeta.setDisplayName(this.plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).getMessage());
             headMeta.setLore(Arrays.asList(this.plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
