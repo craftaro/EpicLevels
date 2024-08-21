@@ -3,6 +3,7 @@ package com.craftaro.epiclevels.gui;
 import com.craftaro.core.gui.CustomizableGui;
 import com.craftaro.core.gui.GuiUtils;
 import com.craftaro.core.input.ChatPrompt;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.core.utils.TextUtils;
 import com.craftaro.epiclevels.EpicLevels;
 import com.craftaro.epiclevels.players.EPlayer;
@@ -151,7 +152,7 @@ public class GUILevels extends CustomizableGui {
                         this.plugin.getLocale().getMessage("gui.levels.search").getMessage()),
                 (event) ->
                         ChatPrompt.showPrompt(this.plugin, this.player,
-                                this.plugin.getLocale().getMessage("gui.levels.nametosearch").getMessage(),
+                                this.plugin.getLocale().getMessage("gui.levels.nametosearch").toText(),
                                 response -> {
                                     Optional<EPlayer> targetOptional = Optional.empty();
                                     for (EPlayer ePlayer : this.players) {
@@ -201,11 +202,12 @@ public class GUILevels extends CustomizableGui {
             String prog = TextUtils.formatText(Methods.generateProgressBar(exp, nextLevel, false));
 
 
-            ItemStack head = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
+            //ItemStack head = XSkull.createItem().profile(new Profileable.OfflinePlayerProfileable(targetPlayer)).apply();
+            ItemStack head = SkullItemCreator.byUsername(targetPlayer.getName());
             ItemMeta headMeta = head.getItemMeta();
-            headMeta.setDisplayName(this.plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).getMessage());
-            headMeta.setLore(Arrays.asList(this.plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).getMessage(),
-                    this.plugin.getLocale().getMessage("gui.levels.exp").processPlaceholder("exp", Methods.formatDecimal(selected.getExperience())).processPlaceholder("expnext", Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))).getMessage(), prog));
+            headMeta.setDisplayName(this.plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).toText());
+            headMeta.setLore(Arrays.asList(this.plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).toText(),
+                    this.plugin.getLocale().getMessage("gui.levels.exp").processPlaceholder("exp", Methods.formatDecimal(selected.getExperience())).processPlaceholder("expnext", Methods.formatDecimal(EPlayer.experience(selected.getLevel() + 1))).toText(), prog));
             head.setItemMeta(headMeta);
 
             int slot = 37 + i;
@@ -248,7 +250,7 @@ public class GUILevels extends CustomizableGui {
             return EpicLevels.getPlugin(EpicLevels.class)
                     .getLocale()
                     .getMessage("gui.levels." + name().toLowerCase() + "type")
-                    .getMessage();
+                    .toText();
         }
     }
 }

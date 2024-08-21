@@ -37,7 +37,7 @@ public class Rewards {
                         }
                         break;
                     case "BROADCAST":
-                        Bukkit.broadcastMessage(EpicLevels.getPlugin(EpicLevels.class).getLocale().newMessage(line.trim()).getMessage());
+                        Bukkit.broadcastMessage(EpicLevels.getPlugin(EpicLevels.class).getLocale().newMessage(line.trim()).toText());
                         break;
                     case "CMD":
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), line.replace("/", "").trim());
