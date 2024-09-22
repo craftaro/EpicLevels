@@ -3,20 +3,24 @@ package com.craftaro.epiclevels.gui;
 import com.craftaro.core.gui.CustomizableGui;
 import com.craftaro.core.gui.GuiUtils;
 import com.craftaro.core.input.ChatPrompt;
+import com.craftaro.core.utils.SkullItemCreator;
 import com.craftaro.core.utils.TextUtils;
 import com.craftaro.epiclevels.EpicLevels;
 import com.craftaro.epiclevels.players.EPlayer;
 import com.craftaro.epiclevels.settings.Settings;
 import com.craftaro.epiclevels.utils.Methods;
 import com.craftaro.third_party.com.cryptomorin.xseries.XMaterial;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.builder.XSkull;
-import com.craftaro.third_party.com.cryptomorin.xseries.profiles.objects.Profileable;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 public class GUILevels extends CustomizableGui {
     private final EpicLevels plugin;
@@ -184,21 +188,24 @@ public class GUILevels extends CustomizableGui {
                 continue;
             }
             EPlayer selected = this.players.get(current);
-            if (selected.getPlayer() == null || selected.getPlayer().getName() == null) {
+            OfflinePlayer targetPlayer = selected.getPlayer();
+
+            if (targetPlayer == null || targetPlayer.getName() == null) {
                 continue;
             }
 
-            OfflinePlayer targetPlayer = selected.getPlayer();
-            UUID targetPlayerUuid = targetPlayer.getUniqueId();
-
             double exp = selected.getExperience() - EPlayer.experience(selected.getLevel());
-
             double nextLevel = EPlayer.experience(selected.getLevel() + 1) - EPlayer.experience(selected.getLevel());
 
             String prog = TextUtils.formatText(Methods.generateProgressBar(exp, nextLevel, false));
 
+            ItemStack head;
+            try {
+                head = SkullItemCreator.byUuid(targetPlayer.getUniqueId()).get();
+            } catch (InterruptedException | ExecutionException ex) {
+                throw new RuntimeException(ex);
+            }
 
-            ItemStack head = XSkull.createItem().profile(new Profileable.PlayerProfileable(targetPlayer)).apply();
             ItemMeta headMeta = head.getItemMeta();
             headMeta.setDisplayName(this.plugin.getLocale().getMessage("gui.levels.name").processPlaceholder("position", current + 1).processPlaceholder("name", targetPlayer.getName()).toText());
             headMeta.setLore(Arrays.asList(this.plugin.getLocale().getMessage("gui.levels.level").processPlaceholder("level", Methods.formatDecimal(selected.getLevel())).toText(),
