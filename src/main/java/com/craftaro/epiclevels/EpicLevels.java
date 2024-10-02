@@ -3,6 +3,7 @@ package com.craftaro.epiclevels;
 import com.craftaro.core.SongodaCore;
 import com.craftaro.core.SongodaPlugin;
 import com.craftaro.core.commands.CommandManager;
+import com.craftaro.core.compatibility.MajorServerVersion;
 import com.craftaro.core.compatibility.ServerVersion;
 import com.craftaro.core.configuration.Config;
 import com.craftaro.core.database.DatabaseConnector;
@@ -128,7 +129,7 @@ public class EpicLevels extends SongodaPlugin {
         this.killstreakManager.load(this);
 
         // Start Tasks
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_9)) {
+        if (MajorServerVersion.isServerVersionAtLeast(MajorServerVersion.V1_9)) {
             ModifierTask.startTask(this);
         }
         BoostTask.startTask(this);

@@ -43,8 +43,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
                 return Methods.formatDecimal(EPlayer.experience(ePlayer.getLevel() + 1) - ePlayer.getExperience());
             case "boosterenabled":
                 return this.plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null
-                        ? this.plugin.getLocale().getMessage("general.word.enabled").getMessage()
-                        : this.plugin.getLocale().getMessage("general.word.disabled").getMessage();
+                        ? this.plugin.getLocale().getMessage("general.word.enabled").toText()
+                        : this.plugin.getLocale().getMessage("general.word.disabled").toText();
             case "booster":
                 if (this.plugin.getBoostManager().getBoost(ePlayer.getUniqueId()) == null) {
                     return "1";
@@ -52,8 +52,8 @@ public class PlaceholderManager extends PlaceholderExpansion {
                 return Methods.formatDecimal(this.plugin.getBoostManager().getBoost(ePlayer.getUniqueId()).getMultiplier());
             case "globalboosterenabled":
                 return this.plugin.getBoostManager().getGlobalBoost() == null
-                        ? this.plugin.getLocale().getMessage("general.word.enabled").getMessage()
-                        : this.plugin.getLocale().getMessage("general.word.disabled").getMessage();
+                        ? this.plugin.getLocale().getMessage("general.word.enabled").toText()
+                        : this.plugin.getLocale().getMessage("general.word.disabled").toText();
             case "globalbooster":
                 if (this.plugin.getBoostManager().getGlobalBoost() == null) {
                     return "1";
